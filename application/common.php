@@ -245,9 +245,7 @@ function randColor($image) {
     return imagecolorallocate($image,mt_rand(0,255),mt_rand(0,255),mt_rand(0,255));
 }
 
-function mredis($config = []) {
-    return \my\MyRedis::getInstance($config);
-}
+
 /*----------------------------- 后加入的分割线--------------------------*/
 
 function curl_post_data($url, $curlPost,$userCert = false)
@@ -336,11 +334,10 @@ function upload($k) {
     if(checkfile($k) !== true) {
         return array('error'=>1,'msg'=>checkfile($k));
     }
-
     $filename_array = explode('.',$_FILES[$k]['name']);
     $ext = array_pop($filename_array);
 
-    $path =  'static/upload/' . date('Y-m-d');
+    $path =  'upload/admin/' . date('Y-m-d');
     is_dir($path) or mkdir($path,0755,true);
     //转移临时文件
     $newname = create_unique_number() . '.' . $ext;
@@ -411,7 +408,7 @@ function ajaxUpload($k,$maxsize=512) {
 
 function rename_file($tmp,$path = '') {
     $filename = substr(strrchr($tmp,"/"),1);
-    $path = $path ? $path : 'static/upload/';
+    $path = $path ? $path : 'upload/api/';
     $path.= date('Y-m-d') . '/';
     is_dir($path) or mkdir($path,0755,true);
     @rename($tmp, $path . $filename);

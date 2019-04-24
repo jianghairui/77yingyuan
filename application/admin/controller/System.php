@@ -79,10 +79,10 @@ class System extends Base {
             $where[] = ['a.realname|s.detail','like',"%{$param['search']}%"];
         }
         try {
-            $count = Db::table('syslog')->alias('s')
+            $count = Db::table('mp_syslog')->alias('s')
                 ->join('admin a','s.admin_id=a.id','left')
                 ->where($where)->count();
-            $list = Db::table('syslog')->alias('s')
+            $list = Db::table('mp_syslog')->alias('s')
                 ->join('admin a','s.admin_id=a.id','left')
                 ->where($where)
                 ->order(['create_time'=>'DESC'])

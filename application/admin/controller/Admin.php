@@ -33,14 +33,14 @@ class Admin extends Base {
             $where[] = ['a.username|a.realname|a.tel','like',"%{$param['search']}%"];
         }
 
-        $count = Db::table('admin')->alias('a')->where($where)->count();
+        $count = Db::table('mp_admin')->alias('a')->where($where)->count();
         $page['count'] = $count;
         $page['curr'] = $curr_page;
         $page['totalPage'] = ceil($count/$perpage);
         try {
-            $list = Db::table('admin')->alias('a')
-                ->join('auth_group_access au','a.id=au.uid','left')
-                ->join('auth_group g','au.group_id=g.id','left')
+            $list = Db::table('mp_admin')->alias('a')
+                ->join('mp_auth_group_access au','a.id=au.uid','left')
+                ->join('mp_auth_group g','au.group_id=g.id','left')
                 ->where($where)
                 ->field('a.*,g.title')
                 ->order(['a.id'=>'ASC'])
@@ -55,7 +55,7 @@ class Admin extends Base {
 
     public function adminadd() {
         try {
-            $list = Db::table('auth_group')->select();
+            $list = Db::table('mp_auth_group')->select();
         } catch(\Exception $e) {
             die($e->getMessage());
         }
@@ -67,7 +67,7 @@ class Admin extends Base {
         $data = input('post.');
         $group_id = $data['group_id'];
         if($group_id) {
-            $g = Db::table('auth_group')->where('id',$group_id)->find();
+            $g = Db::table('mp_auth_group')->where('id',$group_id)->find();
             if(!$g) {
                 return ajax('用户组不存在',-1);
             }
@@ -81,16 +81,16 @@ class Admin extends Base {
         unset($data['password2']);
         $data['password'] = md5($data['password'] . config('login_key'));
 
-        $exist = Db::table('admin')->where('username',$data['username'])->find();
+        $exist = Db::table('mp_admin')->where('username',$data['username'])->find();
         if($exist) {
             return ajax('用户名已存在',-1);
         }
         try {
             $data['create_time'] = time();
-            Db::table('admin')->insert($data);
+            Db::table('mp_admin')->insert($data);
             if($group_id) {
                 $id = Db::getLastInsID();
-                Db::table('auth_group_access')->insert(['uid'=>$id,'group_id'=>$group_id]);
+                Db::table('mp_auth_group_access')->insert(['uid'=>$id,'group_id'=>$group_id]);
             }
         }catch (\Exception $e) {
             return ajax($e->getMessage(),-1);
@@ -103,9 +103,9 @@ class Admin extends Base {
         if($id == 1) {
             return $this->fetch('public/noAuth');
         }
-        $info = Db::table('admin')->where('id',$id)->find();
-        $group_id = Db::table('auth_group_access')->where('uid',$id)->value('group_id');
-        $list = Db::table('auth_group')->select();
+        $info = Db::table('mp_admin')->where('id',$id)->find();
+        $group_id = Db::table('mp_auth_group_access')->where('uid',$id)->value('group_id');
+        $list = Db::table('mp_auth_group')->select();
         $this->assign('list',$list);
         $this->assign('info',$info);
         $this->assign('group_id',$group_id);
@@ -116,7 +116,7 @@ class Admin extends Base {
         $data = input('post.');
         $group_id = $data['group_id'];
         if($group_id) {
-            $g = Db::table('auth_group')->where('id',$group_id)->find();
+            $g = Db::table('mp_auth_group')->where('id',$group_id)->find();
             if(!$g) {
                 return ajax('用户组不存在',-1);
             }
@@ -138,21 +138,21 @@ class Admin extends Base {
             ['username','=',$data['username']],
             ['id','<>',$data['id']],
         ];
-        $exist = Db::table('admin')->where($map)->find();
+        $exist = Db::table('mp_admin')->where($map)->find();
         if($exist) {
             return ajax('用户名已存在',-1);
         }
         try {
-            Db::table('admin')->where('id',$data['id'])->update($data);
-            $res =  Db::table('auth_group_access')->where('uid',$data['id'])->find();
+            Db::table('mp_admin')->where('id',$data['id'])->update($data);
+            $res =  Db::table('mp_auth_group_access')->where('uid',$data['id'])->find();
             if($group_id) {
                 if($res) {
-                    Db::table('auth_group_access')->where('uid',$data['id'])->update(['group_id'=>$group_id]);
+                    Db::table('mp_auth_group_access')->where('uid',$data['id'])->update(['group_id'=>$group_id]);
                 }else {
-                    Db::table('auth_group_access')->insert(['uid'=>$data['id'],'group_id'=>$group_id]);
+                    Db::table('mp_auth_group_access')->insert(['uid'=>$data['id'],'group_id'=>$group_id]);
                 }
             }else {
-                Db::table('auth_group_access')->where('uid',$data['id'])->delete();
+                Db::table('mp_auth_group_access')->where('uid',$data['id'])->delete();
             }
         }catch (\Exception $e) {
             return ajax($e->getMessage(),-1);
@@ -166,9 +166,9 @@ class Admin extends Base {
             return ajax('没有权限',-1);
         }
         try {
-            Db::table('admin')->where('id','=',$id)->delete();
-            Db::table('auth_group_access')->where('uid','=',$id)->delete();
-            Db::table('syslog')->where('admin_id','=',$id)->delete();
+            Db::table('mp_admin')->where('id','=',$id)->delete();
+            Db::table('mp_auth_group_access')->where('uid','=',$id)->delete();
+            Db::table('mp_syslog')->where('admin_id','=',$id)->delete();
         }catch (\Exception $e) {
             return ajax($e->getMessage(),-1);
         }
@@ -193,9 +193,9 @@ class Admin extends Base {
             ['admin_id','<>',1]
         ];
         try {
-            Db::table('admin')->where($map1)->delete();
-            Db::table('auth_group_access')->where($map2)->delete();
-            Db::table('syslog')->where($map3)->delete();
+            Db::table('mp_admin')->where($map1)->delete();
+            Db::table('mp_auth_group_access')->where($map2)->delete();
+            Db::table('mp_syslog')->where($map3)->delete();
         }catch (\Exception $e) {
             return ajax($e->getMessage(),-1);
         }
@@ -208,7 +208,7 @@ class Admin extends Base {
             return ajax('没有权限',-1);
         }
         try {
-            Db::table('admin')->where('id','=',$id)->update(['status'=>0]);
+            Db::table('mp_admin')->where('id','=',$id)->update(['status'=>0]);
         }catch (\Exception $e) {
             return ajax($e->getMessage(),-1);
         }
@@ -221,7 +221,7 @@ class Admin extends Base {
             return ajax('没有权限',-1);
         }
         try {
-            Db::table('admin')->where('id','=',$id)->update(['status'=>1]);
+            Db::table('mp_admin')->where('id','=',$id)->update(['status'=>1]);
         }catch (\Exception $e) {
             return ajax($e->getMessage(),-1);
         }
@@ -229,7 +229,7 @@ class Admin extends Base {
     }
 
     public function rulelist() {
-        $list = Db::table('auth_rule')->where('status',1)->select();
+        $list = Db::table('mp_auth_rule')->where('status',1)->select();
         $newlist = $this->sortMerge($list);
         $this->assign('list',$newlist);
         return $this->fetch();
@@ -242,7 +242,7 @@ class Admin extends Base {
                 ['id','=',$pid],
                 ['pid','=',0]
             ];
-            $res = Db::table('auth_rule')->where($map)->find();
+            $res = Db::table('mp_auth_rule')->where($map)->find();
             if($res) {
                 $pname = $res['name'];
             }else {
@@ -263,13 +263,13 @@ class Admin extends Base {
         $val['title'] = input('post.title');
         $val['pid'] = input('post.pid');
         if($val['pid']) {
-            $res = Db::table('auth_rule')->where('id',$val['pid'])->find();
+            $res = Db::table('mp_auth_rule')->where('id',$val['pid'])->find();
             if(!$res) {
                 return ajax('非法参数',-1);
             }
         }
         try {
-            Db::table('auth_rule')->insert($val);
+            Db::table('mp_auth_rule')->insert($val);
         }catch (\Exception $e) {
             return ajax($e->getMessage(),-1);
         }
@@ -285,12 +285,12 @@ class Admin extends Base {
             ['pid','=',0],
             ['id','in',$rules]
         ];
-        $arr = Db::table('auth_rule')->where($map)->column('id');
+        $arr = Db::table('mp_auth_rule')->where($map)->column('id');
         try{
             if($arr) {
-                Db::table('auth_rule')->where('pid','in',$arr)->delete();
+                Db::table('mp_auth_rule')->where('pid','in',$arr)->delete();
             }
-            Db::table('auth_rule')->where('id','in',$rules)->delete();
+            Db::table('mp_auth_rule')->where('id','in',$rules)->delete();
         }catch (\Exception $e) {
             return ajax($e->getMessage(),-1);
         }
@@ -298,13 +298,13 @@ class Admin extends Base {
     }
 
     public function grouplist() {
-        $list = Db::table('auth_group')->select();
+        $list = Db::table('mp_auth_group')->select();
         $this->assign('list',$list);
         return $this->fetch();
     }
 
     public function groupadd() {
-        $list = Db::table('auth_rule')->where('status',1)->select();
+        $list = Db::table('mp_auth_rule')->where('status',1)->select();
         $newlist = $this->sortMerge($list);
         $this->assign('list',$newlist);
         return $this->fetch();
@@ -315,19 +315,19 @@ class Admin extends Base {
         checkPost($data);
         $data['desc'] = input('post.desc');
         $check = input('post.check');
-        $exist = Db::table('auth_group')->where('title','=',$data['title'])->find();
+        $exist = Db::table('mp_auth_group')->where('title','=',$data['title'])->find();
         if($exist) {
             return ajax('角色已存在',-1);
         }
         if($check && is_array($check)) {
-            $count = Db::table('auth_rule')->where('id','in',$check)->count();
+            $count = Db::table('mp_auth_rule')->where('id','in',$check)->count();
             if($count !== count($check)) {
                 return ajax('非法参数',-1);
             }
             $data['rules'] = implode(',',$check);
         }
         try {
-            Db::table('auth_group')->insert($data);
+            Db::table('mp_auth_group')->insert($data);
         }catch (\Exception $e) {
             return ajax($e->getMessage());
         }
@@ -336,12 +336,12 @@ class Admin extends Base {
 
     public function groupmod() {
         $gid = input('param.gid');
-        $exist = Db::table('auth_group')->where('id','=',$gid)->find();
+        $exist = Db::table('mp_auth_group')->where('id','=',$gid)->find();
         if(!$exist) {
             $this->error('非法操作');
         }
-        $list = Db::table('auth_rule')->where('status',1)->select();
-        $rules = Db::table('auth_group')->where('id','=',$gid)->value('rules');
+        $list = Db::table('mp_auth_rule')->where('status',1)->select();
+        $rules = Db::table('mp_auth_group')->where('id','=',$gid)->value('rules');
         $access = explode(',',$rules);
         $newlist = $this->sortMerge($list,$access);
         $this->assign('list',$newlist);
@@ -361,12 +361,12 @@ class Admin extends Base {
             ['id','<>',$data['id']]
         ];
 
-        $exist = Db::table('auth_group')->where($map)->find();
+        $exist = Db::table('mp_auth_group')->where($map)->find();
         if($exist) {
             return ajax('角色已存在',-1);
         }
         if($check && is_array($check)) {
-            $count = Db::table('auth_rule')->where('id','in',$check)->count();
+            $count = Db::table('mp_auth_rule')->where('id','in',$check)->count();
             if($count !== count($check)) {
                 return ajax('非法参数',-1);
             }
@@ -375,7 +375,7 @@ class Admin extends Base {
             $data['rules'] = '';
         }
         try {
-            Db::table('auth_group')->where('id','=',$data['id'])->update($data);
+            Db::table('mp_auth_group')->where('id','=',$data['id'])->update($data);
         }catch (\Exception $e) {
             return ajax($e->getMessage());
         }
@@ -385,8 +385,8 @@ class Admin extends Base {
     public function groupdel() {
         $gid = input('post.gid');
         try{
-            Db::table('auth_group')->where('id','=',$gid)->delete();
-            Db::table('auth_group_access')->where('group_id','=',$gid)->delete();
+            Db::table('mp_auth_group')->where('id','=',$gid)->delete();
+            Db::table('mp_auth_group_access')->where('group_id','=',$gid)->delete();
         }catch (\Exception $e) {
             return ajax($e->getMessage(),-1);
         }
@@ -399,8 +399,8 @@ class Admin extends Base {
             return ajax('未选择删除项',-1);
         }
         try{
-            Db::table('auth_group')->where('id','in',$gid)->delete();
-            Db::table('auth_group_access')->where('group_id','in',$gid)->delete();
+            Db::table('mp_auth_group')->where('id','in',$gid)->delete();
+            Db::table('mp_auth_group_access')->where('group_id','in',$gid)->delete();
         }catch (\Exception $e) {
             return ajax($e->getMessage(),-1);
         }
