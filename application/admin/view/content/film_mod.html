@@ -22,6 +22,12 @@
             </div>
         </div>
         <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>上映时间：</label>
+            <div class="formControls col-xs-4 col-sm-4">
+                <input type="text" name="up_time" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="logmin" value="{$info.up_time|strtotime|date='Y-m-d'}" class="input-text Wdate" readonly>
+            </div>
+        </div>
+        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>状态：</label>
             <div class="formControls col-xs-8 col-sm-9 skin-minimal">
                 <div class="radio-box">

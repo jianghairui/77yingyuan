@@ -312,7 +312,7 @@ class Admin extends Base {
 
     public function groupadd_post() {
         $data['title'] = input('post.title');
-        checkPost($data);
+        checkInput($data);
         $data['desc'] = input('post.desc');
         $check = input('post.check');
         $exist = Db::table('mp_auth_group')->where('title','=',$data['title'])->find();
@@ -352,7 +352,7 @@ class Admin extends Base {
     public function groupmod_post() {
         $data['title'] = input('post.title');
         $data['id'] = input('post.group_id');
-        checkPost($data);
+        checkInput($data);
 
         $data['desc'] = input('post.desc');
         $check = input('post.check');

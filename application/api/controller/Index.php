@@ -24,15 +24,31 @@ class Index extends Common {
     }
 
     public function messageAdd() {
-
+        $val['content'] = input('post.content');
+        checkPost($val);
+        $val['uid'] = $this->myinfo['uid'];
+        $val['create_time'] = time();
+        try {
+            Db::table('mp_message')->insert($val);
+        } catch (\Exception $e) {
+            return ajax($e->getMessage(), -1);
+        }
+        return ajax();
     }
 
     public function messageList() {
-
+        try {
+            $list = Db::table('mp_message')->alias('m')
+                ->join("mp_user u","m.uid=u.id","left")
+                ->field("m.id,m.content,m.create_time,u.nickname,u.avatar")
+                ->select();
+        } catch (\Exception $e) {
+            return ajax($e->getMessage(), -1);
+        }
+        return ajax($list);
     }
 
     public function filmList() {
-
         $curr_page = input('param.page',1);
         $perpage = input('param.perpage',10);
         $where = [];
@@ -48,8 +64,7 @@ class Index extends Common {
         }catch (\Exception $e) {
             die('SQL错误: ' . $e->getMessage());
         }
-        $this->assign('list',$list);
-        return $this->fetch();
+        return ajax($list);
     }
 
     public function contact() {

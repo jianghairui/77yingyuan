@@ -24,7 +24,7 @@ class Banner extends Base {
     //添加轮播图POST
     public function slideadd() {
         $val['title'] = input('post.title');
-        checkPost($val);
+        checkInput($val);
         $val['url'] = input('post.url');
 
         if(isset($_FILES['file'])) {
@@ -70,7 +70,7 @@ class Banner extends Base {
         if(Request::isAjax()) {
             $val['title'] = input('post.title');
             $val['id'] = input('post.slideid');
-            checkPost($val);
+            checkInput($val);
             $val['url'] = input('post.url');
             $exist = Db::table('mp_slideshow')->where('id',$val['id'])->find();
             if(!$exist) {
@@ -101,7 +101,7 @@ class Banner extends Base {
     //删除轮播图
     public function slide_del() {
         $val['id'] = input('post.slideid');
-        checkPost($val);
+        checkInput($val);
         $exist = Db::table('mp_slideshow')->where('id',$val['id'])->find();
         if(!$exist) {
             return ajax('非法操作',-1);
@@ -119,7 +119,7 @@ class Banner extends Base {
     public function sortSlide() {
         $val['id'] = input('post.id');
         $val['sort'] = input('post.sort');
-        checkPost($val);
+        checkInput($val);
         try {
             Db::table('mp_slideshow')->update($val);
         }catch (\Exception $e) {
@@ -130,7 +130,7 @@ class Banner extends Base {
     //禁用轮播图
     public function slide_stop() {
         $val['id'] = input('post.slideid');
-        checkPost($val);
+        checkInput($val);
         $exist = Db::table('mp_slideshow')->where('id',$val['id'])->find();
         if(!$exist) {
             return ajax('非法操作',-1);
@@ -146,7 +146,7 @@ class Banner extends Base {
     //启用轮播图
     public function slide_start() {
         $val['id'] = input('post.slideid');
-        checkPost($val);
+        checkInput($val);
         $exist = Db::table('mp_slideshow')->where('id',$val['id'])->find();
         if(!$exist) {
             return ajax('非法操作',-1);
@@ -158,6 +158,49 @@ class Banner extends Base {
             return ajax($e->getMessage(),-1);
         }
         return ajax([],1);
+    }
+
+    public function company() {
+        if(request()->isPost()) {
+            $val['name'] = input('post.name');
+            $val['linkman'] = input('post.linkman');
+            $val['tel'] = input('post.tel');
+            $val['address'] = input('post.address');
+            $val['intro'] = input('post.intro');
+            checkPost($val);
+            $val['lon'] = input('post.lon',0);
+            $val['lat'] = input('post.lat',0);
+            if(isset($_FILES['file'])) {
+                $info = upload('file');
+                if($info['error'] === 0) {
+                    $val['logo'] = $info['data'];
+                }else {
+                    return ajax($info['msg'],-1);
+                }
+            }
+            try {
+                $exist = Db::table('mp_company')->where('id',1)->find();
+                if(!$exist) {
+                    Db::table('mp_company')->insert($val);
+                }else {
+                    Db::table('mp_company')->where('id',1)->update($val);
+                }
+            }catch (\Exception $e) {
+                if(isset($val['logo'])) {
+                    @unlink($val['logo']);
+                }
+                return ajax($e->getMessage(),-1);
+            }
+            if($exist) {
+                if(isset($val['logo'])) {
+                    @unlink($exist['logo']);
+                }
+            }
+            return ajax();
+        }
+        $exist = Db::table('mp_company')->where('id','=',1)->find();
+        $this->assign('info',$exist);
+        return $this->fetch();
     }
 
 

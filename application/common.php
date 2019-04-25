@@ -415,13 +415,25 @@ function rename_file($tmp,$path = '') {
     return $path . $filename;
 }
 
-function checkPost($postArray) {
+function checkInput($postArray) {
     if(empty($postArray)) {
-        throw new HttpResponseException(ajax($postArray,-3));
+        throw new HttpResponseException(ajax('数据不能为空',-3));
     }
     foreach ($postArray as $value) {
         if (is_null($value) || $value === '') {
-            throw new HttpResponseException(ajax($postArray,-3));
+            throw new HttpResponseException(ajax('数据不能为空',-3));
+        }
+    }
+    return true;
+}
+
+function checkPost($postArray) {
+    if(empty($postArray)) {
+        throw new HttpResponseException(ajax($postArray,-2));
+    }
+    foreach ($postArray as $value) {
+        if (is_null($value) || $value === '') {
+            throw new HttpResponseException(ajax($postArray,-2));
         }
     }
     return true;
