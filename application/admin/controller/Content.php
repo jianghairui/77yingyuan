@@ -414,4 +414,12 @@ class Content extends Base {
         return ajax([],1);
     }
 
+    public function orderList() {
+        die('还没写');
+    }
+
+    public function joinList() {
+        die('还没写');
+    }
+
 }
