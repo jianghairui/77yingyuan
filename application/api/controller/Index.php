@@ -79,7 +79,10 @@ class Index extends Common {
     public function activeList() {
         $curr_page = input('param.page',1);
         $perpage = input('param.perpage',10);
-        $where = [];
+        $where = [
+            ['start_time','<=',time()],
+            ['end_time','>',time()]
+        ];
         try {
             $count = Db::table('mp_activity')->where($where)->count();
             $page['count'] = $count;
@@ -92,6 +95,23 @@ class Index extends Common {
             die('SQL错误: ' . $e->getMessage());
         }
         return ajax($list);
+    }
+
+    public function activityDetail() {
+        $val['id'] = input('post.id');
+        $this->checkPost($val);
+        try {
+            $where = [
+                ['id','=',$val['id']]
+            ];
+            $info = Db::table('mp_activity')
+                ->where($where)
+                ->field("id,title,desc,origin_price,price,pic,explain")
+                ->find();
+        } catch (\Exception $e) {
+            return ajax($e->getMessage(), -1);
+        }
+        return ajax($info);
     }
 
     public function activityOrder() {
@@ -124,10 +144,10 @@ class Index extends Common {
             if($order_exist) {
                 return ajax('已预订',45);
             }
-            if($activity_exist['start_time'] < time()) {
+            if($activity_exist['start_time'] > time()) {
                 return ajax('活动未开始',26);
             }
-            if($activity_exist['end_time'] >= time()) {
+            if($activity_exist['end_time'] <= time()) {
                 return ajax('活动已结束',25);
             }
             $val['unit_price'] = $activity_exist['price'];
