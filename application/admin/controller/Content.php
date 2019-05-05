@@ -67,6 +67,20 @@ class Content extends Base {
         return $this->fetch();
     }
 
+    public function messageDel() {
+        $val['id'] = input('post.id');
+        checkInput($val);
+        try {
+            $where = [
+                ['id','=',$val['id']]
+            ];
+            Db::table('mp_message')->where($where)->delete();
+        } catch (\Exception $e) {
+            return ajax($e->getMessage(), -1);
+        }
+        return ajax();
+    }
+
     public function filmAdd() {
         return $this->fetch();
     }
@@ -415,11 +429,72 @@ class Content extends Base {
     }
 
     public function orderList() {
-        die('还没写');
+        $param['search'] = input('param.search');
+        $page['query'] = http_build_query(input('param.'));
+
+        $curr_page = input('param.page',1);
+        $perpage = input('param.perpage',10);
+        $where = [];
+        if($param['search']) {
+            $where[] = ['o.order_sn|o.tel','like',"%{$param['search']}%"];
+        }
+        $count = Db::table('mp_order')->alias('o')->where($where)->count();
+
+        $page['count'] = $count;
+        $page['curr'] = $curr_page;
+        $page['totalPage'] = ceil($count/$perpage);
+        try {
+            $list = Db::table('mp_order')->alias('o')
+                ->join("mp_activity a","o.a_id=a.id","left")
+                ->field("o.*,a.title")
+                ->order(['o.id'=>'DESC'])
+                ->where($where)->limit(($curr_page - 1)*$perpage,$perpage)->select();
+        }catch (\Exception $e) {
+            die('SQL错误: ' . $e->getMessage());
+        }
+        $this->assign('list',$list);
+        $this->assign('page',$page);
+        return $this->fetch();
+    }
+
+    public function orderContact() {
+        $id = input('post.id');
+        try {
+            $where = [
+                ['id','=',$id]
+            ];
+            Db::table('mp_order')->where($where)->update(['contact'=>1]);
+        } catch (\Exception $e) {
+            return ajax($e->getMessage(), -1);
+        }
+        return ajax();
     }
 
     public function joinList() {
-        die('还没写');
+        $param['search'] = input('param.search');
+        $page['query'] = http_build_query(input('param.'));
+
+        $curr_page = input('param.page',1);
+        $perpage = input('param.perpage',10);
+        $where = [];
+        if($param['search']) {
+            $where[] = ['name|tel','like',"%{$param['search']}%"];
+        }
+        $count = Db::table('mp_join')->where($where)->count();
+
+        $page['count'] = $count;
+        $page['curr'] = $curr_page;
+        $page['totalPage'] = ceil($count/$perpage);
+        try {
+            $list = Db::table('mp_join')
+                ->order(['id'=>'DESC'])
+                ->where($where)->limit(($curr_page - 1)*$perpage,$perpage)->select();
+        }catch (\Exception $e) {
+            die('SQL错误: ' . $e->getMessage());
+        }
+        $this->assign('list',$list);
+        $this->assign('page',$page);
+        return $this->fetch();
     }
 
 }

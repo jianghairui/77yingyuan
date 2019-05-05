@@ -3,13 +3,13 @@
         width:40px;height:40px;border-radius: 50%;
     }
 </style>
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 内容管理 <span class="c-gray en">&gt;</span> 需求列表 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 内容管理 <span class="c-gray en">&gt;</span> 预约记录 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="page-container">
     <section id="formAjax">
         <div class="text-c">
             <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button>
-            <input type="text" name="search" value="{$Think.get.search}" id="search" placeholder=" 需求内容" style="width:250px" class="input-text">
-            <button name="" id="search-btn" class="btn btn-success" type="button"><i class="Hui-iconfont">&#xe665;</i> 查找需求</button>
+            <input type="text" name="search" value="{$Think.get.search}" id="search" placeholder=" " style="width:250px" class="input-text">
+            <button name="" id="search-btn" class="btn btn-success" type="button"><i class="Hui-iconfont">&#xe665;</i> 查找</button>
         </div>
     </section>
     <div class="cl pd-5 bg-1 bk-gray mt-20">
@@ -20,10 +20,14 @@
         <thead>
         <tr class="text-c">
             <th width="25">#</th>
-            <th width="40"></th>
-            <th width="120">昵称</th>
+            <th width="150">单号</th>
             <th>内容</th>
-            <th width="120">发布时间</th>
+            <th width="120">金额</th>
+            <th width="60">数量</th>
+            <th width="80">预约人</th>
+            <th width="120">手机号</th>
+            <th width="150">预约时间</th>
+            <th width="60">状态</th>
             <th width="100">操作</th>
         </tr>
         </thead>
@@ -32,16 +36,26 @@
             {foreach $list as $li}
             <tr class="text-c userinfo">
                 <td>{$li.id}</td>
-                <td>
-                    <img src="{if $li['avatar']}{$li['avatar']}{else /}/static/src/image/default.jpg{/if}" alt="">
+                <td>{$li.order_sn}</td>
+                <td>{$li.title}</td>
+                <td>{$li.total_price}</td>
+                <td>{$li.num}</td>
+                <td>{$li.name}</td>
+                <td>{$li.tel}</td>
+                <td>{$li.create_time|date="Y-m-d H:i:s"}</td>
+                <td class="td-contact">
+                    {if $li['contact'] == 1}
+                    <span class="label label-success radius">已联系</span>
+                    {else /}
+                    <span class="label label-defaunt radius">未联系</span>
+                    {/if}
                 </td>
-                <td>{$li.nickname}</td>
-                <td>{$li.content}</td>
-                <td>{$li.create_time|date="Y-m-d"}</td>
                 <td class="td-manage">
-                    <a style="text-decoration:none" class="ml-5" onClick="message_del(this,{$li['id']})" href="javascript:;" title="删除">
-                        <i class="Hui-iconfont">&#xe6e2;</i>
+                    {if $li['contact'] == 0}
+                    <a style="text-decoration:none" class="ml-5" onClick="contact(this,{$li['id']})" href="javascript:;" title="联系">
+                        <i class="Hui-iconfont">&#xe6a3;</i>
                     </a>
+                    {/if}
                 </td>
             </tr>
             {/foreach}
@@ -58,7 +72,7 @@
 <script type="text/javascript" src="/lib/laypage/1.2/laypage.js"></script>
 <script type="text/javascript">
 
-    var url = '{:url("Content/filmList")}' + '?<?php echo $page["query"];?>';
+    var url = '{:url("Content/orderList")}' + '?<?php echo $page["query"];?>';
     var curr = '{$page.curr}',totalPage = '{$page.totalPage}';
     if(totalPage > 1) {
         laypage({
@@ -84,30 +98,34 @@
         if(search.length != '') {
             str += '&search=' + search;
         }
-        window.location.href = '{:url("Content/filmList")}' + '?' + str;
+        window.location.href = '{:url("Content/orderList")}' + '?' + str;
     });
-    /*-删除*/
-    function message_del(obj,id){
-        layer.confirm('确认要删除吗？',function(index){
+
+    function contact(obj,id) {
+        layer.confirm('确认已联系过吗？',function(index){
             $.ajax({
-                url: "{:url('Content/messageDel')}",
+                url: "{:url('Content/orderContact')}",
                 type: 'POST',
                 dataType: 'json',
                 data:{id:id},
                 success: function(data){
                     console.log(data);
                     if(data.code == 1) {
-                        $(obj).parents("tr").remove();
-                        layer.msg('已删除!',{icon:1,time:1000});
+                        $(obj).parents('tr').find('.td-contact').html('<span class="label label-success radius">已联系</span>');
+                        $(obj).remove();
+                        layer.msg('已联系!',{icon:1,time:1000});
                     }else {
-                        layer.msg('删除失败!',{icon:2,time:1000});
+                        layer.msg('操作失败!',{icon:2,time:1000});
                     }
                 },
                 error:function(data) {
                     console.log(data.msg);
                 }
             });
+
         });
+
     }
+
 
 </script>

@@ -114,6 +114,11 @@ class Login extends Common {
         }
     }
 
+    //检测用户是否授权手机号
+    public function myInfo() {
+        return ajax($this->getMyInfo());
+    }
+
     //保存手机号
     public function getPhoneNumber() {
 

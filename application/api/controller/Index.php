@@ -11,6 +11,7 @@ use think\Db;
 
 class Index extends Common {
 
+//轮播图列表
     public function slideList() {
         try {
             $where = [
@@ -22,7 +23,7 @@ class Index extends Common {
         }
         return ajax($list);
     }
-
+//需求留言
     public function messageAdd() {
         $val['content'] = input('post.content');
         checkPost($val);
@@ -35,7 +36,7 @@ class Index extends Common {
         }
         return ajax();
     }
-
+//需求留言列表
     public function messageList() {
         try {
             $list = Db::table('mp_message')->alias('m')
@@ -47,7 +48,7 @@ class Index extends Common {
         }
         return ajax($list);
     }
-
+//影片列表
     public function filmList() {
         $curr_page = input('param.page',1);
         $perpage = input('param.perpage',10);
@@ -66,7 +67,7 @@ class Index extends Common {
         }
         return ajax($list);
     }
-
+//公司简介
     public function company() {
         try {
             $exist = Db::table('mp_company')->where('id','=',1)->find();
@@ -75,7 +76,7 @@ class Index extends Common {
         }
         return ajax($exist);
     }
-
+//活动列表
     public function activeList() {
         $curr_page = input('param.page',1);
         $perpage = input('param.perpage',10);
@@ -96,7 +97,7 @@ class Index extends Common {
         }
         return ajax($list);
     }
-
+//活动详情
     public function activityDetail() {
         $val['id'] = input('post.id');
         $this->checkPost($val);
@@ -113,7 +114,7 @@ class Index extends Common {
         }
         return ajax($info);
     }
-
+//预约下单
     public function activityOrder() {
         $val['name'] = input('post.name');
         $val['tel'] = input('post.tel');
@@ -122,6 +123,7 @@ class Index extends Common {
         checkPost($val);
         $val['uid'] = $this->myinfo['uid'];
         $val['create_time'] = time();
+        $val['order_sn'] = create_unique_number('');
         if(!is_tel($val['tel'])) {
             return ajax('无效的手机号',6);
         }
@@ -136,14 +138,14 @@ class Index extends Common {
             if(!$activity_exist) {
                 return ajax('非法参数',-4);
             }
-            $whereOrder = [
-                ['uid','=',$val['uid']],
-                ['a_id','=',$val['a_id']]
-            ];
-            $order_exist = Db::table('mp_order')->where($whereOrder)->find();
-            if($order_exist) {
-                return ajax('已预订',45);
-            }
+//            $whereOrder = [
+//                ['uid','=',$val['uid']],
+//                ['a_id','=',$val['a_id']]
+//            ];
+//            $order_exist = Db::table('mp_order')->where($whereOrder)->find();
+//            if($order_exist) {
+//                return ajax('已预订',45);
+//            }
             if($activity_exist['start_time'] > time()) {
                 return ajax('活动未开始',26);
             }
@@ -158,7 +160,7 @@ class Index extends Common {
         }
         return ajax();
     }
-
+//加盟
     public function join() {
         $val['name'] = input('post.name');
         $val['tel'] = input('post.tel');
@@ -187,16 +189,23 @@ class Index extends Common {
         }
         return ajax();
     }
-
-
-
-
-
-
-
-
-
-
+//我的订单列表
+    public function myOrderList() {
+        $curr_page = input('post.page',1);
+        $perpage = input('post.perpage',10);
+        try {
+            $where = [];
+            $list = Db::table('mp_order')->alias('o')
+                ->join("mp_activity a","o.a_id=a.id","left")
+                ->where($where)
+                ->field("o.*,a.title,a.pic")
+                ->limit(($curr_page-1)*$perpage,$perpage)
+                ->select();
+        } catch (\Exception $e) {
+            return ajax($e->getMessage(), -1);
+        }
+        return ajax($list);
+    }
 
 
 
