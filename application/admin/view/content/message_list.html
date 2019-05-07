@@ -58,7 +58,7 @@
 <script type="text/javascript" src="/lib/laypage/1.2/laypage.js"></script>
 <script type="text/javascript">
 
-    var url = '{:url("Content/filmList")}' + '?<?php echo $page["query"];?>';
+    var url = '{:url("Content/messageList")}' + '?<?php echo $page["query"];?>';
     var curr = '{$page.curr}',totalPage = '{$page.totalPage}';
     if(totalPage > 1) {
         laypage({
@@ -84,7 +84,7 @@
         if(search.length != '') {
             str += '&search=' + search;
         }
-        window.location.href = '{:url("Content/filmList")}' + '?' + str;
+        window.location.href = '{:url("Content/messageList")}' + '?' + str;
     });
     /*-删除*/
     function message_del(obj,id){

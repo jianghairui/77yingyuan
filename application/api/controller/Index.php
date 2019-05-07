@@ -60,7 +60,8 @@ class Index extends Common {
         try {
             $list = Db::table('mp_film')->alias('f')
                 ->join("mp_admin a","f.admin_id=a.id","left")
-                ->field("f.id,f.pic,f.title,f.up_time")
+                ->field("f.id,f.pic,f.title,f.up_time,f.desc,f.content")
+                ->order(['f.up_time'=>'DESC'])
                 ->where($where)->limit(($curr_page - 1)*$perpage,$perpage)->select();
         }catch (\Exception $e) {
             die('SQL错误: ' . $e->getMessage());
@@ -83,6 +84,26 @@ class Index extends Common {
         $where = [
             ['start_time','<=',time()],
             ['end_time','>',time()]
+        ];
+        try {
+            $count = Db::table('mp_activity')->where($where)->count();
+            $page['count'] = $count;
+            $page['curr'] = $curr_page;
+            $page['totalPage'] = ceil($count/$perpage);
+            $list = Db::table('mp_activity')
+                ->field("id,title,origin_price,price,pic")
+                ->where($where)->limit(($curr_page - 1)*$perpage,$perpage)->select();
+        }catch (\Exception $e) {
+            die('SQL错误: ' . $e->getMessage());
+        }
+        return ajax($list);
+    }
+    //以往活动列表
+    public function oldActivityList() {
+        $curr_page = input('param.page',1);
+        $perpage = input('param.perpage',10);
+        $where = [
+            ['end_time','<=',time()]
         ];
         try {
             $count = Db::table('mp_activity')->where($where)->count();
@@ -181,7 +202,7 @@ class Index extends Common {
             ];
             $exist = Db::table('mp_join')->where($where)->find();
             if($exist) {
-                return ajax('不可重复提交',46);
+                return ajax('已提交过申请',46);
             }
             Db::table('mp_join')->insert($val);
         } catch (\Exception $e) {
@@ -197,6 +218,7 @@ class Index extends Common {
             $where = [];
             $list = Db::table('mp_order')->alias('o')
                 ->join("mp_activity a","o.a_id=a.id","left")
+                ->order(["o.id"=>"DESC"])
                 ->where($where)
                 ->field("o.*,a.title,a.pic")
                 ->limit(($curr_page-1)*$perpage,$perpage)
@@ -205,6 +227,16 @@ class Index extends Common {
             return ajax($e->getMessage(), -1);
         }
         return ajax($list);
+    }
+
+    public function groupQrcode() {
+        try {
+            $exist = Db::table('mp_company')->where('id','=',1)->find();
+        } catch (\Exception $e) {
+            die($e->getMessage());
+        }
+        $url = $_SERVER['REQUEST_SCHEME'] .'://'. $_SERVER['HTTP_HOST'] . '/' . $exist['qrcode'];
+        return ajax($url);
     }
 
 

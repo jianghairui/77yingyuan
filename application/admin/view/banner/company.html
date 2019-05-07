@@ -1,5 +1,6 @@
 <style>
     .thumbnail{ width:300px;height: 200px;background-size: cover;background-position: center;position: relative}
+    .thumbnail2{ width:200px;height: 200px;background-size: cover;background-position: center;position: relative}
 </style>
 <article class="page-container" style="width: 70%">
     <form class="form form-horizontal" id="form-article-add">
@@ -58,11 +59,24 @@
             </div>
         </div>
         <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">
+                <span id="btn-star2" class="btn btn-primary btn-uploadstar radius ml-10">群二维码</span>
+            </label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="uploader-thum-container">
+                    <div id="fileList2" class="uploader-list">
+                        <div id="cover2" class="thumbnail2" style="background-image: url('/{$info.qrcode}');"><div class="file-panel"></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row cl">
             <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
                 <button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
             </div>
         </div>
         <input type="file" name="file" id="file" style="display: none;">
+        <input type="file" name="file2" id="file2" style="display: none;">
     </form>
 </article>
 
@@ -155,9 +169,27 @@
 
         });
 
+        $("#file2").change(function (e) {
+            var img = e.target.files[0];
+            if (typeof(img) == "undefined") {
+                var src = '';
+            }else {
+                if(checkfile('file2') !== true) {
+                    $("#file2").val('');
+                    $("#fileList2").html('');
+                    return false;
+                }
+                var src = window.URL.createObjectURL(img);
+                $("#fileList2").html('<div id="cover2" class="thumbnail2" style="background-image: url('+src+');"><div class="file-panel"></div></div>');
+            }
+
+        });
+
         $("#btn-star1").click(function(){
             $("#file").click();
         });
-
+        $("#btn-star2").click(function(){
+            $("#file2").click();
+        });
     });
 </script>
