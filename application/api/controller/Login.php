@@ -116,7 +116,17 @@ class Login extends Common {
 
     //检测用户是否授权手机号
     public function myInfo() {
-        return ajax($this->getMyInfo());
+        $data = $this->getMyInfo();
+        $where = [
+            ['uid','=',$this->myinfo['uid']]
+        ];
+        $exist = Db::table('mp_join')->where($where)->find();
+        if($exist) {
+            $data['join'] = 1;
+        }else {
+            $data['join'] = 0;
+        }
+        return ajax($data);
     }
 
     //保存手机号

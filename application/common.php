@@ -330,14 +330,14 @@ function arr2xml($data, $root = true){
 }
 
 //后台上传图片
-function upload($k) {
+function upload($k,$base_path = 'upload/admin/') {
     if(checkfile($k) !== true) {
         return array('error'=>1,'msg'=>checkfile($k));
     }
     $filename_array = explode('.',$_FILES[$k]['name']);
     $ext = array_pop($filename_array);
 
-    $path =  'upload/admin/' . date('Y-m-d');
+    $path = $base_path . date('Y-m-d');
     is_dir($path) or mkdir($path,0755,true);
     //转移临时文件
     $newname = create_unique_number() . '.' . $ext;
