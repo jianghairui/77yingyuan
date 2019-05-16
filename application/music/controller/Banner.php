@@ -178,14 +178,6 @@ class Banner extends Base {
                     return ajax($info['msg'],-1);
                 }
             }
-            if(isset($_FILES['file2'])) {
-                $info = upload('file2','res/music/upload/');
-                if($info['error'] === 0) {
-                    $val['qrcode'] = $info['data'];
-                }else {
-                    return ajax($info['msg'],-1);
-                }
-            }
             try {
                 $exist = Db::table('mp_company')->where('id',1)->find();
                 if(!$exist) {
@@ -203,9 +195,7 @@ class Banner extends Base {
                 if(isset($val['logo'])) {
                     @unlink($exist['logo']);
                 }
-                if(isset($val['qrcode'])) {
-                    @unlink($exist['qrcode']);
-                }
+
             }
             return ajax();
         }

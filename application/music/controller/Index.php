@@ -8,7 +8,18 @@ class Index extends Base
     public function index() {
         $auth = new Auth();
         $authlist = $auth->getAuthList(session('admin_id'));
+        $curr_page = input('param.page',1);
+        $perpage = input('param.perpage',10);
+        try {
+            $list = Db::table('mp_advise')->alias('a')
+                ->join('mp_user u','a.uid=u.id','left')
+                ->field('a.*,u.nickname,u.avatar')
+                ->limit(($curr_page - 1)*$perpage,$perpage)->select();
+        } catch (\Exception $e) {
+            die($e->getMessage());
+        }
         $this->assign('authlist',$authlist);
+        $this->assign('list',$list);
         return $this->fetch();
     }
 

@@ -22,7 +22,9 @@ return array(
         'auth_out'          => [
             'Index/index'
         ]
-    ]
+    ],
+
+    'mch_key' => 'TIANJINTAOCIYUAN20190111SHWHCOPY'
 
 
 

@@ -30,6 +30,11 @@
     <script type="text/javascript" src="/static/h-ui.admin/js/H-ui.admin.js"></script>
     <!--/_footer 作为公共模版分离出去-->
     <title>山海文化管理系统</title>
+    <style>
+        .userinfo td img {
+            width:45px;height: 45px;
+        }
+    </style>
 </head>
 <body>
 {include file="public/header" /}
@@ -59,86 +64,28 @@
                 </p>
                 <table class="table table-border table-bordered table-bg mt-20">
                     <thead>
-                    <tr>
-                        <th colspan="2" scope="col">服务器信息</th>
+                    <tr class="text-c">
+                        <th scope="col" width="25">#</th>
+                        <th scope="col" width="45"></th>
+                        <th scope="col" width="100">昵称</th>
+                        <th scope="col">用户反馈</th>
+                        <th scope="col" width="120">反馈时间</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <th width="30%">服务器计算机名</th>
-                        <td><span id="lbServerName">山海文化</span></td>
+                    {foreach $list as $li}
+                    <tr class="text-c userinfo">
+                        <td>{$li.id}</td>
+                        <td width="45"><img src="{if $li['avatar']}
+                {if substr($li['avatar'],0,4) == 'http'}{$li['avatar']}{else /}/{$li['avatar']}{/if}{else /}/static/src/image/default.jpg{/if}" alt=""></td>
+                        <td width="100">{$li.nickname}</td>
+                        <td>{$li.content}</td>
+                        <td width="120">{$li.create_time|date="Y-m-d h:i"}</td>
                     </tr>
-                    <tr>
-                        <td>服务器IP地址</td>
-                        <td>{$Think.server.server_addr}</td>
-                    </tr>
-                    <tr>
-                        <td>服务器域名</td>
-                        <td>{$Think.server.http_host}</td>
-                    </tr>
-                    <tr>
-                        <td>服务器端口 </td>
-                        <td>{$Think.server.server_port}</td>
-                    </tr>
-                    <tr>
-                        <td>服务器软件 </td>
-                        <td>{$Think.server.server_software}</td>
-                    </tr>
-                    <tr>
-                        <td>项目所在目录 </td>
-                        <td>{$Think.server.document_root}</td>
-                    </tr>
-                    <tr>
-                        <td>服务器操作系统 </td>
-                        <td>CentOS release 6.5 (Final)</td>
-                    </tr>
-                    <tr>
-                        <td>服务器脚本超时时间 </td>
-                        <td>60秒</td>
-                    </tr>
-                    <tr>
-                        <td>服务器当前时间 </td>
-                        <td id="clock"></td>
-                    </tr>
-                    <tr>
-                        <td>CPU 核数 </td>
-                        <td>4</td>
-                    </tr>
-                    <tr>
-                        <td>CPU 型号 </td>
-                        <td>Intel(R) Xeon(R) Platinum 8163 CPU @ 2.50GHz</td>
-                    </tr>
-                    <tr>
-                        <td>服务器内存 </td>
-                        <td>8192M</td>
-                    </tr>
-                    <tr>
-                        <td>当前系统用户名 </td>
-                        <td>{$Think.server.user}</td>
-                    </tr>
+                    {/foreach}
                     </tbody>
                 </table>
             </div>
-            <script>
-                var int = setInterval("clock()",50);
-
-
-                function clock()
-                {
-                    document.getElementById("clock").innerHTML=show()+'<br>'
-                }
-
-                function show(){
-                    var mydate = new Date();
-                    var str = "" + mydate.getFullYear() + "年";
-                    str += (Array(2).join('0') + (mydate.getMonth() + 1)).slice(-2) + "月";
-                    str += (Array(2).join('0') + mydate.getDate()).slice(-2) + "日 ";
-                    str += (Array(2).join('0') + mydate.getHours()).slice(-2) + ":";
-                    str += (Array(2).join('0') + mydate.getMinutes()).slice(-2) + ":";
-                    str += (Array(2).join('0') + mydate.getSeconds()).slice(-2);
-                    return str;
-                }
-            </script>
         </div>
     </div>
 </section>
