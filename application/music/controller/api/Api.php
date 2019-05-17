@@ -35,13 +35,20 @@ class Api extends Common {
                 ['id','=',1]
             ];
             $info = Db::table('mp_company')->where($where)->find();
+            $video = Db::table('mp_video')->where('id','=',1)->find();
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
         }
         $data['logo'] = $info['logo'];
-        $data['desc'] = mb_substr(strip_tags($info['intro']),0,50,'utf8');
-        $data['video'] = 'https://cave.jianghairui.com/20190517/1558059442.mp4';
-        $data['poster'] = 'https://cave.jianghairui.com/tmp.jpg';
+        $data['desc'] = mb_substr(strip_tags($info['intro']),0,100,'utf8');
+        if($video) {
+            $data['video'] = 'https://cave.jianghairui.com/' . $video['url'];
+            $data['poster'] = 'https://cave.jianghairui.com/' . $video['poster'];
+        }else {
+            $data['video'] = 'https://cave.jianghairui.com/res/music/video/001.mp4';
+            $data['poster'] = 'https://cave.jianghairui.com/tmp01.jpg';
+        }
+
         return ajax($data);
     }
 
@@ -180,7 +187,6 @@ class Api extends Common {
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
         }
-        $list = [];
         return ajax($list);
     }
 

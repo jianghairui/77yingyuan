@@ -82,8 +82,7 @@ class Index extends Common {
         $curr_page = input('param.page',1);
         $perpage = input('param.perpage',10);
         $where = [
-            ['start_time','<=',time()],
-            ['end_time','>',time()]
+            ['start_time','<',time()]
         ];
         try {
             $count = Db::table('mp_activity')->where($where)->count();
@@ -91,30 +90,17 @@ class Index extends Common {
             $page['curr'] = $curr_page;
             $page['totalPage'] = ceil($count/$perpage);
             $list = Db::table('mp_activity')
-                ->field("id,title,origin_price,price,pic")
+                ->field("id,title,origin_price,price,pic,start_time,end_time")
                 ->where($where)->limit(($curr_page - 1)*$perpage,$perpage)->select();
         }catch (\Exception $e) {
             die('SQL错误: ' . $e->getMessage());
         }
-        return ajax($list);
-    }
-    //以往活动列表
-    public function oldActivityList() {
-        $curr_page = input('param.page',1);
-        $perpage = input('param.perpage',10);
-        $where = [
-            ['end_time','<=',time()]
-        ];
-        try {
-            $count = Db::table('mp_activity')->where($where)->count();
-            $page['count'] = $count;
-            $page['curr'] = $curr_page;
-            $page['totalPage'] = ceil($count/$perpage);
-            $list = Db::table('mp_activity')
-                ->field("id,title,origin_price,price,pic")
-                ->where($where)->limit(($curr_page - 1)*$perpage,$perpage)->select();
-        }catch (\Exception $e) {
-            die('SQL错误: ' . $e->getMessage());
+        foreach ($list as &$v) {
+            if($v['end_time'] < time()) {
+                $v['ifend'] = 1;
+            }else {
+                $v['ifend'] = 0;
+            }
         }
         return ajax($list);
     }

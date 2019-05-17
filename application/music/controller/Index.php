@@ -14,6 +14,7 @@ class Index extends Base
             $list = Db::table('mp_advise')->alias('a')
                 ->join('mp_user u','a.uid=u.id','left')
                 ->field('a.*,u.nickname,u.avatar')
+                ->order(['a.id'=>'DESC'])
                 ->limit(($curr_page - 1)*$perpage,$perpage)->select();
         } catch (\Exception $e) {
             die($e->getMessage());
