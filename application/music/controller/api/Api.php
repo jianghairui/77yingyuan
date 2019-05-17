@@ -39,17 +39,15 @@ class Api extends Common {
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
         }
-        $data['logo'] = $info['logo'];
-        $data['desc'] = mb_substr(strip_tags($info['intro']),0,100,'utf8');
+        $info['desc'] = mb_substr(strip_tags($info['intro']),0,100,'utf8');
         if($video) {
-            $data['video'] = 'https://cave.jianghairui.com/' . $video['url'];
-            $data['poster'] = 'https://cave.jianghairui.com/' . $video['poster'];
+            $info['video'] = $this->weburl . $video['url'];
+            $info['poster'] = $this->weburl . $video['poster'];
         }else {
-            $data['video'] = 'https://cave.jianghairui.com/res/music/video/001.mp4';
-            $data['poster'] = 'https://cave.jianghairui.com/tmp01.jpg';
+            $info['video'] = $this->weburl . 'res/music/video/001.mp4';
+            $info['poster'] = $this->weburl . 'tmp01.jpg';
         }
-
-        return ajax($data);
+        return ajax($info);
     }
 
     public function instrumentList() {

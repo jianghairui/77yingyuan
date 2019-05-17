@@ -88,6 +88,11 @@
         //对外方法，传入文件对象
         this.addFileAndSend = function(that){
             var file = that.files[0];
+            console.log(file,'filesize');
+            if(file.size > 128*1024*1024) {
+                alert('视频文件不超过128M');
+                return false;
+            }
             blob = cutFile(file);
             sendFile(blob,file);
             blob_num  += 1;
@@ -155,7 +160,7 @@
             dataType: 'json', //返回值类型 一般设置为json
             success: function (data)  //服务器成功响应处理函数
             {
-                console.log(data);
+                console.log(data.data);
                 if(data.code == 1) {
                     $.ajax({
                         url: "{:url('Banner/posterUpdate')}",

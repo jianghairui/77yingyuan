@@ -238,6 +238,9 @@ class Banner extends Base {
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
         }
+        if($exist) {
+            @unlink($exist['url']);
+        }
         return ajax();
     }
 
