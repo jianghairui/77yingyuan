@@ -10,6 +10,7 @@ namespace app\music\controller;
 use think\Exception;
 use think\Db;
 use think\facade\Request;
+use my\Bigfile;
 class Banner extends Base {
     //轮播图列表
     public function slideshow() {
@@ -202,6 +203,17 @@ class Banner extends Base {
         $exist = Db::table('mp_company')->where('id','=',1)->find();
         $this->assign('info',$exist);
         return $this->fetch();
+    }
+
+    public function video() {
+        return $this->fetch();
+    }
+
+    public function bifileUpload() {
+        //实例化并获取系统变量传参
+        $upload = new Bigfile($_FILES['file']['tmp_name'],$_POST['blob_num'],$_POST['total_blob_num'],$_POST['file_name']);
+//调用方法，返回结果
+        $upload->apiReturn();
     }
 
 

@@ -40,6 +40,8 @@ class Api extends Common {
         }
         $data['logo'] = $info['logo'];
         $data['desc'] = mb_substr(strip_tags($info['intro']),0,50,'utf8');
+        $data['video'] = 'https://cave.jianghairui.com/20190517/1558059442.mp4';
+        $data['poster'] = 'https://cave.jianghairui.com/tmp.jpg';
         return ajax($data);
     }
 
@@ -178,6 +180,7 @@ class Api extends Common {
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
         }
+        $list = [];
         return ajax($list);
     }
 

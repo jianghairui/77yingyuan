@@ -33,6 +33,7 @@ class Base extends Controller {
             'Login/vcode',
             'Login/login',
             'Login/test',
+//            'Banner/bifileupload',
         ];
         if (in_array(request()->controller() . '/' . request()->action(), $noNeedSession)) {
             return true;
