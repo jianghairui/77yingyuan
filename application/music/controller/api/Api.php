@@ -39,7 +39,7 @@ class Api extends Common {
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
         }
-        $info['desc'] = mb_substr(strip_tags($info['intro']),0,100,'utf8');
+        $info['desc'] = mb_substr(strip_tags($info['intro']),0,88,'utf8');
         if($video) {
             $info['video'] = $this->weburl . $video['url'];
             $info['poster'] = $this->weburl . $video['poster'];

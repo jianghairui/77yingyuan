@@ -201,7 +201,9 @@ class Index extends Common {
         $curr_page = input('post.page',1);
         $perpage = input('post.perpage',10);
         try {
-            $where = [];
+            $where = [
+                ['o.uid','=',$this->myinfo['uid']]
+            ];
             $list = Db::table('mp_order')->alias('o')
                 ->join("mp_activity a","o.a_id=a.id","left")
                 ->order(["o.id"=>"DESC"])
