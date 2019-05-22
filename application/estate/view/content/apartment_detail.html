@@ -1,39 +1,111 @@
 <style>
-    .thumbnail{ width:200px}
+    .thumbnail{ width:200px;height: 200px;background-size: cover;background-position: center;position: relative}
 </style>
 <article class="page-container">
     <form class="form form-horizontal" id="form-article-add">
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>姓名：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>所属楼盘：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="{$info.name}" placeholder="" id="name" name="name">
+                <span class="select-box">
+                    <select name="res_id" class="select">
+                        {foreach $list as $li}
+                            <option value="{$li['id']}" {if $info['res_id'] == $li['id']}selected{/if}>{$li['name']}</option>
+                        {/foreach}
+                    </select>
+				</span>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>户型名称：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="{$info.title}" placeholder="" id="title" name="title" maxlength="20">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">
-                <span id="btn-star1" class="btn btn-primary btn-uploadstar radius ml-10">照片</span>
+                <span id="btn-star1" class="btn btn-primary btn-uploadstar radius ml-10"  onclick="document.getElementById('pic_up').click()">展示图</span>
             </label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="uploader-thum-container">
-                    <div id="fileList1" class="uploader-list">
-                        <img class="thumbnail" src="/{$info.pic}" />
+                    <div id="fileList" class="uploader-list">
+                        <?php $images = unserialize($info['pic']);?>
+                        {foreach $images as $v}
+                        <div id="cover" class="thumbnail" style="background-image: url('/{$v}');"><div class="file-panel">
+                            <input type="hidden" value="{$v}" name="pic_url[]"/></div></div>
+                        {/foreach}
                     </div>
+
+                    <input type="file"  id="pic_up" name="pic_up" style="display:none;">
                 </div>
             </div>
         </div>
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">教师简介：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>参考价格(万元/套)：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <textarea name="desc" id="zhai" cols="" rows="" maxlength="255" class="textarea"  placeholder="说点什么...最多输入255个字符" dragonfly="true" nullmsg="备注不能为空！" >{$info.desc}</textarea>
+                <input type="number" class="input-text" value="{$info.price}" placeholder="" id="price" name="price">
             </div>
         </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>面积(m²)：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="number" class="input-text" value="{$info.area}" placeholder="" id="area" name="area">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>朝向：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="{$info.orientation}" placeholder="例：朝南、南北通透" id="orientation" name="orientation" maxlength="20">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>户型结构：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="{$info.structure}" placeholder="例：平层、上下阁楼" id="structure" name="structure" maxlength="20">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>物业类型：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <span class="select-box">
+                    <select name="realty_type" class="select">
+                        <option value="居住" {if $info['realty_type'] == '居住'}selected{/if}>居住</option>
+                        <option value="商业" {if $info['realty_type'] == '商业'}selected{/if}>商业</option>
+                        <option value="工业" {if $info['realty_type'] == '工业'}selected{/if}>工业</option>
+                    </select>
+				</span>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">标签：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                {foreach $tag as $v}
+                <label title="{$v.tag_name}" style="display:inline-block;width: 120px;">
+                    <input type="checkbox" value="{$v.tag_name}" name="tags[]" {if in_array($v['tag_name'],$tags)}checked{/if}>
+                    {$v.tag_name}
+                </label>
+                {/foreach}
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>出售状态：</label>
+            <div class="formControls col-xs-8 col-sm-9 skin-minimal">
+                <div class="radio-box">
+                    <input name="status" type="radio" id="hot" value="1" {if $info['status'] == '1'}checked{/if}>
+                    <label for="hot">在售</label>
+                </div>
+                <div class="radio-box">
+                    <input name="status" type="radio" id="cool" value="0" {if $info['status'] == '0'}checked{/if}>
+                    <label for="cool">已售罄</label>
+                </div>
+            </div>
+        </div>
+
         <div class="row cl">
             <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
                 <button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
                 <button onClick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
             </div>
         </div>
-        <input type="file" name="file" id="file" style="display: none;">
         <input type="hidden" name="id" value="{$info.id}">
     </form>
 </article>
@@ -45,6 +117,7 @@
 <script type="text/javascript" src="/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 
 <script type="text/javascript" src="/lib/checkfile.js"></script>
+<script type="text/javascript" src="/lib/ajaxfileupload.js"></script>
 
 <script type="text/javascript">
     $(function(){
@@ -54,6 +127,48 @@
             radioClass: 'iradio-blue',
             increaseArea: '20%'
         });
+
+        $(document).on("change","#pic_up",function(){
+            var limit = 9;
+            if($("input[name='pic_url[]']").length > (limit-1)) {
+                layer.alert('最多上传'+limit+'张图')
+                return false;
+            }
+            if($("#pic_up").val() != '') {
+                ajaxFileUpload();
+            }
+        });
+
+        $(document).on("click",'.thumbnail',function(){
+            var picBox = $(this);
+            layer.confirm("是否要删除该图片？",{
+                btn:['是','否']
+            },function(){
+                picBox.remove();
+                layer.closeAll();
+            });
+        });
+
+        function ajaxFileUpload() {
+            if(checkfile('pic_up') !== true) {
+                $("#pic_up").val('');
+                return false;
+            }
+            $.ajaxFileUpload({
+                url: '{:url("Index/uploadImage")}', //用于文件上传的服务器端请求地址
+                secureuri: false, //是否需要安全协议，一般设置为false
+                fileElementId: 'pic_up', //文件上传域的ID
+                dataType: 'json', //返回值类型 一般设置为json
+                success: function (data)  //服务器成功响应处理函数
+                {
+                    // console.log(data.data.path);
+                    var src = data.data.path;
+                    var html = '<div id="cover" class="thumbnail" style="background-image: url(/'+src+');"><div class="file-panel"><input type="hidden" value="'+src+'" name="pic_url[]"/></div></div>';
+                    $("#fileList").append(html);
+                }
+            });
+            return false;
+        }
 
         var isclick = true;
         //表单验证
@@ -75,7 +190,7 @@
                     isclick = false;
                     $(form).ajaxSubmit({
                         type: 'post',
-                        url: "{:url('Content/teacherMod')}" ,
+                        url: "{:url('Content/apartmentMod')}" ,
                         success: function(data){
                             if(data.code == 1) {
                                 layer.msg('保存成功!',{icon:1,time:1000},function () {
@@ -88,7 +203,7 @@
 
                         },
                         error: function(XmlHttpRequest, textStatus, errorThrown){
-                            layer.msg('error!',{icon:5,time:1000});
+                            layer.msg('接口请求失败!',{icon:5,time:1000});
                             isclick = true
                         }
                     });
@@ -98,19 +213,7 @@
         });
 
 
-        $("#btn-star1").click(function(){
-            $("#file").click();
-            $("#file").change(function(e){
-                if(checkfile('file') !== true) {
-                    $("#file").val('');
-                    $("#fileList1").html('');
-                    return false
-                }
-                var img = e.target.files[0];
-                var src = window.URL.createObjectURL(img);
-                $("#fileList1").html('<img class="thumbnail" src="'+src+'" />');
-            });
-        });
+
 
     });
 </script>
