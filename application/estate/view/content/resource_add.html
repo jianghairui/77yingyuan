@@ -27,6 +27,14 @@
             </div>
         </div>
         <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">佣金区间(元)：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="number" id="min_bro" name="min_bro" placeholder="" value="4000" class="input-text" style=" width:20%">
+                —
+                <input type="number" id="max_bro" name="max_bro" placeholder="" value="5000" class="input-text" style=" width:20%">
+            </div>
+        </div>
+        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">面积区间(m²)：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input type="number" id="min_area" name="min_area" placeholder="" value="100" class="input-text" style=" width:20%">
@@ -264,37 +272,46 @@
         //表单验证
         $("#form-article-add").validate({
             rules:{
-                name:{
-                    required:true,
-                    maxlength:50
-                },
-                avr_price:{
-                    required:true
-                },
-                min_area:{
-                    required:true
-                },
-                deliver:{
-                    required:true
-                },
-                open_date:{
-                    required:true
-                },
-                region:{
-                    required:true
-                },
-                address:{
-                    required:true
-                },
-                saler_address:{
-                    required:true
-                },
-                developer:{
-                    required:true
-                },
-                property:{
-                    required:true
-                }
+                // name:{
+                //     required:true,
+                //     maxlength:50
+                // },
+                // avr_price:{
+                //     required:true
+                // },
+                // min_area:{
+                //     required:true
+                // },
+                // max_area:{
+                //     required:true
+                // },
+                // min_bro:{
+                //     required: true
+                // },
+                // max_bro:{
+                //     required:true
+                // },
+                // deliver:{
+                //     required:true
+                // },
+                // open_date:{
+                //     required:true
+                // },
+                // region:{
+                //     required:true
+                // },
+                // address:{
+                //     required:true
+                // },
+                // saler_address:{
+                //     required:true
+                // },
+                // developer:{
+                //     required:true
+                // },
+                // property:{
+                //     required:true
+                // }
             },
             focusCleanup:true,
             success:"valid",
@@ -305,6 +322,8 @@
                         type: 'post',
                         url: "{:url('Content/resourceAddPost')}" ,
                         success: function(data){
+                            // isclick = true;
+                            // console.log(data);return;
                             if(data.code == 1) {
                                 layer.msg('添加成功!',{icon:1,time:1000},function () {
                                     window.parent.location.reload();
@@ -316,7 +335,7 @@
 
                         },
                         error: function(XmlHttpRequest, textStatus, errorThrown){
-                            layer.msg('error!',{icon:5,time:1000});
+                            layer.msg('接口请求失败!',{icon:5,time:1000});
                             isclick = true
                         }
                     });

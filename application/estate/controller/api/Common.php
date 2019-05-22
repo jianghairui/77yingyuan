@@ -24,8 +24,8 @@ class Common extends Controller {
         $this->domain = 'cave.jianghairui.com';
         $this->weburl = 'https://cave.jianghairui.com/';
         $this->mp_config = [
-            'app_id' => 'wx215316a9caf08d21',
-            'secret' => 'f3ac4b7dc9780de7bbfe576a826cb97b',
+            'app_id' => 'wx50f030c7f4a897ff',
+            'secret' => '608b9a4b5cfeecfb5e7f83becc252db5',
 
             'mch_id'             => '1490402642',
             'key'                => 'TIANJINTAOCIYUAN20190111SHWHCOPY',   // API 密钥

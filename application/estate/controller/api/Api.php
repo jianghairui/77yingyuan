@@ -29,158 +29,54 @@ class Api extends Common {
         return ajax($data);
     }
 
-    public function aboutUs() {
+    public function getCityList() {
         try {
             $where = [
-                ['id','=',1]
+                ['pcode','=','1201']
             ];
-            $info = Db::table('mp_company')->where($where)->find();
-            $video = Db::table('mp_video')->where('id','=',1)->find();
+            $citylist = Db::table('mp_city')->where($where)->field("id,name")->select();
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
         }
-        $info['desc'] = mb_substr(strip_tags($info['intro']),0,88,'utf8');
-        if($video) {
-            $info['video'] = $this->weburl . $video['url'];
-            $info['poster'] = $this->weburl . $video['poster'];
-        }else {
-            $info['video'] = $this->weburl . 'res/estate/video/001.mp4';
-            $info['poster'] = $this->weburl . 'tmp01.jpg';
-        }
-        return ajax($info);
+        return ajax($citylist);
     }
 
-    public function instrumentList() {
-        $curr_page = input('post.page',1);
-        $perpage = input('post.perpage',3);
-        try {
-            $where = [];
-            $list = Db::table('mp_instrument')
-                ->where($where)
-                ->field('id,name,desc,pic')
-                ->limit(($curr_page - 1)*$perpage,$perpage)
-                ->select();
-        } catch (\Exception $e) {
-            return ajax($e->getMessage(), -1);
-        }
-        return ajax($list);
-    }
-
-    public function teacherList() {
+    public function resourceList() {
         $curr_page = input('post.page',1);
         $perpage = input('post.perpage',10);
-        try {
-            $where = [];
-            $list = Db::table('mp_teacher')
-                ->where($where)
-                ->field('id,name,desc,pic')
-                ->limit(($curr_page - 1)*$perpage,$perpage)->select();
-        } catch (\Exception $e) {
-            return ajax($e->getMessage(), -1);
+        $val['min_price'] = input('post.min_price',0);
+        $val['max_price'] = input('post.max_price',0);
+        $val['region'] = input('post.region','');
+        $val['sort'] = input('post.sort','');
+        $where = [];
+        if($val['min_price']) {
+            $where[] = ['avr_total_price','>=',$val['min_price']*10000];
         }
-        return ajax($list);
-    }
-
-    public function courseCateList() {
-        try {
-            $where = [
-                ['del','=',0]
-            ];
-            $list = Db::table('mp_course_cate')
-                ->where($where)
-                ->field('id,cate_name,pic')
-                ->select();
-        } catch (\Exception $e) {
-            return ajax($e->getMessage(), -1);
+        if($val['max_price']) {
+            $where[] = ['avr_total_price','<=',$val['max_price']*10000];
         }
-        return ajax($list);
-    }
-
-    public function courseList() {
-        $curr_page = input('post.page',1);
-        $perpage = input('post.perpage',10);
-        $cate_id = input('post.cate_id',0);
-        $where = [
-            ['c.del','=',0]
-        ];
-        if($cate_id) {
-            $where[] = ['c.cate_id','=',$cate_id];
+        if($val['region']) {
+            $where[] = ['region','=',$val['region']];
         }
-        try {
-            $list = Db::table('mp_course')->alias('c')
-                ->join('mp_course_cate cate','c.cate_id=cate.id','left')
-                ->field('c.id,c.title,c.pic,c.desc,cate.cate_name')
-                ->order(['c.id'=>'DESC'])
-                ->where($where)->limit(($curr_page - 1)*$perpage,$perpage)->select();
-        }catch (\Exception $e) {
-            die('SQL错误: ' . $e->getMessage());
-        }
-        return ajax($list);
-    }
-
-    public function courseDetail() {
-        $val['course_id'] = input('post.course_id');
-        checkPost($val);
-        try {
-            $where = [
-                ['id','=',$val['course_id']]
-            ];
-            $exist = Db::table('mp_course')
-                ->where($where)
-                ->field('id,title,price,desc,content,pic')
-                ->find();
-            if(!$exist) {
-                return ajax('',-4);
+        $order = [];
+        if($val['sort']) {
+            switch ($val['sort']) {
+                case '1':
+                    $order = ['avr_price'=>'ASC'];break;
+                case '2':
+                    $order = ['avr_price'=>'DESC'];break;
+                case '3':
+                    $order = ['avr_total_price'=>'ASC'];break;
+                case '4':
+                    $order = ['avr_total_price'=>'DESC'];break;
             }
-        } catch (\Exception $e) {
-            return ajax($e->getMessage(), -1);
-        }
-        return ajax($exist);
-    }
-
-    public function courseOrder() {
-        $val['course_id'] = input('post.course_id');
-        $val['class_time'] = input('post.class_time');
-        checkPost($val);
-        $val['class_time'] = strtotime($val['class_time']);
-        try {
-            $where = [
-                ['id','=',$val['course_id']]
-            ];
-            $exist = Db::table('mp_course')->where($where)->find();
-            if(!$exist) {
-                return ajax('非法参数',-4);
-            }
-            $val['order_sn'] = create_unique_number('');
-            $val['uid'] = $this->myinfo['uid'];
-            $val['unit_price'] = $exist['price'];
-            $val['total_price'] = $exist['price'];
-            $val['num'] = 1;
-            $val['openid'] = $this->myinfo['openid'];
-            $val['create_time'] = time();
-            Db::table('mp_order')->insert($val);
-        } catch (\Exception $e) {
-            return ajax($e->getMessage(), -1);
-        }
-        return ajax($val['order_sn']);
-    }
-
-    public function orderList() {
-        $curr_page = input('post.page',1);
-        $perpage = input('post.perpage',10);
-        $status = input('post.status','');
-        $where = [
-            ['o.uid','=',$this->myinfo['uid']]
-        ];
-        if($status !== '') {
-            $where[] = ['o.status','=',$status];
         }
         try {
-            $list = Db::table('mp_order')->alias('o')
-                ->join('mp_course c','o.course_id=c.id','left')
+            $where[] = ['del','=',0];
+            $list = Db::table('mp_resource')
                 ->where($where)
-                ->field('o.order_sn,o.total_price,o.pay_time,o.status,o.class_time,o.num,c.title,c.pic')
                 ->limit(($curr_page-1)*$perpage,$perpage)
+                ->order($order)
                 ->select();
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
@@ -188,19 +84,25 @@ class Api extends Common {
         return ajax($list);
     }
 
-    public function advise() {
-        $val['content'] = input('post.content');
+    public function apartmentList() {
+        $val['res_id'] = input('post.res_id','');
         checkPost($val);
-        $val['uid'] = $this->myinfo['uid'];
-        $val['create_time'] = time();
+        $where = [
+            ['res_id','=',$val['res_id']]
+        ];
         try {
-            Db::table('mp_advise')->insert($val);
+            $list = Db::table('mp_apartment')
+                ->where($where)
+                ->field('id,title,tags,price,area,orientation,pic,status')
+                ->select();
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
         }
-        return ajax();
+        foreach ($list as &$v) {
+            $v['cover'] = unserialize($v['pic'])[0];
+        }
+        return ajax($list);
     }
-
 
 
 }
