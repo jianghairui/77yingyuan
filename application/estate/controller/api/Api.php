@@ -48,6 +48,7 @@ class Api extends Common {
         $val['max_price'] = input('post.max_price',0);
         $val['region'] = input('post.region','');
         $val['sort'] = input('post.sort','');
+        $val['search'] = input('post.search','');
         $where = [];
         if($val['min_price']) {
             $where[] = ['avr_total_price','>=',$val['min_price']*10000];
@@ -57,6 +58,9 @@ class Api extends Common {
         }
         if($val['region']) {
             $where[] = ['region','=',$val['region']];
+        }
+        if($val['search']) {
+            $where[] = ['name','like',"%{$val['search']}%"];
         }
         $order = [];
         if($val['sort']) {
@@ -75,7 +79,7 @@ class Api extends Common {
             $where[] = ['del','=',0];
             $list = Db::table('mp_resource')
                 ->where($where)
-                ->field("id,pic,name,avr_price,min_bro,max_bro,tags")
+                ->field("id,pic,name,avr_price,min_area,max_area,min_bro,max_bro,tags")
                 ->limit(($curr_page-1)*$perpage,$perpage)
                 ->order($order)
                 ->select();
@@ -168,11 +172,11 @@ class Api extends Common {
             }
             $whereAppoint = [
                 ['res_id','=',$val['res_id']],
-                ['uid','=',$this->myinfo['uid']]
+                ['tel','=',$val['tel']]
             ];
             $appoint_exist = Db::table('mp_appoint')->where($whereAppoint)->find();
             if($appoint_exist) {
-                return ajax('已预约',47);
+                return ajax('此手机号已预约',47);
             }
             Db::table('mp_appoint')->insert($val);
         } catch (\Exception $e) {
@@ -195,9 +199,11 @@ class Api extends Common {
         $perpage = input('post.perpage',10);
         try {
             $where = [
-                ['uid','=',$this->myinfo['uid']]
+                ['a.uid','=',$this->myinfo['uid']]
             ];
-            $list = Db::table('mp_appoint')
+            $list = Db::table('mp_appoint')->alias('a')
+                ->join("mp_resource r","a.res_id=r.id","left")
+                ->field("a.*,r.name AS res_name,r.min_bro,r.max_bro,r.pic,r.avr_price")
                 ->where($where)
                 ->limit(($curr_page-1)*$perpage,$perpage)->select();
         } catch (\Exception $e) {

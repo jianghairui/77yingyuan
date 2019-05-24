@@ -23,8 +23,10 @@
         <tr class="text-c">
             <th width="25">#</th>
             <th>预约楼盘</th>
-            <th width="90">姓名</th>
-            <th width="120">手机号</th>
+            <th width="90">推荐人姓名</th>
+            <th width="120">推荐人手机号</th>
+            <th width="90">预约人姓名</th>
+            <th width="120">预约人手机号</th>
             <th width="220">预约时间</th>
             <th width="120">状态</th>
             <th width="100">操作</th>
@@ -36,6 +38,8 @@
             <tr class="text-c userinfo">
                 <td>{$li.id}</td>
                 <td>{$li.res_name}</td>
+                <td>{$li.rec_name}</td>
+                <td>{$li.rec_tel}</td>
                 <td>{$li.name}</td>
                 <td>{$li.tel}</td>
                 <td>{$li.meeting_date}</td>
@@ -58,7 +62,7 @@
         </form>
 
         <tr>
-            <td colspan="11" id="page" class="text-r"></td>
+            <td colspan="13" id="page" class="text-r"></td>
         </tr>
         </tbody>
     </table>

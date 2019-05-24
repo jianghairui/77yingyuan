@@ -226,6 +226,12 @@
             </div>
         </div>
         <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>资讯电话：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="{$info.tel}" placeholder="输入手机号" id="tel" name="tel" maxlength="15">
+            </div>
+        </div>
+        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">标签：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 {foreach $tag as $v}
@@ -303,6 +309,9 @@
                     required:true
                 },
                 property:{
+                    required:true
+                },
+                tel:{
                     required:true
                 }
             },

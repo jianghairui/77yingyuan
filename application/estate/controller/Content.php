@@ -88,8 +88,12 @@ class Content extends Base {
         $val['water_type'] = input('post.water_type');
         $val['power_type'] = input('post.power_type');
         $val['status'] = input('post.status',1);
+        $val['tel'] = input('post.tel',1);
         checkInput($val);
         $val['desc'] = input('post.desc');
+        if(!is_tel($val['tel'])) {
+            return ajax('无效的手机号',-1);
+        }
         $val['avr_total_price'] = $val['avr_price']*($val['min_area']+$val['max_area'])/2;
         $val['tags'] = input('post.tags',[]);
         $val['create_time'] = time();
@@ -183,12 +187,16 @@ class Content extends Base {
         $val['water_type'] = input('post.water_type');
         $val['power_type'] = input('post.power_type');
         $val['status'] = input('post.status',1);
-        $val['desc'] = input('post.desc');
+        $val['tel'] = input('post.tel');
         $val['id'] = input('post.id');
         checkInput($val);
+        $val['desc'] = input('post.desc');
         $val['tags'] = input('post.tags',[]);
         $val['avr_total_price'] = $val['avr_price']*($val['min_area']+$val['max_area'])/2;
         $val['create_time'] = time();
+        if(!is_tel($val['tel'])) {
+            return ajax('无效的手机号',-1);
+        }
         if(!empty($val['tags']) && is_array($val['tags'])) {
             $val['tags'] = implode(',',$val['tags']);
         }else {

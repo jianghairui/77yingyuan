@@ -115,6 +115,9 @@ class Api extends Common {
         }catch (\Exception $e) {
             die('SQL错误: ' . $e->getMessage());
         }
+        foreach ($list as &$v) {
+            $v['desc'] = mb_substr($v['desc'],0,20,'utf8');;
+        }
         return ajax($list);
     }
 
@@ -168,7 +171,7 @@ class Api extends Common {
     public function orderList() {
         $curr_page = input('post.page',1);
         $perpage = input('post.perpage',10);
-        $status = input('post.status','');
+        $status = input('post.status','1');
         $where = [
             ['o.uid','=',$this->myinfo['uid']]
         ];

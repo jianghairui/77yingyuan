@@ -46,7 +46,6 @@ class Member extends Base {
         $this->assign('page',$page);
         return $this->fetch();
     }
-
     //会员列表
     public function appointList() {
         $param['logmin'] = input('param.logmin');
@@ -78,8 +77,9 @@ class Member extends Base {
             $page['totalPage'] = ceil($count/$perpage);
             $list = Db::table('mp_appoint')->alias('a')
                 ->join("mp_resource r","a.res_id=r.id","left")
+                ->join("mp_user u","a.uid=u.id","left")
                 ->where($where)
-                ->field("a.*,r.name AS res_name")
+                ->field("a.*,r.name AS res_name,u.nickname AS rec_name,u.tel AS rec_tel")
                 ->order(['a.id'=>'DESC'])->limit(($curr_page - 1)*$perpage,$perpage)->select();
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
