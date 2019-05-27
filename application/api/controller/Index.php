@@ -42,6 +42,7 @@ class Index extends Common {
             $list = Db::table('mp_message')->alias('m')
                 ->join("mp_user u","m.uid=u.id","left")
                 ->field("m.id,m.content,m.create_time,u.nickname,u.avatar")
+                ->order(['m.id'=>'DESC'])
                 ->select();
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
@@ -52,12 +53,18 @@ class Index extends Common {
     public function filmList() {
         $curr_page = input('param.page',1);
         $perpage = input('param.perpage',10);
+        $recommend = input('post.recommend','');
         $where = [];
         $count = Db::table('mp_film')->alias('f')->where($where)->count();
         $page['count'] = $count;
         $page['curr'] = $curr_page;
         $page['totalPage'] = ceil($count/$perpage);
         try {
+            if($recommend) {
+                $where = [
+                    ['f.recommend','=',1]
+                ];
+            }
             $list = Db::table('mp_film')->alias('f')
                 ->join("mp_admin a","f.admin_id=a.id","left")
                 ->field("f.id,f.pic,f.title,f.up_time,f.desc,f.content")

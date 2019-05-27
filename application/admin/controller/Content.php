@@ -497,4 +497,27 @@ class Content extends Base {
         return $this->fetch();
     }
 
+
+    public function recommend() {
+        $id = input('post.id');
+        try {
+            $where = [
+                ['id','=',$id]
+            ];
+            $exist = Db::table('mp_film')->where($where)->find();
+            if(!$exist) {
+                return ajax('非法参数',-1);
+            }
+            if($exist['recommend'] == 1) {
+                Db::table('mp_film')->where($where)->update(['recommend'=>0]);
+                return ajax(false);
+            }else {
+                Db::table('mp_film')->where($where)->update(['recommend'=>1]);
+                return ajax(true);
+            }
+        }catch (\Exception $e) {
+            return ajax($e->getMessage(),-1);
+        }
+    }
+
 }

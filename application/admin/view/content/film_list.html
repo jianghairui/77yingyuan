@@ -53,6 +53,17 @@
                         <i class="Hui-iconfont">&#xe603;</i>
                     </a>
                     {/if}
+                    <span>
+                        {if $li['recommend']}
+                            <a style="text-decoration:none;color:gold;" class="ml-5" onClick="recommend(this,{$li.id})" href="javascript:;" title="取消推荐">
+                                <i class="Hui-iconfont">&#xe630;</i>
+                            </a>
+                            {else /}
+                            <a style="text-decoration:none;color:#aaa" class="ml-5" onClick="recommend(this,{$li.id})" href="javascript:;" title="推荐">
+                                <i class="Hui-iconfont">&#xe630;</i>
+                            </a>
+                        {/if}
+                    </span>
                     <a style="text-decoration:none" onclick="add_info('影片信息','{:url("Content/filmMod",array("id"=>$li["id"]))}')" class="ml-5" href="javascript:;" title="查看影片">
                     <i class="Hui-iconfont">&#xe6df;</i>
                     </a>
@@ -189,6 +200,40 @@
                 },
             });
         });
+    }
+
+    var click_lock = true;
+
+    function recommend(obj,id) {
+        if(click_lock) {
+            click_lock = false;
+            $.ajax({
+                url: "{:url('Content/recommend')}",
+                type: 'POST',
+                dataType: 'json',
+                data:{id:id},
+                success: function(data){
+                    console.log(data);
+                    if(data.code == 1) {
+                        if(data.data == true) {
+                            $(obj).parent().html('<a style="text-decoration:none;color:gold;" class="ml-5" onClick="recommend(this,' + id + ')" href="javascript:;" title="编辑"> <i class="Hui-iconfont">&#xe630;</i>');
+                        }else {
+                            $(obj).parent().html('<a style="text-decoration:none;color:#aaa;" class="ml-5" onClick="recommend(this,' + id + ')" href="javascript:;" title="编辑"> <i class="Hui-iconfont">&#xe630;</i>');
+                        }
+                        click_lock = true;
+                    }else {
+                        layer.msg('异常!',{icon:2,time:1000});
+                    }
+                    click_lock = true;
+                },
+                error:function(data) {
+                    console.log(data.msg);
+                    layer.msg('接口请求失败!',{icon:2,time:1000},function () {
+                        click_lock = true;
+                    });
+                },
+            });
+        }
     }
 
 </script>
