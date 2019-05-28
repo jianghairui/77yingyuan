@@ -732,4 +732,88 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
         return ajax();
     }
 
+    public function couponList() {
+        $where = [
+            ['del','=',0]
+        ];
+        try {
+            $list = Db::table('mp_coupon')->where($where)->select();
+        }catch (\Exception $e) {
+            die($e->getMessage());
+        }
+        $this->assign('list',$list);
+        return $this->fetch();
+    }
+
+    public function couponAdd() {
+        return $this->fetch();
+    }
+
+    public function couponAddPost() {
+        $val['coupon_name'] = input('post.coupon_name');
+        $val['condition'] = input('post.condition',200);
+        $val['cut_price'] = input('post.cut_price');
+        checkPost($val);
+        $val['create_time'] = time();
+        try {
+            Db::table('mp_coupon')->insert($val);
+        }catch (\Exception $e) {
+            return ajax($e->getMessage(),-1);
+        }
+        return ajax([]);
+    }
+
+    public function couponDetail() {
+        try {
+            $val['id'] = input('param.id');
+            $where = [
+                ['id','=',$val['id']]
+            ];
+            $info = Db::table('mp_coupon')->where($where)->find();
+        } catch (\Exception $e) {
+            die($e->getMessage());
+        }
+        $this->assign('info',$info);
+        return $this->fetch();
+    }
+
+    public function couponMod() {
+        $val['coupon_name'] = input('post.coupon_name');
+        $val['condition'] = input('post.condition',200);
+        $val['cut_price'] = input('post.cut_price');
+        $val['id'] = input('post.id');
+        checkInput($val);
+        try {
+            $where = [
+                ['id','=',$val['id']]
+            ];
+            $exist = Db::table('mp_coupon')->where($where)->find();
+            if(!$exist) {
+                return ajax('非法参数',-4);
+            }
+            Db::table('mp_coupon')->where($where)->update($val);
+        }catch (\Exception $e) {
+            return ajax($e->getMessage(),-1);
+        }
+        return ajax([]);
+    }
+
+    public function couponDel() {
+        $val['id'] = input('post.id');
+        checkInput($val);
+        try {
+            $where = [
+                ['id','=',$val['id']]
+            ];
+            $exist = Db::table('mp_coupon')->where($where)->find();
+            if(!$exist) {
+                return ajax('非法参数',-4);
+            }
+            Db::table('mp_coupon')->where($where)->delete();
+        }catch (\Exception $e) {
+            return ajax($e->getMessage(),-1);
+        }
+        return ajax([]);
+    }
+
 }
