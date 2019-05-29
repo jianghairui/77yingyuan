@@ -24,10 +24,10 @@
             <th width="25">#</th>
             <th width="60">头像</th>
             <th>昵称</th>
+            <th width="90">姓名</th>
             <th width="90">性别</th>
             <th width="120">手机号</th>
-            <th width="60">用户状态</th>
-            <th width="100">操作</th>
+            <th width="130">注册时间</th>
         </tr>
         </thead>
         <tbody>
@@ -38,6 +38,7 @@
                 <td><img src="{if $li['avatar']}
                 {if substr($li['avatar'],0,4) == 'http'}{$li['avatar']}{else /}/{$li['avatar']}{/if}{else /}/static/src/image/default.jpg{/if}" alt=""></td>
                 <td>{$li.nickname}</td>
+                <td>{$li.realname}</td>
                 <td>
                     {switch $li['sex']}
                     {case 0}
@@ -50,30 +51,7 @@
                     {/switch}
                 </td>
                 <td>{$li.tel}</td>
-                <td class="td-status">
-                    {switch $li['status']}
-                    {case 1}
-                    <span class="label label-success radius">正常</span>{/case}
-                    {case 2}
-                    <span class="label label-danger radius">已拉黑</span>{/case}
-                    {default /}
-                    {/switch}
-
-                </td>
-                <td class="td-manage">
-                    {if $li['status'] != 2}
-                    <a style="text-decoration:none" onClick="user_stop(this,{$li.id})" href="javascript:;" title="拉进黑名单">
-                        <i class="Hui-iconfont">&#xe631;</i>
-                    </a>
-                    {else /}
-                    <a style="text-decoration:none" onClick="user_start(this,{$li.id})" href="javascript:;" title="恢复">
-                        <i class="Hui-iconfont">&#xe66b;</i>
-                    </a>
-                    {/if}
-                    <a title="查看详情" href="javascript:;" onclick="user_detail('用户信息','{:url("Member/detail",array("id"=>$li['id']))}')" class="ml-5" style="text-decoration:none">
-                    <i class="Hui-iconfont">&#xe6df;</i>
-                    </a>
-                </td>
+                <td>{$li.create_time|date="Y-m-d H:i:s"}</td>
             </tr>
             {/foreach}
         </form>

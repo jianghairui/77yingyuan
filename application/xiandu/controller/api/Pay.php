@@ -31,8 +31,8 @@ class Pay extends Common {
             $result = $app->order->unify([
                 'body' => '先度文化文创产品',
                 'out_trade_no' => $val['pay_order_sn'],
-//                'total_fee' => 1,
-                'total_fee' => floatval($total_price)*100,
+                'total_fee' => 1,
+//                'total_fee' => floatval($total_price)*100,
                 'notify_url' => $this->weburl . 'xiandu/api.pay/order_notify',
                 'trade_type' => 'JSAPI',
                 'openid' => $this->myinfo['openid']

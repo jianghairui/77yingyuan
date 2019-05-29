@@ -61,147 +61,53 @@ class Member extends Common {
         return $this->fetch();
     }
 
-
-
-    //拉黑用户
-    public function userStop() {
-        $id = input('post.id');
-        $map = [
-            ['status','=',1],
-            ['id','=',$id]
-        ];
-        try {
-            $res = Db::table('mp_user')->where($map)->update(['status'=>2]);
-        }catch (\Exception $e) {
-            return ajax($e->getMessage(),-1);
-        }
-        if($res) {
-            return ajax([],1);
-        }else {
-            return ajax('拉黑失败',-1);
-        }
-    }
-    //恢复用户
-    public function userGetback() {
-        $id = input('post.id');
-        $map = [
-            ['status','=',2],
-            ['id','=',$id]
-        ];
-        try {
-            $res = Db::table('mp_user')->where($map)->update(['status'=>1]);
-        }catch (\Exception $e) {
-            return ajax($e->getMessage(),-1);
-        }
-        if($res) {
-            return ajax([],1);
-        }else {
-            return ajax('恢复失败',-1);
-        }
-    }
-
-    public function rechargeList() {
-        $param['status'] = input('param.status','');
+    public function userCouponList() {
         $param['logmin'] = input('param.logmin');
         $param['logmax'] = input('param.logmax');
         $param['search'] = input('param.search');
 
         $page['query'] = http_build_query(input('param.'));
 
-        if($param['logmin']) {
-            $where[] = ['o.create_time','>=',strtotime(date('Y-m-d 00:00:00',strtotime($param['logmin'])))];
-        }
-        if($param['logmax']) {
-            $where[] = ['create_time','<=',strtotime(date('Y-m-d 23:59:59',strtotime($param['logmax'])))];
-        }
-        if($param['search']) {
-            $where[] = ['nickname|tel','like',"%{$param['search']}%"];
-        }
-
         $curr_page = input('param.page',1);
         $perpage = input('param.perpage',10);
 
         $where = [];
+
+        if($param['logmin']) {
+            $where[] = ['uc.create_time','>=',strtotime(date('Y-m-d 00:00:00',strtotime($param['logmin'])))];
+        }
+
+        if($param['logmax']) {
+            $where[] = ['uc.create_time','<=',strtotime(date('Y-m-d 23:59:59',strtotime($param['logmax'])))];
+        }
+
+        if($param['search']) {
+            $where[] = ['u.nickname|u.tel','like',"%{$param['search']}%"];
+        }
         try {
-            $count = Db::table('mp_vip_order')->alias('o')->where($where)->count();
+            $count = Db::table('mp_user_coupon')->alias('uc')
+                ->join('mp_coupon c','uc.coupon_id=c.id','left')
+                ->join('mp_user u','uc.uid=u.id','left')
+                ->where($where)->count();
             $page['count'] = $count;
             $page['curr'] = $curr_page;
             $page['totalPage'] = ceil($count/$perpage);
-            $list = Db::table('mp_vip_order')->alias('o')
-                ->join("mp_user u","o.uid=u.id","left")
-                ->join("mp_vip v","o.vip_id=v.id","left")
-                ->order(['o.create_time'=>'DESC'])
-                ->field("o.*,u.nickname,u.avatar,v.title")
-                ->limit(($curr_page-1)*$perpage,$perpage)
-                ->select();
-        }catch (\Exception $e) {
+            $list = Db::table('mp_user_coupon')->alias('uc')
+                ->join('mp_coupon c','uc.coupon_id=c.id','left')
+                ->join('mp_user u','uc.uid=u.id','left')
+                ->field('uc.*,c.coupon_name,c.condition,c.cut_price,u.nickname,u.avatar,u.tel')
+                ->where($where)
+                ->order(['uc.id'=>'DESC'])->limit(($curr_page - 1)*$perpage,$perpage)->select();
+        } catch (\Exception $e) {
             die($e->getMessage());
         }
+
         $this->assign('list',$list);
         $this->assign('page',$page);
         return $this->fetch();
     }
 
-    public function rechargeDetail() {
-        $id = input('param.id');
-        try {
-            $where = [
-                ['o.id','=',$id]
-            ];
-            $info = Db::table('mp_vip_order')->alias('o')
-                ->join("mp_vip v","o.vip_id=v.id","left")
-                ->where($where)
-                ->field("o.*,v.title,v.detail,v.pic")
-                ->find();
-        }catch (\Exception $e) {
-            die($e->getMessage());
-        }
-        $this->assign('info',$info);
-        return $this->fetch();
-    }
 
-    //订单发货
-    public function orderSend() {
-        $id = input('param.id');
-        try {
-            $where = [
-                ['del','=',0]
-            ];
-            $list = Db::table('mp_tracking')->where($where)->select();
-        } catch (\Exception $e) {
-            die($e->getMessage());
-        }
-        $this->assign('list',$list);
-        $this->assign('id',$id);
-        return $this->fetch();
-    }
-    //确认发货
-    public function deliver() {
-        $val['tracking_name'] = input('post.tracking_name');
-        $val['tracking_num'] = input('post.tracking_num');
-        $val['id'] = input('post.id');
-        checkInput($val);
-        try {
-            $where = [
-                ['id','=',$val['id']],
-                ['status','=',1]
-            ];
-            $exist = Db::table('mp_vip_order')->where($where)->find();
-            if(!$exist) {
-                return ajax('订单不存在或状态已改变',-1);
-            }
-            $update_data = [
-                'status' => 2,
-                'send_time' => time(),
-                'tracking_name' => $val['tracking_name'],
-                'tracking_num' => $val['tracking_num']
-            ];
-            Db::table('mp_vip_order')->where($where)->update($update_data);
-        } catch (\Exception $e) {
-            return ajax($e->getMessage(), -1);
-        }
-        return ajax();
-    }
 
 
 }
