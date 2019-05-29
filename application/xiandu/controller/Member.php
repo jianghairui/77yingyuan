@@ -180,7 +180,7 @@ class Member extends Common {
         $val['tracking_name'] = input('post.tracking_name');
         $val['tracking_num'] = input('post.tracking_num');
         $val['id'] = input('post.id');
-        checkPost($val);
+        checkInput($val);
         try {
             $where = [
                 ['id','=',$val['id']],

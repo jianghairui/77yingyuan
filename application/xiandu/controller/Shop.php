@@ -17,7 +17,9 @@ class Shop extends Common {
 
         $curr_page = input('param.page',1);
         $perpage = input('param.perpage',10);
-        $where = [];
+        $where = [
+            ['del','=',0]
+        ];
         if($param['search']) {
             $where[] = ['name','like',"%{$param['search']}%"];
         }
@@ -120,7 +122,7 @@ class Shop extends Common {
             $val['desc'] = input('post.desc');
             $val['status'] = input('post.status');
             $val['create_time'] = time();
-            checkPost($val);
+            checkInput($val);
             $val['detail'] = input('post.detail');
             $val['use_attr'] = input('post.use_attr','');
             if($val['use_attr']) {
@@ -206,7 +208,7 @@ class Shop extends Common {
             $val['status'] = input('post.status');
             $val['id'] = input('post.id');
             $val['create_time'] = time();
-            checkPost($val);
+            checkInput($val);
             $val['detail'] = input('post.detail');
             $val['use_attr'] = input('post.use_attr',0);
             if($val['use_attr']) {
@@ -346,15 +348,11 @@ class Shop extends Common {
             ['id','=',$id]
         ];
         try {
-            $res = Db::table('mp_goods')->where($map)->update(['del'=>1]);
+            Db::table('mp_goods')->where($map)->update(['del'=>1]);
         }catch (\Exception $e) {
             return ajax($e->getMessage(),-1);
         }
-        if($res) {
-            return ajax();
-        }else {
-            return ajax('共修改0条记录',-1);
-        }
+        return ajax();
     }
 //分类列表
     public function cateList() {
@@ -390,7 +388,7 @@ class Shop extends Common {
     public function cateAddPost() {
         $val['cate_name'] = input('post.cate_name');
         $val['pid'] = input('post.pid',0);
-        checkPost($val);
+        checkInput($val);
 
         if(isset($_FILES['file'])) {
             $info = upload('file',$this->upload_base_path);
@@ -428,7 +426,7 @@ class Shop extends Common {
         $val['cate_name'] = input('post.cate_name');
         $val['pid'] = input('post.pid',0);
         $val['id'] = input('post.id',0);
-        checkPost($val);
+        checkInput($val);
         try {
             $exist = Db::table('mp_goods_cate')->where('id',$val['id'])->find();
             if(!$exist) {
@@ -601,7 +599,7 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
         $val['tracking_name'] = input('post.tracking_name');
         $val['tracking_num'] = input('post.tracking_num');
         $val['id'] = input('post.id');
-        checkPost($val);
+        checkInput($val);
         try {
             $where = [
                 ['id','=',$val['id']],
@@ -634,7 +632,7 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
 //退款
     public function orderRefund() {
         $val['id'] = input('post.id');
-        checkPost($val);
+        checkInput($val);
         try {
             $where = [
                 ['id','=',$val['id']],
@@ -691,7 +689,7 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
     public function modAdress() {
         $val['address'] = input('post.address');
         $val['id'] = input('post.id');
-        checkPost($val);
+        checkInput($val);
         try {
             $where = [
                 ['id','=',$val['id']]
@@ -713,7 +711,7 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
     public function modPrice() {
         $val['pay_price'] = input('post.pay_price');
         $val['id'] = input('post.id');
-        checkPost($val);
+        checkInput($val);
         try {
             $where = [
                 ['id','=',$val['id']]
@@ -753,7 +751,7 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
         $val['coupon_name'] = input('post.coupon_name');
         $val['condition'] = input('post.condition',200);
         $val['cut_price'] = input('post.cut_price');
-        checkPost($val);
+        checkInput($val);
         $val['create_time'] = time();
         try {
             Db::table('mp_coupon')->insert($val);
@@ -810,6 +808,10 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
                 return ajax('非法参数',-4);
             }
             Db::table('mp_coupon')->where($where)->delete();
+            $whereUserCoupon = [
+                ['coupon_id','=',$val['id']]
+            ];
+            Db::table('mp_user_coupon')->where($whereUserCoupon)->delete();
         }catch (\Exception $e) {
             return ajax($e->getMessage(),-1);
         }

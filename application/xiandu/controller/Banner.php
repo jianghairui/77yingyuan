@@ -21,7 +21,7 @@ class Banner extends Common {
     public function slideadd() {
         if(Request::isAjax()) {
             $val['title'] = input('post.title');
-            checkPost($val);
+            checkInput($val);
             $val['url'] = input('post.url');
             if(isset($_FILES['file'])) {
                 $info = upload('file',$this->upload_base_path);
@@ -67,7 +67,7 @@ class Banner extends Common {
         if(Request::isAjax()) {
             $val['title'] = input('post.title');
             $val['id'] = input('post.slideid');
-            checkPost($val);
+            checkInput($val);
             $val['url'] = input('post.url');
 
             $exist = Db::table('mp_slideshow')->where('id',$val['id'])->find();
@@ -100,7 +100,7 @@ class Banner extends Common {
     //删除轮播图
     public function slide_del() {
         $val['id'] = input('post.slideid');
-        checkPost($val);
+        checkInput($val);
         $exist = Db::table('mp_slideshow')->where('id',$val['id'])->find();
         if(!$exist) {
             return ajax('非法操作',-1);
@@ -118,7 +118,7 @@ class Banner extends Common {
     public function sortSlide() {
         $val['id'] = input('post.id');
         $val['sort'] = input('post.sort');
-        checkPost($val);
+        checkInput($val);
         try {
             Db::table('mp_slideshow')->update($val);
         }catch (\Exception $e) {
@@ -129,7 +129,7 @@ class Banner extends Common {
     //禁用轮播图
     public function slide_stop() {
         $val['id'] = input('post.slideid');
-        checkPost($val);
+        checkInput($val);
         $exist = Db::table('mp_slideshow')->where('id',$val['id'])->find();
         if(!$exist) {
             return ajax('非法操作',-1);
@@ -145,7 +145,7 @@ class Banner extends Common {
     //启用轮播图
     public function slide_start() {
         $val['id'] = input('post.slideid');
-        checkPost($val);
+        checkInput($val);
         $exist = Db::table('mp_slideshow')->where('id',$val['id'])->find();
         if(!$exist) {
             return ajax('非法操作',-1);

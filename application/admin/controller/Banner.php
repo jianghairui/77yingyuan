@@ -167,7 +167,7 @@ class Banner extends Base {
             $val['tel'] = input('post.tel');
             $val['address'] = input('post.address');
             $val['intro'] = input('post.intro');
-            checkPost($val);
+            checkInput($val);
             $val['lon'] = input('post.lon',0);
             $val['lat'] = input('post.lat',0);
             if(isset($_FILES['file'])) {

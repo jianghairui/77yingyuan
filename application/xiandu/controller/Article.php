@@ -48,7 +48,7 @@ class Article extends Common {
         $val['title'] = input('post.title');
         $val['desc'] = input('post.desc');
         $val['status'] = input('post.status');
-        checkPost($val);
+        checkInput($val);
         $val['content'] = input('post.content');
         $val['admin_id'] = session('admin_id');
 
@@ -91,7 +91,7 @@ class Article extends Common {
         $val['desc'] = input('post.desc');
         $val['status'] = input('post.status');
         $val['id'] = input('post.id');
-        checkPost($val);
+        checkInput($val);
         $val['content'] = input('post.content');
         $val['admin_id'] = session('admin_id');
 
@@ -121,7 +121,7 @@ class Article extends Common {
     //删除资讯
     public function articleDel() {
         $val['id'] = input('post.id');
-        checkPost($val);
+        checkInput($val);
         try {
             $exist = Db::table('mp_article')->where('id',$val['id'])->find();
             if(!$exist) {
@@ -138,7 +138,7 @@ class Article extends Common {
     public function articleHide()
     {
         $val['id'] = input('post.id');
-        checkPost($val);
+        checkInput($val);
         try {
             $exist = Db::table('mp_article')->where('id', $val['id'])->find();
             if (!$exist) {
@@ -154,7 +154,7 @@ class Article extends Common {
     //启用资讯
     public function articleShow() {
         $val['id'] = input('post.id');
-        checkPost($val);
+        checkInput($val);
         try {
             $exist = Db::table('mp_article')->where('id',$val['id'])->find();
             if(!$exist) {
