@@ -384,6 +384,27 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
         return ajax();
     }
 
+    public function myCouponList() {
+        $val['use'] = input('post.use','');
+        try {
+            $whereCoupon = [
+                ['uc.uid','=',$this->myinfo['uid']],
+            ];
+            if($val['use'] == '1') {
+                $whereCoupon[] = ['uc.use','=',0];
+            }
+            $list = Db::table('mp_user_coupon')->alias('uc')
+                ->join('mp_coupon c','uc.coupon_id=c.id','left')
+                ->field('uc.*,c.coupon_name,c.condition,c.cut_price')
+                ->where($whereCoupon)
+                ->select();
+        } catch (\Exception $e) {
+            return ajax($e->getMessage(), -1);
+        }
+        return ajax($list);
+    }
+
+
 
 
 

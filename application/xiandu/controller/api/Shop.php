@@ -370,7 +370,7 @@ class Shop extends Common {
                     ['uc.use','=',0]
                 ];
                 $coupon_exist = Db::table('mp_user_coupon')->alias('uc')
-                    ->join('mp_coupon c','','left')
+                    ->join('mp_coupon c','uc.coupon_id=c.id','left')
                     ->field('uc.*,c.condition,c.cut_price')
                     ->where($whereCoupon)
                     ->find();
@@ -381,6 +381,7 @@ class Shop extends Common {
                     return ajax('未达到使用条件',52);
                 }else {
                     $insert_data['pay_price'] = $insert_data['total_price'] - $coupon_exist['cut_price'];
+                    $insert_data['coupon_price'] = $coupon_exist['cut_price'];
                 }
             }
 
@@ -401,6 +402,9 @@ class Shop extends Common {
             Db::table('mp_goods')->where('id', $data['goods_id'])->setDec('stock',$data['num']);
             if($data['attr_id']) {
                 Db::table('mp_goods_attr')->where($where_attr)->setDec('stock',$data['num']);
+            }
+            if($data['coupon_id']) {
+                Db::table('mp_user_coupon')->alias('uc')->where($whereCoupon)->update(['use'=>1]);
             }
             Db::commit();
         } catch (\Exception $e) {
@@ -509,7 +513,7 @@ class Shop extends Common {
                     ['uc.use','=',0]
                 ];
                 $coupon_exist = Db::table('mp_user_coupon')->alias('uc')
-                    ->join('mp_coupon c','','left')
+                    ->join('mp_coupon c','uc.coupon_id=c.id','left')
                     ->field('uc.*,c.condition,c.cut_price')
                     ->where($whereCoupon)
                     ->find();
@@ -520,6 +524,7 @@ class Shop extends Common {
                     return ajax('未达到使用条件',52);
                 }else {
                     $insert_data['pay_price'] = $insert_data['total_price'] - $coupon_exist['cut_price'];
+                    $insert_data['coupon_price'] = $coupon_exist['cut_price'];
                 }
             }
 
@@ -544,6 +549,9 @@ class Shop extends Common {
                 ['uid','=',$this->myinfo['uid']]
             ];
             Db::table('mp_cart')->where($whereDelete)->delete();
+            if($val['coupon_id']) {
+                Db::table('mp_user_coupon')->alias('uc')->where($whereCoupon)->update(['use'=>1]);
+            }
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
         }
