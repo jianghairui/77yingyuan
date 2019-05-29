@@ -316,6 +316,7 @@ class Shop extends Common {
         $data['address'] = input('post.address');
         checkPost($data);
         $data['attr_id'] = input('post.attr_id',0);
+        $data['coupon_id'] = input('post.coupon_id',0);
         $data['use_attr'] = 0;
         if(!if_int($data['num'])) {
             return ajax($data['num'],-4);
@@ -351,6 +352,7 @@ class Shop extends Common {
             }else {
                 $unit_price = $goods_exist['price'];
             }
+
             $insert_data['uid'] = $this->myinfo['uid'];
             $insert_data['pay_order_sn'] = create_unique_number('');
             $insert_data['total_price'] = $unit_price * $data['num'] + $goods_exist['carriage'];
@@ -360,6 +362,27 @@ class Shop extends Common {
             $insert_data['tel'] = $data['tel'];
             $insert_data['address'] = $data['address'];
             $insert_data['create_time'] = $time;
+
+            if($data['coupon_id']) {
+                $whereCoupon = [
+                    ['uc.coupon_id','=',$data['coupon_id']],
+                    ['uc.uid','=',$this->myinfo['uid']],
+                    ['uc.use','=',0]
+                ];
+                $coupon_exist = Db::table('mp_user_coupon')->alias('uc')
+                    ->join('mp_coupon c','','left')
+                    ->field('uc.*,c.condition,c.cut_price')
+                    ->where($whereCoupon)
+                    ->find();
+                if(!$coupon_exist) {
+                    return ajax('无效的优惠券',51);
+                }
+                if($coupon_exist['condition'] < $insert_data['total_price']) {
+                    return ajax('未达到使用条件',52);
+                }else {
+                    $insert_data['pay_price'] = $insert_data['total_price'] - $coupon_exist['cut_price'];
+                }
+            }
 
             Db::startTrans();
             $order_id = Db::table('mp_order')->insertGetId($insert_data);
@@ -393,6 +416,7 @@ class Shop extends Common {
         $val['tel'] = input('post.tel');
         $val['address'] = input('post.address');
         checkPost($val);
+        $val['coupon_id'] = input('post.coupon_id',0);
         if(empty($cart_ids)) {
             return ajax('请选择要结算的商品',40);
         }
@@ -477,6 +501,27 @@ class Shop extends Common {
             $insert_data['tel'] = $val['tel'];
             $insert_data['address'] = $val['address'];
             $insert_data['create_time'] = $time;
+
+            if($val['coupon_id']) {
+                $whereCoupon = [
+                    ['uc.coupon_id','=',$val['coupon_id']],
+                    ['uc.uid','=',$this->myinfo['uid']],
+                    ['uc.use','=',0]
+                ];
+                $coupon_exist = Db::table('mp_user_coupon')->alias('uc')
+                    ->join('mp_coupon c','','left')
+                    ->field('uc.*,c.condition,c.cut_price')
+                    ->where($whereCoupon)
+                    ->find();
+                if(!$coupon_exist) {
+                    return ajax('无效的优惠券',51);
+                }
+                if($coupon_exist['condition'] < $insert_data['total_price']) {
+                    return ajax('未达到使用条件',52);
+                }else {
+                    $insert_data['pay_price'] = $insert_data['total_price'] - $coupon_exist['cut_price'];
+                }
+            }
 
             $order_id = Db::table('mp_order')->insertGetId($insert_data);
             foreach ($insert_detail_all as $k=>&$v) {

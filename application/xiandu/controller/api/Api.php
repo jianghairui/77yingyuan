@@ -38,10 +38,23 @@ class Api extends Common
             ];
             $list = Db::table('mp_coupon')
                 ->where($where)
-                ->field('coupon_name,condition,cut_price,create_time')
+                ->field('id,coupon_name,condition,cut_price,create_time')
                 ->select();
+            $whereUserCoupon = [
+                ['uid','=',$this->myinfo['uid']]
+            ];
+            $myCouponIds = Db::table('mp_user_coupon')
+                ->where($whereUserCoupon)
+                ->column('id');
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
+        }
+        foreach ($list as &$v) {
+            if(in_array($v['id'],$myCouponIds)) {
+                $v['has'] = 1;
+            }else {
+                $v['has'] = 0;
+            }
         }
         return ajax($list);
     }
@@ -95,15 +108,31 @@ class Api extends Common
         }
         return ajax($list);
     }
-
+//领取优惠券
     public function getCoupon() {
         $val['coupon_id'] = input('post.coupon_id');
         checkPost($val);
+        $val['create_time'] = time();
+        $val['use'] = 0;
+        $val['uid'] = $this->myinfo['uid'];
         try {
-
+            $coupon_exist = Db::table('mp_coupon')->where('id','=',$val['coupon_id'])->find();
+            if(!$coupon_exist) {
+                return ajax('',-4);
+            }
+            $where = [
+                ['coupon_id','=',$val['coupon_id']],
+                ['uid','=',$this->myinfo['uid']]
+            ];
+            $exist = Db::table('mp_user_coupon')->where($where)->find();
+            if($exist) {
+                return ajax('',50);
+            }
+            Db::table('mp_user_coupon')->insert($val);
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
         }
+        return ajax();
     }
 //上传图片限制512KB
     public function uploadImage()
@@ -131,5 +160,7 @@ class Api extends Common
             return ajax('请上传图片', 3);
         }
     }
+
+
 
 }

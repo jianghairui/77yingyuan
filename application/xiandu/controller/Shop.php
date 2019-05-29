@@ -753,6 +753,9 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
         $val['cut_price'] = input('post.cut_price');
         checkInput($val);
         $val['create_time'] = time();
+        if($val['condition'] <= $val['cut_price']) {
+            return ajax('条件值必须大于满减值');
+        }
         try {
             Db::table('mp_coupon')->insert($val);
         }catch (\Exception $e) {
@@ -781,6 +784,9 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
         $val['cut_price'] = input('post.cut_price');
         $val['id'] = input('post.id');
         checkInput($val);
+        if($val['condition'] <= $val['cut_price']) {
+            return ajax('条件值必须大于满减值');
+        }
         try {
             $where = [
                 ['id','=',$val['id']]

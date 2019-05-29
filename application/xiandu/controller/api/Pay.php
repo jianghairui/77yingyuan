@@ -33,7 +33,7 @@ class Pay extends Common {
                 'out_trade_no' => $val['pay_order_sn'],
 //                'total_fee' => 1,
                 'total_fee' => floatval($total_price)*100,
-                'notify_url' => $this->weburl . 'api/pay/order_notify',
+                'notify_url' => $this->weburl . 'xiandu/api.pay/order_notify',
                 'trade_type' => 'JSAPI',
                 'openid' => $this->myinfo['openid']
             ]);
@@ -49,7 +49,7 @@ class Pay extends Common {
             $sign['nonceStr'] = $result['nonce_str'];
             $sign['signType'] = 'MD5';
             $sign['package'] = 'prepay_id=' . $result['prepay_id'];
-            $sign['paySign'] = $this->getSign($sign);
+            $sign['paySign'] = getSign($sign);
         }catch (\Exception $e) {
             return ajax($e->getMessage(),-1);
         }
