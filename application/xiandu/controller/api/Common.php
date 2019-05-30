@@ -46,7 +46,7 @@ class Common extends Controller {
     private function checkSession() {
         $noneed = [
             'Api.login/login',
-            'Api.pay/notify'
+            'Api.pay/order_notify'
         ];
         if (in_array(request()->controller() . '/' . request()->action(), $noneed)) {
             return true;
