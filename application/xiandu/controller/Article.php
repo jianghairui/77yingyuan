@@ -167,4 +167,58 @@ class Article extends Common {
         return ajax();
     }
 
+    public function commentList() {
+        $param['search'] = input('param.search');
+        $page['query'] = http_build_query(input('param.'));
+
+        $curr_page = input('param.page',1);
+        $perpage = input('param.perpage',10);
+        $where = [];
+        if($param['search']) {
+            $where[] = ['c.content|a.title','like',"%{$param['search']}%"];
+        }
+        $count = Db::table('mp_comment')->alias('c')
+            ->join('mp_user u','c.uid=u.id','left')
+            ->join('mp_article a','c.article_id=a.id','left')
+            ->where($where)->count();
+
+        $page['count'] = $count;
+        $page['curr'] = $curr_page;
+        $page['totalPage'] = ceil($count/$perpage);
+        try {
+            $list = Db::table('mp_comment')->alias('c')
+                ->join('mp_user u','c.uid=u.id','left')
+                ->join('mp_article a','c.article_id=a.id','left')
+                ->field('c.*,u.nickname,a.title')
+                ->where($where)->limit(($curr_page - 1)*$perpage,$perpage)->select();
+        }catch (\Exception $e) {
+            die('SQL错误: ' . $e->getMessage());
+        }
+
+        $this->assign('list',$list);
+        $this->assign('page',$page);
+        return $this->fetch();
+
+    }
+
+    public function commentDel() {
+        $val['id'] = input('post.id');
+        checkInput($val);
+        try {
+            $where = [
+                ['id','=',$val['id']]
+            ];
+            $exist = Db::table('mp_comment')->where($where)->find();
+            if(!$exist) {
+                return ajax();
+            }
+            Db::table('mp_comment')->where($where)->delete();
+        } catch (\Exception $e) {
+            return ajax($e->getMessage(), -1);
+        }
+        return ajax();
+    }
+
+
+
 }

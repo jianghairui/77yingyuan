@@ -14,8 +14,7 @@ use think\Exception;
 class Api extends Common
 {
 //获取轮播图列表
-    public function slideList()
-    {
+    public function getSlideList() {
         try {
             $list = Db::table('mp_slideshow')->where([
                 ['status', '=', 1]
@@ -45,7 +44,7 @@ class Api extends Common
             ];
             $myCouponIds = Db::table('mp_user_coupon')
                 ->where($whereUserCoupon)
-                ->column('id');
+                ->column('coupon_id');
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
         }
@@ -141,7 +140,7 @@ class Api extends Common
             if (count($_FILES) > 1) {
                 return ajax('最多上传一张图片', 9);
             }
-            $path = upload(array_keys($_FILES)[0]);
+            $path = ajaxUpload(array_keys($_FILES)[0],512);
             return ajax(['path' => $path]);
         } else {
             return ajax('请上传图片', 3);
@@ -154,7 +153,7 @@ class Api extends Common
             if (count($_FILES) > 1) {
                 return ajax('最多上传一张图片', 9);
             }
-            $path = upload(array_keys($_FILES)[0], 2048);
+            $path = ajaxUpload(array_keys($_FILES)[0], 2048);
             return ajax(['path' => $path]);
         } else {
             return ajax('请上传图片', 3);

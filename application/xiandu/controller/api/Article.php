@@ -103,7 +103,7 @@ WHERE c.article_id=?",[$val['article_id']]);
                 $val['to_uid'] = 0;
                 $val['root_cid'] = 0;
             }
-            $val['created_time'] = date("Y-m-d H:i:s");
+            $val['create_time'] = date("Y-m-d H:i:s");
             Db::table('mp_comment')->insert($val);
         }catch (\Exception $e) {
             return ajax($e->getMessage(),-1);

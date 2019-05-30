@@ -19,6 +19,9 @@ class My extends Common {
 
         $val['desc'] = input('post.desc','');
         $val['id'] = $this->myinfo['uid'];
+        if(!is_tel($val['tel'])) {
+            return ajax('无效的手机号',6);
+        }
         $user = $this->getMyInfo();
         try {
             $avatar = input('post.avatar');

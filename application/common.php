@@ -363,7 +363,7 @@ function checkfile($file) {
         return '图片格式无效';
     }
     if($_FILES[$file]["size"] > 1024*512) {
-        return '图片大小不超过300Kb';
+        return '图片大小不超过512Kb';
     }
     if ($_FILES[$file]["error"] > 0) {
         return "error: " . $_FILES[$file]["error"];
