@@ -10,13 +10,12 @@ use think\Db;
 class My extends Common {
     //点击头像编辑个人资料
     public function modMyInfo() {
-        $val['realname'] = input('post.realname');
         $val['nickname'] = input('post.nickname');
         $val['sex'] = input('post.sex');
         $val['age'] = input('post.age');
         $val['tel'] = input('post.tel');
         checkPost($val);
-
+        $val['realname'] = input('post.realname');
         $val['desc'] = input('post.desc','');
         $val['id'] = $this->myinfo['uid'];
         if(!is_tel($val['tel'])) {

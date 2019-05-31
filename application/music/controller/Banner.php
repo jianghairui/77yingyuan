@@ -215,7 +215,7 @@ class Banner extends Base {
         return $this->fetch();
     }
 
-    public function bifileUpload() {
+    public function bigFileupload() {
         //实例化并获取系统变量传参
         $upload = new Bigfile($_FILES['file']['tmp_name'],$_POST['blob_num'],$_POST['total_blob_num'],$_POST['file_name']);
 //调用方法，返回结果

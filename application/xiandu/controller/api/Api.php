@@ -80,8 +80,18 @@ class Api extends Common
     }
 //首页视频
     public function homeVideo() {
-        $info['video'] = $this->weburl . 'upload/video/20190517/1558083883.mp4';
-        $info['poster'] = $this->weburl . 'res/music/upload/2019-05-17/155808330186542800206.jpg';
+        try {
+            $video = Db::table('mp_video')->where('id','=',1)->find();
+        } catch (\Exception $e) {
+            return ajax($e->getMessage(), -1);
+        }
+        if($video) {
+            $info['video'] = $this->weburl . $video['url'];
+            $info['poster'] = $this->weburl . $video['poster'];
+        }else {
+            $info['video'] = $this->weburl . 'res/music/video/001.mp4';
+            $info['poster'] = $this->weburl . 'tmp01.jpg';
+        }
         return ajax($info);
     }
 //首页商品列表

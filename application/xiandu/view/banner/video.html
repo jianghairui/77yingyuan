@@ -60,7 +60,7 @@
     //上传视频
     var fileNameTime = Date.parse(new Date())/1000;
     var video_file = document.getElementById("video_file");
-    var upload_url = 'https://cave.jianghairui.com/music/banner/bifileUpload';
+    var upload_url = "{:url('Banner/bigFileUpload')}";
     var progress_obj = document.getElementById('finish_video');
 
     $(function(){
