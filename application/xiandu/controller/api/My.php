@@ -61,7 +61,7 @@ class My extends Common {
         }
         try {
             $list = Db::query("SELECT 
-`o`.`id`,`o`.`pay_order_sn`,`o`.`pay_price`,`o`.`total_price`,`o`.`carriage`,`o`.`create_time`,`o`.`refund_apply`,`o`.`status`,`o`.`refund_apply`,`d`.`order_id`,`d`.`goods_id`,`d`.`num`,`d`.`unit_price`,`d`.`goods_name`,`d`.`attr`,`g`.`pics` 
+`o`.`id`,`o`.`pay_order_sn`,`o`.`pay_price`,`o`.`total_price`,`o`.coupon_price,`o`.`carriage`,`o`.`create_time`,`o`.`refund_apply`,`o`.`status`,`o`.`refund_apply`,`d`.`order_id`,`d`.`goods_id`,`d`.`num`,`d`.`unit_price`,`d`.`goods_name`,`d`.`attr`,`g`.`pics` 
 FROM (SELECT * FROM mp_order WHERE " . $where . $order ." LIMIT ".($curr_page-1)*$perpage.",".$perpage.") `o` 
 LEFT JOIN `mp_order_detail` `d` ON `o`.`id`=`d`.`order_id`
 LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
@@ -82,6 +82,8 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
                     $data['id'] = $li['id'];
                     $data['pay_order_sn'] = $li['pay_order_sn'];
                     $data['total_price'] = $li['total_price'];
+                    $data['pay_price'] = $li['pay_price'];
+                    $data['coupon_price'] = $li['coupon_price'];
                     $data['carriage'] = $li['carriage'];
                     $data['status'] = $li['status'];
                     $data['refund_apply'] = $li['refund_apply'];
@@ -174,7 +176,7 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
                 ->join("mp_order_detail d","o.id=d.order_id","left")
                 ->join("mp_goods g","d.goods_id=g.id","left")
                 ->where($where)
-                ->field("o.id,o.pay_order_sn,o.pay_price,o.total_price,o.carriage,o.receiver,o.tel,o.address,o.create_time,o.refund_apply,o.status,d.order_id,d.num,d.unit_price,d.goods_name,d.attr,g.pics")->select();
+                ->field("o.id,o.pay_order_sn,o.pay_price,o.total_price,o.coupon_price,o.carriage,o.receiver,o.tel,o.address,o.create_time,o.refund_apply,o.status,d.order_id,d.num,d.unit_price,d.goods_name,d.attr,g.pics")->select();
             if(!$list) {
                 return ajax($val['id'],-4);
             }
@@ -189,6 +191,8 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
             $data['tel'] = $li['tel'];
             $data['address'] = $li['address'];
             $data['total_price'] = $li['total_price'];
+            $data['pay_price'] = $li['pay_price'];
+            $data['coupon_price'] = $li['coupon_price'];
             $data['carriage'] = $li['carriage'];
             $data['amount'] = $li['total_price'] - $data['carriage'];
             $data['create_time'] = date('Y-m-d H:i',$li['create_time']);

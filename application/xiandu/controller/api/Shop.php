@@ -29,6 +29,7 @@ class Shop extends Common {
         $cate_id = input('post.cate_id',0);
         $curr_page = input('post.page',1);
         $perpage = input('post.perpage',10);
+        $search = input('post.search','');
         $where = [
             ['status','=',1],
             ['del','=',0]
@@ -38,6 +39,9 @@ class Shop extends Common {
         }
         if($cate_id) {
             $where[] = ['cate_id','=',$cate_id];
+        }
+        if($search) {
+            $where[] = ['name','like',"%{$search}%"];
         }
         try {
             $list = Db::table('mp_goods')->where($where)->field("id,name,origin_price,price,desc,pics,width,height")->limit(($curr_page-1)*$perpage,$perpage)->select();
@@ -362,10 +366,9 @@ class Shop extends Common {
             $insert_data['tel'] = $data['tel'];
             $insert_data['address'] = $data['address'];
             $insert_data['create_time'] = $time;
-
             if($data['coupon_id']) {
                 $whereCoupon = [
-                    ['uc.coupon_id','=',$data['coupon_id']],
+                    ['uc.id','=',$data['coupon_id']],
                     ['uc.uid','=',$this->myinfo['uid']],
                     ['uc.use','=',0]
                 ];
@@ -377,7 +380,7 @@ class Shop extends Common {
                 if(!$coupon_exist) {
                     return ajax('无效的优惠券',51);
                 }
-                if($coupon_exist['condition'] < $insert_data['total_price']) {
+                if($coupon_exist['condition'] > $insert_data['total_price']) {
                     return ajax('未达到使用条件',52);
                 }else {
                     $insert_data['pay_price'] = $insert_data['total_price'] - $coupon_exist['cut_price'];
@@ -508,7 +511,7 @@ class Shop extends Common {
 
             if($val['coupon_id']) {
                 $whereCoupon = [
-                    ['uc.coupon_id','=',$val['coupon_id']],
+                    ['uc.id','=',$val['coupon_id']],
                     ['uc.uid','=',$this->myinfo['uid']],
                     ['uc.use','=',0]
                 ];
@@ -520,7 +523,7 @@ class Shop extends Common {
                 if(!$coupon_exist) {
                     return ajax('无效的优惠券',51);
                 }
-                if($coupon_exist['condition'] < $insert_data['total_price']) {
+                if($coupon_exist['condition'] > $insert_data['total_price']) {
                     return ajax('未达到使用条件',52);
                 }else {
                     $insert_data['pay_price'] = $insert_data['total_price'] - $coupon_exist['cut_price'];

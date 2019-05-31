@@ -10,6 +10,7 @@ namespace app\xiandu\controller;
 use think\Exception;
 use think\Db;
 use think\facade\Request;
+use my\Bigfile;
 class Banner extends Common {
     //轮播图列表
     public function slideshow() {
@@ -157,6 +158,82 @@ class Banner extends Common {
             return ajax($e->getMessage(),-1);
         }
         return ajax([],1);
+    }
+
+    public function video() {
+        try {
+            $info = Db::table('mp_video')->find();
+        } catch (\Exception $e) {
+            return ajax($e->getMessage(), -1);
+        }
+        $this->assign('info',$info);
+        return $this->fetch();
+    }
+
+    public function bifileUpload() {
+        //实例化并获取系统变量传参
+        $upload = new Bigfile($_FILES['file']['tmp_name'],$_POST['blob_num'],$_POST['total_blob_num'],$_POST['file_name']);
+//调用方法，返回结果
+        $upload->apiReturn();
+    }
+
+    public function videoUpdate() {
+        $val['url'] = input('post.video_url');
+        try {
+            $exist = Db::table('mp_video')->where('id','=',1)->find();
+            $update_data = [
+                'id' => 1,
+                'url' => $val['url']
+            ];
+            if($exist) {
+                Db::table('mp_video')->where('id','=',1)->update($update_data);
+            }else {
+                Db::table('mp_video')->where('id','=',1)->insert($update_data);
+            }
+        } catch (\Exception $e) {
+            return ajax($e->getMessage(), -1);
+        }
+        if($exist) {
+            @unlink($exist['url']);
+        }
+        return ajax();
+    }
+
+    public function posterUpdate() {
+        $val['poster'] = input('post.poster');
+        try {
+            $val['poster'] = rename_file($val['poster'],'res/xiandu/admin/');
+            $exist = Db::table('mp_video')->where('id','=',1)->find();
+            $update_data = [
+                'id' => 1,
+                'poster' => $val['poster']
+            ];
+            if($exist) {
+                Db::table('mp_video')->where('id','=',1)->update($update_data);
+            }else {
+                Db::table('mp_video')->where('id','=',1)->insert($update_data);
+            }
+        } catch (\Exception $e) {
+            return ajax($e->getMessage(), -1);
+        }
+        if($exist) {
+            @unlink($exist['poster']);
+        }
+        return ajax(['path'=>$val['poster']]);
+    }
+
+    //上传图片限制512KB
+    public function uploadImage()
+    {
+        if (!empty($_FILES)) {
+            if (count($_FILES) > 1) {
+                return ajax('最多上传一张图片', 9);
+            }
+            $path = ajaxUpload(array_keys($_FILES)[0]);
+            return ajax(['path' => $path]);
+        } else {
+            return ajax('请上传图片', 3);
+        }
     }
 
 
