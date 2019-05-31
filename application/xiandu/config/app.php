@@ -26,6 +26,11 @@ return array(
             'Index/index'
         ]
     ],
+    'app_id' => 'wx60823ccbac8c4e09',
+    'app_secret' => 'e101ef1f8d8dc2d7b97d3d394d8769b0',
+    'mch_id'  => '1490402642',
+    'mch_key' => 'TIANJINTAOCIYUAN20190111SHWHCOPY',
+    'cert_path' =>  '/var/www/cave.jianghairui.com/public/cert/apiclient_cert.pem',
+    'key_path' =>  '/var/www/cave.jianghairui.com/public/cert/apiclient_key.pem'
 
-    'mch_key' => 'TIANJINTAOCIYUAN20190111SHWHCOPY'
 );

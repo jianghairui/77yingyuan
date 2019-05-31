@@ -13,7 +13,6 @@ use think\exception\HttpResponseException;
 
 class Common extends Controller {
 
-    protected $config = [];
     protected $weburl = '';
     protected $cmd;
     protected $upload_base_path;
@@ -26,21 +25,6 @@ class Common extends Controller {
         $this->weburl = 'cave.jianghairui.com';
         $this->upload_base_path = 'res/xiandu/admin/';
         $this->rename_base_path = 'res/xiandu/api/';
-        $this->config = [
-            'app_id' => 'wx60823ccbac8c4e09',
-            'secret' => 'e101ef1f8d8dc2d7b97d3d394d8769b0',
-
-            'mch_id'             => '1490402642',
-            'key'                => 'TIANJINTAOCIYUAN20190111SHWHCOPY',
-            'cert_path'          =>  '/mnt/cave.jianghiarui.com/public/cert/apiclient_cert.pem',
-            'key_path'           =>  '/mnt/cave.jianghairui.com/public/cert/apiclient_key.pem',
-            'response_type' => 'array',
-            'log' => [
-                'level' => 'debug',
-                'file' => APP_PATH . '/wechat.log',
-            ],
-        ];
-
         if(!$this->needSession()) {
             if(request()->isPost()) {
                 throw new HttpResponseException(ajax([],-2));

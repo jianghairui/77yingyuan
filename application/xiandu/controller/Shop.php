@@ -645,8 +645,8 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
             $pay_order_sn = $exist['pay_order_sn'];
 //            $exist['pay_price'] = 0.01;
             $arr = [
-                'appid' => $this->config['app_id'],
-                'mch_id'=> $this->config['mch_id'],
+                'appid' => config('app_id'),
+                'mch_id'=> config('mch_id'),
                 'nonce_str'=>randomkeys(32),
                 'sign_type'=>'MD5',
                 'transaction_id'=> $exist['trans_id'],
@@ -663,6 +663,7 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
             $arr['sign'] = getSign($arr);
             $url = 'https://api.mch.weixin.qq.com/secapi/pay/refund';
             $res = curl_post_data($url,array2xml($arr),true);
+            $res = xml2array($res);
             if($res && $res['return_code'] == 'SUCCESS') {
                 if($res['result_code'] == 'SUCCESS') {
                     $update_data = [
