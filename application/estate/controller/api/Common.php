@@ -24,9 +24,8 @@ class Common extends Controller {
         $this->domain = 'cave.jianghairui.com';
         $this->weburl = 'https://cave.jianghairui.com/';
         $this->mp_config = [
-            'app_id' => 'wxd9c5f04932c09eda',
-            'secret' => 'b6eb418e078d5eac3c4c2953ae64f608',
-
+            'app_id' => 'wx50f030c7f4a897ff',
+            'secret' => '608b9a4b5cfeecfb5e7f83becc252db5',//
             'mch_id'             => '1490402642',
             'key'                => 'TIANJINTAOCIYUAN20190111SHWHCOPY',   // API 密钥
             // 如需使用敏感接口（如退款、发送红包等）需要配置 API 证书路径(登录商户平台下载 API 证书)
