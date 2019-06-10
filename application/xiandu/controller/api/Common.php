@@ -26,13 +26,13 @@ class Common extends Controller {
         $this->weburl = 'https://cave.jianghairui.com/';
         $this->rename_base_path = 'res/xiandu/api/';
         $this->mp_config = [
-            'app_id' => 'wx60823ccbac8c4e09',
-            'secret' => 'e101ef1f8d8dc2d7b97d3d394d8769b0',
-            'mch_id'             => '1490402642',
-            'key'                => 'TIANJINTAOCIYUAN20190111SHWHCOPY',   // API 密钥
+            'app_id' => 'wxcf0a69a03e0d6c0a',
+            'secret' => 'a3a1402a7063c946ccf8ae7634bd010e',
+            'mch_id'             => '1437814202',
+            'key'                => 'xanaducn1234567890xanaducn123456',   // API 密钥
             // 如需使用敏感接口（如退款、发送红包等）需要配置 API 证书路径(登录商户平台下载 API 证书)
-            'cert_path'          =>  '/mnt/www.caves.vip/public/cert/apiclient_cert.pem',
-            'key_path'           =>  '/mnt/www.caves.vip/public/cert/apiclient_key.pem',
+            'cert_path'          =>  '/mnt/cave.jianghairui.com/public/cert/apiclient_cert.pem',
+            'key_path'           =>  '/mnt/cave.jianghairui.com/cert/apiclient_key.pem',
             // 下面为可选项,指定 API 调用返回结果的类型：array(default)/collection/object/raw/自定义类名
             'response_type' => 'array',
             'log' => [

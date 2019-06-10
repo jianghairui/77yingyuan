@@ -26,10 +26,10 @@ return array(
             'Index/index'
         ]
     ],
-    'app_id' => 'wx60823ccbac8c4e09',
-    'app_secret' => 'e101ef1f8d8dc2d7b97d3d394d8769b0',
-    'mch_id'  => '1490402642',
-    'mch_key' => 'TIANJINTAOCIYUAN20190111SHWHCOPY',
+    'app_id' => 'wxcf0a69a03e0d6c0a',
+    'app_secret' => 'a3a1402a7063c946ccf8ae7634bd010e',
+    'mch_id'  => '1437814202',
+    'mch_key' => 'xanaducn1234567890xanaducn123456',
     'cert_path' =>  '/var/www/cave.jianghairui.com/public/cert/apiclient_cert.pem',
     'key_path' =>  '/var/www/cave.jianghairui.com/public/cert/apiclient_key.pem'
 

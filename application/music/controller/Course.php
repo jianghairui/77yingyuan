@@ -289,7 +289,7 @@ class Course extends Base {
         }
         $this->assign('list',$list);
         $this->assign('page',$page);
-        return $this->fetch();
+        return $this->fetch('order_tmp_list');
     }
 
 }
