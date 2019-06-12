@@ -5,14 +5,19 @@
  * Date: 2019/5/13
  * Time: 9:08
  */
-namespace app\test\controller;
+namespace app\estate\controller;
+
+use think\Db;
 
 class Test {
 
     public function index() {
-//        echo 'OOK';
-        $data = [];
-        checkInput($data);
+        try {
+            $info = Db::table('mp_company')->find();
+        } catch (\Exception $e) {
+            return ajax($e->getMessage(), -1);
+        }
+        echo '<div style="width: 40%;">' . $info['intro'] . '</div>';
     }
 
 }
