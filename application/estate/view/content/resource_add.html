@@ -1,5 +1,6 @@
 <style>
     .thumbnail{ width:300px}
+    .thumbnails{ width:200px;height: 200px;background-size: cover;background-position: center;position: relative}
 </style>
 <article class="page-container">
     <form class="form form-horizontal" id="form-article-add">
@@ -17,62 +18,7 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>楼盘名称：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="name" name="name" maxlength="20">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>参考均价(元/m²)：</label>
-            <div class="formControls col-xs-4 col-sm-4">
-                <input type="text" class="input-text" value="" placeholder="" id="avr_price" name="avr_price" maxlength="20" oninput="this.value=/^\d{1,8}(\.\d{0,2})?$/.test(this.value) ? this.value : this.value.substring(0,this.value.length-1)">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">佣金区间(元)：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="number" id="min_bro" name="min_bro" placeholder="" value="4000" class="input-text" style=" width:20%">
-                —
-                <input type="number" id="max_bro" name="max_bro" placeholder="" value="5000" class="input-text" style=" width:20%">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">面积区间(m²)：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="number" id="min_area" name="min_area" placeholder="" value="100" class="input-text" style=" width:20%">
-                —
-                <input type="number" id="max_area" name="max_area" placeholder="" value="200" class="input-text" style=" width:20%">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>楼盘类型：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select name="type" class="select">
-					<option value="住宅">住宅</option>
-					<option value="商品类">商品类</option>
-				</select>
-				</span> </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>楼盘结构：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="板楼" placeholder="" id="structure" name="structure" maxlength="20">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>户型：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="2/3/4居" placeholder="" id="apartment" name="apartment" maxlength="20">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>交房日期：</label>
-            <div class="formControls col-xs-4 col-sm-4">
-                <input type="text" name="deliver" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="deliver" value="" class="input-text Wdate" readonly>
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>开盘时间：</label>
-            <div class="formControls col-xs-4 col-sm-4">
-                <input type="text" name="open_date" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="open_date" value="" class="input-text Wdate" readonly>
+                <input type="text" class="input-text" value="" placeholder="" id="name" name="name" maxlength="30">
             </div>
         </div>
         <div class="row cl">
@@ -88,32 +34,21 @@
             </div>
         </div>
         <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>开盘时间：</label>
+            <div class="formControls col-xs-4 col-sm-4">
+                <input type="text" name="open_date" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="open_date" value="" class="input-text Wdate" readonly>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>交房日期：</label>
+            <div class="formControls col-xs-4 col-sm-4">
+                <input type="text" name="deliver" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="deliver" value="" class="input-text Wdate" readonly>
+            </div>
+        </div>
+        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>楼盘地址：</label>
             <div class="formControls col-xs-8 col-sm-9">
                 <input type="text" class="input-text" value="" placeholder="" id="address" name="address" maxlength="20">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>售楼地址：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="saler_address" name="saler_address" maxlength="20">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>开发商：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="developer" name="developer" maxlength="20">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>建筑类型：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
-				<select name="building_type" class="select">
-					<option value="板楼">板楼</option>
-					<option value="塔楼">塔楼</option>
-					<option value="平板">平板</option>
-				</select>
-				</span>
             </div>
         </div>
         <div class="row cl">
@@ -123,63 +58,21 @@
             </div>
         </div>
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>装修标准：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>开发商：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="trim_std" name="trim_std" maxlength="20">
+                <input type="text" class="input-text" value="" placeholder="" id="developer" name="developer" maxlength="20">
             </div>
         </div>
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>装修价格：</label>
-            <div class="formControls col-xs-4 col-sm-4">
-                <input type="text" class="input-text" value="" placeholder="" id="trim_price" name="trim_price" maxlength="20" oninput="this.value=/^\d{1,8}(\.\d{0,2})?$/.test(this.value) ? this.value : this.value.substring(0,this.value.length-1)">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>售楼地址：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="saler_address" name="saler_address" maxlength="20">
             </div>
         </div>
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>装修说明：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>预售许可证：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="trim_desc" name="trim_desc" maxlength="20">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>占地面积(m²)：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="number" class="input-text" value="" placeholder="" id="area_covered" name="area_covered" maxlength="20">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>建筑面积(m²)：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="number" class="input-text" value="" placeholder="" id="floorage" name="floorage" maxlength="20">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>容积率：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="area_rate" name="area_rate" maxlength="20">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>绿化率：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="number" class="input-text" value="" placeholder="" id="green_rate" name="green_rate" maxlength="20">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>规划户数：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="number" class="input-text" value="" placeholder="" id="house_num" name="house_num" maxlength="20">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>规划楼栋：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="number" class="input-text" value="" placeholder="" id="building_num" name="building_num" maxlength="20">
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>规划车位：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="number" class="input-text" value="" placeholder="" id="parking_num" name="parking_num" maxlength="20">
+                <input type="text" class="input-text" value="" placeholder="" id="licence" name="licence" maxlength="20">
             </div>
         </div>
         <div class="row cl">
@@ -207,29 +100,79 @@
             </div>
         </div>
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>供暖方式：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>装修类型：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="集体供暖" placeholder="" id="heating_type" name="heating_type" maxlength="20">
+                <input type="text" class="input-text" value="" placeholder="普通装修" id="trim_type" name="trim_type" maxlength="20">
             </div>
         </div>
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>供水类型：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="民水" placeholder="" id="water_type" name="water_type" maxlength="20">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>建筑类型：</label>
+            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+				<select name="building_type" class="select">
+					<option value="板楼">板楼</option>
+					<option value="塔楼">塔楼</option>
+					<option value="平板">平板</option>
+				</select>
+				</span>
             </div>
         </div>
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>供电类型：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="民电" placeholder="" id="power_type" name="power_type" maxlength="20">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>容积率：</label>
+            <div class="formControls col-xs-4 col-sm-4">
+                <input type="text" class="input-text" value="" placeholder="" id="area_rate" name="area_rate" maxlength="20">
             </div>
         </div>
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>资讯电话：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>占地面积(m²)：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="输入手机号" id="tel" name="tel" maxlength="15">
+                <input type="number" class="input-text" value="" placeholder="" id="area_covered" name="area_covered" maxlength="20">
             </div>
         </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>建筑面积(m²)：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="number" class="input-text" value="" placeholder="" id="floorage" name="floorage" maxlength="20">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>规划户数：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="number" class="input-text" value="" placeholder="" id="house_num" name="house_num" maxlength="20">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>规划车位：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="number" class="input-text" value="" placeholder="" id="parking_num" name="parking_num" maxlength="20">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>绿化率：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="number" class="input-text" value="" placeholder="" id="green_rate" name="green_rate" maxlength="20">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>参考均价(元/m²)：</label>
+            <div class="formControls col-xs-4 col-sm-4">
+                <input type="text" class="input-text" value="" placeholder="" id="avr_price" name="avr_price" maxlength="20" oninput="this.value=/^\d{1,8}(\.\d{0,2})?$/.test(this.value) ? this.value : this.value.substring(0,this.value.length-1)">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">面积区间(m²)：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="number" id="min_area" name="min_area" placeholder="" value="100" class="input-text" style=" width:20%">
+                —
+                <input type="number" id="max_area" name="max_area" placeholder="" value="200" class="input-text" style=" width:20%">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">佣金(元)：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="number" id="min_bro" name="commission" placeholder="" value="6000" class="input-text">
+            </div>
+        </div>
+
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">标签：</label>
             <div class="formControls col-xs-8 col-sm-9">
@@ -242,9 +185,40 @@
             </div>
         </div>
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">楼盘简介：</label>
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>案场负责人姓名：</label>
+            <div class="formControls col-xs-4 col-sm-4">
+                <input type="text" class="input-text" value="" placeholder="案场负责人姓名" id="linkman" name="linkman" maxlength="15">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>案场负责人邮箱：</label>
+            <div class="formControls col-xs-4 col-sm-4">
+                <input type="text" class="input-text" value="" placeholder="此为报备通知邮箱" id="email" name="email" maxlength="15">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>案场负责人电话：</label>
+            <div class="formControls col-xs-4 col-sm-4">
+                <input type="text" class="input-text" value="" placeholder="输入负责人手机号" id="tel" name="tel" maxlength="15">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">项目卖点：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <textarea name="desc" id="desc" cols="" rows="" maxlength="255" class="textarea"  placeholder="说点什么...最多输入255个字符"></textarea>
+                <textarea name="selling_point" id="selling_point" cols="" rows="" maxlength="2000" class="textarea"  placeholder="说点什么...最多输入2000个字符"></textarea>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">
+                <span class="btn btn-primary btn-uploadstar radius ml-10" onclick="javascript:$('#pic_up0').click();">展示图</span>
+            </label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="uploader-thum-container">
+                    <div id="fileList0" class="uploader-list">
+
+                    </div>
+                    <input type="file"  id="pic_up0" name="pic_up0" style="display:none;">
+                </div>
             </div>
         </div>
         <div class="row cl">
@@ -280,7 +254,13 @@
             rules:{
                 name:{
                     required:true,
-                    maxlength:50
+                    maxlength:30
+                },
+                open_date: {
+                    required: true
+                },
+                deliver: {
+                    required: true
                 },
                 avr_price:{
                     required:true
@@ -291,22 +271,22 @@
                 max_area:{
                     required:true
                 },
-                min_bro:{
+                commission:{
                     required: true
-                },
-                max_bro:{
-                    required:true
-                },
-                deliver:{
-                    required:true
-                },
-                open_date:{
-                    required:true
                 },
                 region:{
                     required:true
                 },
                 address:{
+                    required:true
+                },
+                realty_comp: {
+                    required:true
+                },
+                realty_price: {
+                    required:true
+                },
+                property:{
                     required:true
                 },
                 saler_address:{
@@ -315,7 +295,10 @@
                 developer:{
                     required:true
                 },
-                property:{
+                linkman:{
+                    required:true
+                },
+                email:{
                     required:true
                 },
                 tel:{
@@ -331,8 +314,8 @@
                         type: 'post',
                         url: "{:url('Content/resourceAddPost')}" ,
                         success: function(data){
-                            // isclick = true;
-                            // console.log(data);return;
+                            isclick = true;
+                            console.log(data);return;
                             if(data.code == 1) {
                                 layer.msg('添加成功!',{icon:1,time:1000},function () {
                                     window.parent.location.reload();
@@ -367,6 +350,48 @@
                 $("#fileList").html('<img class="thumbnail" src="'+src+'" />');
             });
         });
+
+        $(document).on("change","#pic_up0",function(){
+            var limit = 6;
+            if($("input[name='pic_url0[]']").length > (limit-1)) {
+                layer.alert('最多上传'+limit+'张图');
+                return false;
+            }
+            if($("#pic_up0").val() != '') {
+                ajaxFileUpload('0');
+            }
+        });
+
+        $(document).on("click",'.thumbnails',function(){
+            var picBox = $(this);
+            layer.confirm("是否要删除该图片？",{
+                btn:['是','否']
+            },function(){
+                picBox.remove();
+                layer.closeAll();
+            });
+        });
+
+        function ajaxFileUpload(index) {
+            if(checkfile(file_area) !== true) {
+                $("#pic_up").val('');
+                return false;
+            }
+            $.ajaxFileUpload({
+                url: '{:url("Index/uploadImage")}', //用于文件上传的服务器端请求地址
+                secureuri: false, //是否需要安全协议，一般设置为false
+                fileElementId: 'pic_up', //文件上传域的ID
+                dataType: 'json', //返回值类型 一般设置为json
+                success: function (data)  //服务器成功响应处理函数
+                {
+                    // console.log(data.data.path);
+                    var src = data.data.path;
+                    var html = '<div class="thumbnails" style="background-image: url(/'+src+');"><div class="file-panel"><input type="hidden" value="'+src+'" name="pic_url' + index + '[]"/></div></div>';
+                    $("#fileList"+index).append(html);
+                }
+            });
+            return false;
+        }
 
     });
 </script>

@@ -410,6 +410,15 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
         return ajax($list);
     }
 
+    public function aboutUs() {
+        try {
+            $info = Db::table('mp_company')->find();
+        } catch (\Exception $e) {
+            return ajax($e->getMessage(), -1);
+        }
+        return ajax($info);
+    }
+
 
 
 
