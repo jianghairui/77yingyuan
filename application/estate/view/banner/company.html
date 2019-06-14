@@ -60,6 +60,24 @@
             </div>
         </div>
         <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">用户服务协议：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <textarea id="editor1" type="text/plain" name="treaty1" style="width:100%;height:400px;">{$info.treaty1|htmlspecialchars_decode}</textarea>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">推荐服务协议：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <textarea id="editor2" type="text/plain" name="treaty2" style="width:100%;height:400px;">{$info.treaty2|htmlspecialchars_decode}</textarea>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">结算服务协议：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <textarea id="editor3" type="text/plain" name="treaty3" style="width:100%;height:400px;">{$info.treaty3|htmlspecialchars_decode}</textarea>
+            </div>
+        </div>
+        <div class="row cl">
             <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
                 <button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
             </div>
@@ -82,6 +100,9 @@
     $(function(){
 
         var ue = UE.getEditor('editor');
+        var ue1 = UE.getEditor('editor1');
+        var ue2 = UE.getEditor('editor2');
+        var ue3 = UE.getEditor('editor3');
 
         $('.skin-minimal input').iCheck({
             checkboxClass: 'icheckbox-blue',

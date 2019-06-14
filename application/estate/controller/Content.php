@@ -83,8 +83,8 @@ class Content extends Base {
         $val['email'] = input('post.email','');
         $val['tel'] = input('post.tel','');
         $val['status'] = input('post.status',1);
-        $val['selling_point'] = input('post.selling_point','');
         checkInput($val);
+        $val['selling_point'] = input('post.selling_point','');
         $val['licence'] = input('post.licence');
         if(!is_tel($val['tel'])) {
             return ajax('无效的手机号',-1);
@@ -197,9 +197,9 @@ class Content extends Base {
         $val['email'] = input('post.email','');
         $val['tel'] = input('post.tel','');
         $val['status'] = input('post.status',1);
-        $val['selling_point'] = input('post.selling_point','');
         $val['id'] = input('post.id','');
         checkInput($val);
+        $val['selling_point'] = input('post.selling_point','');
         $val['licence'] = input('post.licence');
         if(!is_tel($val['tel'])) {
             return ajax('无效的手机号',-1);

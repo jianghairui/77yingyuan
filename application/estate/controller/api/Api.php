@@ -79,7 +79,7 @@ class Api extends Common {
             $where[] = ['del','=',0];
             $list = Db::table('mp_resource')
                 ->where($where)
-                ->field("id,pic,name,avr_price,min_area,max_area,min_bro,max_bro,tags")
+                ->field("id,pic,name,avr_price,min_area,max_area,commission,tags")
                 ->limit(($curr_page-1)*$perpage,$perpage)
                 ->order($order)
                 ->select();
@@ -103,6 +103,10 @@ class Api extends Common {
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
         }
+        $exist['pics0'] = unserialize($exist['pics0']);
+        $exist['pics1'] = unserialize($exist['pics1']);
+        $exist['pics2'] = unserialize($exist['pics2']);
+        $exist['pics3'] = unserialize($exist['pics3']);
         return ajax($exist);
     }
 
@@ -152,6 +156,7 @@ class Api extends Common {
         $val['res_id'] = input('post.res_id');
         $val['name'] = input('post.name');
         $val['tel'] = input('post.tel');
+        $val['desc'] = input('post.desc');
         $val['meeting_date'] = input('post.meeting_date');
         $val['uid'] = $this->myinfo['uid'];
         checkPost($val);
@@ -170,14 +175,14 @@ class Api extends Common {
             if(!$res_exist) {
                 return ajax('非法参数',-4);
             }
-            $whereAppoint = [
-                ['res_id','=',$val['res_id']],
-                ['tel','=',$val['tel']]
-            ];
-            $appoint_exist = Db::table('mp_appoint')->where($whereAppoint)->find();
-            if($appoint_exist) {
-                return ajax('此手机号已预约',47);
-            }
+//            $whereAppoint = [
+//                ['res_id','=',$val['res_id']],
+//                ['tel','=',$val['tel']]
+//            ];
+//            $appoint_exist = Db::table('mp_appoint')->where($whereAppoint)->find();
+//            if($appoint_exist) {
+//                return ajax('此手机号已预约',47);
+//            }
             Db::table('mp_appoint')->insert($val);
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
@@ -187,7 +192,7 @@ class Api extends Common {
 
     public function aboutUs() {
         try {
-            $info = Db::table('mp_company')->find();
+            $info = Db::table('mp_company')->field('id,name,intro,tel,address,linkman,logo,lon,lat,desc')->find();
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
         }
@@ -199,11 +204,9 @@ class Api extends Common {
         $perpage = input('post.perpage',10);
         try {
             $where = [
-                ['a.uid','=',$this->myinfo['uid']]
+                ['uid','=',$this->myinfo['uid']]
             ];
-            $list = Db::table('mp_appoint')->alias('a')
-                ->join("mp_resource r","a.res_id=r.id","left")
-                ->field("a.*,r.name AS res_name,r.min_bro,r.max_bro,r.pic,r.avr_price")
+            $list = Db::table('mp_appoint')
                 ->where($where)
                 ->limit(($curr_page-1)*$perpage,$perpage)->select();
         } catch (\Exception $e) {
@@ -233,5 +236,41 @@ class Api extends Common {
         }
         return ajax();
     }
+
+    public function getTreaty() {
+        $type = input('post.type',1);
+        switch ($type) {
+            case 1:
+                $field='treaty1';break;
+            case 2:
+                $field='treaty2';break;
+            case 3:
+                $field='treaty3';break;
+        }
+        try {
+            $info = Db::table('mp_company')->where('id','=',1)->value($field);
+        } catch (\Exception $e) {
+            return ajax($e->getMessage(), -1);
+        }
+        return ajax($info);
+    }
+
+    public function getInviteList() {
+        $where = [
+            ['inviter_id','=',$this->myinfo['uid']]
+        ];
+        $order = ['id'=>'DESC'];
+        try {
+            $data['count'] = Db::table('mp_user')->where($where)->count();
+            $data['list'] = Db::table('mp_user')->where($where)->field('id,realname,tel,avatar,deal_num')->order($order)->select();
+        } catch (\Exception $e) {
+            return ajax($e->getMessage(), -1);
+        }
+        return ajax($data);
+    }
+
+
+
+
 
 }
