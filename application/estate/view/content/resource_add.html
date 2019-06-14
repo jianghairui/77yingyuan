@@ -1,6 +1,6 @@
 <style>
-    .thumbnail{ width:300px}
-    .thumbnails{ width:200px;height: 200px;background-size: cover;background-position: center;position: relative}
+    .upload-image{ width:300px}
+    .thumbnail{ width:200px;height: 200px;background-size: cover;background-position: center;position: relative}
 </style>
 <article class="page-container">
     <form class="form form-horizontal" id="form-article-add">
@@ -187,13 +187,13 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>案场负责人姓名：</label>
             <div class="formControls col-xs-4 col-sm-4">
-                <input type="text" class="input-text" value="" placeholder="案场负责人姓名" id="linkman" name="linkman" maxlength="15">
+                <input type="text" class="input-text" value="" placeholder="案场负责人姓名" id="linkman" name="linkman" maxlength="20">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>案场负责人邮箱：</label>
             <div class="formControls col-xs-4 col-sm-4">
-                <input type="text" class="input-text" value="" placeholder="此为报备通知邮箱" id="email" name="email" maxlength="15">
+                <input type="text" class="input-text" value="" placeholder="此为报备通知邮箱" id="email" name="email" maxlength="50">
             </div>
         </div>
         <div class="row cl">
@@ -203,14 +203,8 @@
             </div>
         </div>
         <div class="row cl">
-            <label class="form-label col-xs-4 col-sm-2">项目卖点：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <textarea name="selling_point" id="selling_point" cols="" rows="" maxlength="2000" class="textarea"  placeholder="说点什么...最多输入2000个字符"></textarea>
-            </div>
-        </div>
-        <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">
-                <span class="btn btn-primary btn-uploadstar radius ml-10" onclick="javascript:$('#pic_up0').click();">展示图</span>
+                <span class="btn btn-primary btn-uploadstar radius ml-10" onclick="javascript:$('#pic_up0').click();">平面图</span>
             </label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="uploader-thum-container">
@@ -219,6 +213,51 @@
                     </div>
                     <input type="file"  id="pic_up0" name="pic_up0" style="display:none;">
                 </div>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">
+                <span class="btn btn-primary btn-uploadstar radius ml-10" onclick="javascript:$('#pic_up1').click();">样板间</span>
+            </label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="uploader-thum-container">
+                    <div id="fileList1" class="uploader-list">
+
+                    </div>
+                    <input type="file"  id="pic_up1" name="pic_up1" style="display:none;">
+                </div>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">
+                <span class="btn btn-primary btn-uploadstar radius ml-10" onclick="javascript:$('#pic_up2').click();">户型图</span>
+            </label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="uploader-thum-container">
+                    <div id="fileList2" class="uploader-list">
+
+                    </div>
+                    <input type="file"  id="pic_up2" name="pic_up2" style="display:none;">
+                </div>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">
+                <span class="btn btn-primary btn-uploadstar radius ml-10" onclick="javascript:$('#pic_up3').click();">效果图</span>
+            </label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <div class="uploader-thum-container">
+                    <div id="fileList3" class="uploader-list">
+
+                    </div>
+                    <input type="file"  id="pic_up3" name="pic_up3" style="display:none;">
+                </div>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">项目卖点：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <textarea name="selling_point" id="selling_point" cols="" rows="" maxlength="2000" class="textarea"  placeholder="说点什么...最多输入2000个字符"></textarea>
             </div>
         </div>
         <div class="row cl">
@@ -238,6 +277,7 @@
 <script type="text/javascript" src="/lib/jquery.validation/1.14.0/messages_zh.js"></script>
 
 <script type="text/javascript" src="/lib/checkfile.js"></script>
+<script type="text/javascript" src="/lib/ajaxfileupload.js"></script>
 
 <script type="text/javascript">
     $(function(){
@@ -262,22 +302,19 @@
                 deliver: {
                     required: true
                 },
-                avr_price:{
-                    required:true
-                },
-                min_area:{
-                    required:true
-                },
-                max_area:{
-                    required:true
-                },
-                commission:{
+                address: {
                     required: true
                 },
-                region:{
+                property:{
                     required:true
                 },
-                address:{
+                developer:{
+                    required:true
+                },
+                saler_address:{
+                    required:true
+                },
+                region:{
                     required:true
                 },
                 realty_comp: {
@@ -286,14 +323,38 @@
                 realty_price: {
                     required:true
                 },
-                property:{
+                trim_type: {
+                    required: true
+                },
+                area_rate: {
+                    required: true
+                },
+                area_covered: {
+                    required: true
+                },
+                floorage: {
+                    required: true
+                },
+                house_num: {
+                    required: true
+                },
+                parking_num: {
+                    required: true
+                },
+                green_rate: {
+                    required: true
+                },
+                avr_price:{
                     required:true
                 },
-                saler_address:{
+                min_area: {
                     required:true
                 },
-                developer:{
+                max_area: {
                     required:true
+                },
+                commission:{
+                    required: true
                 },
                 linkman:{
                     required:true
@@ -314,17 +375,15 @@
                         type: 'post',
                         url: "{:url('Content/resourceAddPost')}" ,
                         success: function(data){
-                            isclick = true;
-                            console.log(data);return;
+                            // console.log(data);isclick=true;return;
                             if(data.code == 1) {
                                 layer.msg('添加成功!',{icon:1,time:1000},function () {
                                     window.parent.location.reload();
                                 });
                             }else {
                                 layer.msg(data.data,{icon:2,time:1000});
-                                isclick = true
                             }
-
+                            isclick = true;
                         },
                         error: function(XmlHttpRequest, textStatus, errorThrown){
                             layer.msg('接口请求失败!',{icon:5,time:1000});
@@ -347,7 +406,7 @@
                 }
                 var img = e.target.files[0];
                 var src = window.URL.createObjectURL(img);
-                $("#fileList").html('<img class="thumbnail" src="'+src+'" />');
+                $("#fileList").html('<img class="upload-image" src="'+src+'" />');
             });
         });
 
@@ -362,7 +421,40 @@
             }
         });
 
-        $(document).on("click",'.thumbnails',function(){
+        $(document).on("change","#pic_up1",function(){
+            var limit = 6;
+            if($("input[name='pic_url1[]']").length > (limit-1)) {
+                layer.alert('最多上传'+limit+'张图');
+                return false;
+            }
+            if($("#pic_up0").val() != '') {
+                ajaxFileUpload('1');
+            }
+        });
+
+        $(document).on("change","#pic_up2",function(){
+            var limit = 6;
+            if($("input[name='pic_url2[]']").length > (limit-1)) {
+                layer.alert('最多上传'+limit+'张图');
+                return false;
+            }
+            if($("#pic_up0").val() != '') {
+                ajaxFileUpload('2');
+            }
+        });
+
+        $(document).on("change","#pic_up3",function(){
+            var limit = 6;
+            if($("input[name='pic_url3[]']").length > (limit-1)) {
+                layer.alert('最多上传'+limit+'张图');
+                return false;
+            }
+            if($("#pic_up0").val() != '') {
+                ajaxFileUpload('3');
+            }
+        });
+
+        $(document).on("click",'.thumbnail',function(){
             var picBox = $(this);
             layer.confirm("是否要删除该图片？",{
                 btn:['是','否']
@@ -373,20 +465,20 @@
         });
 
         function ajaxFileUpload(index) {
-            if(checkfile(file_area) !== true) {
-                $("#pic_up").val('');
+            if(checkfile('pic_up'+index) !== true) {
+                $("#pic_up"+index).val('');
                 return false;
             }
             $.ajaxFileUpload({
                 url: '{:url("Index/uploadImage")}', //用于文件上传的服务器端请求地址
                 secureuri: false, //是否需要安全协议，一般设置为false
-                fileElementId: 'pic_up', //文件上传域的ID
+                fileElementId: 'pic_up'+index, //文件上传域的ID
                 dataType: 'json', //返回值类型 一般设置为json
                 success: function (data)  //服务器成功响应处理函数
                 {
                     // console.log(data.data.path);
                     var src = data.data.path;
-                    var html = '<div class="thumbnails" style="background-image: url(/'+src+');"><div class="file-panel"><input type="hidden" value="'+src+'" name="pic_url' + index + '[]"/></div></div>';
+                    var html = '<div class="thumbnail" style="background-image: url(/'+src+');"><div class="file-panel"><input type="hidden" value="'+src+'" name="pic_url' + index + '[]"/></div></div>';
                     $("#fileList"+index).append(html);
                 }
             });
