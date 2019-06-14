@@ -52,9 +52,20 @@
                 </td>
                 <td class="td-manage">
                     {if $li['status'] == '0'}
-                    <a style="text-decoration:none" onClick="contact(this,{$li.id})" href="javascript:;" title="联系">
-                        <i class="Hui-iconfont">&#xe6a3;</i>
+                    <!--<a style="text-decoration:none" onClick="contact(this,{$li.id})" href="javascript:;" title="联系">-->
+                        <!--<i class="Hui-iconfont">&#xe6a3;</i>-->
+                    <!--</a>-->
+                    <a style="text-decoration:none" onClick="deal(this,{$li.id})" href="javascript:;" title="成交">
+                        <i class="icon Hui-iconfont">&#xe73a;</i>
                     </a>
+                    {/if}
+                    {if $li['status'] == '2'}
+                    <a style="text-decoration:none" onClick="settle(this,{$li.id})" href="javascript:;" title="结算">
+                        <i class="icon Hui-iconfont">&#xe73a;</i>
+                    </a>
+                    {/if}
+                    {if $li['status'] == '2'}
+                        <i class="icon Hui-iconfont">&#xe73a;</i>
                     {/if}
                 </td>
             </tr>
