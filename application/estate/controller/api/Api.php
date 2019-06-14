@@ -183,6 +183,7 @@ class Api extends Common {
 //            if($appoint_exist) {
 //                return ajax('此手机号已预约',47);
 //            }
+            $val['commission'] = $res_exist['commission'];
             Db::table('mp_appoint')->insert($val);
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
@@ -267,6 +268,36 @@ class Api extends Common {
             return ajax($e->getMessage(), -1);
         }
         return ajax($data);
+    }
+
+    //检测用户是否手机授权
+    public function checkUserPhoneAuth() {
+        $uid = $this->myinfo['uid'];
+        try {
+            $tel = Db::table('mp_user')->where('id',$uid)->value('tel');
+            if($tel) {
+                return ajax(true);
+            }else {
+                return ajax(false);
+            }
+        }catch (\Exception $e) {
+            return ajax($e->getMessage(),-1);
+        }
+    }
+
+    //检测用户是否填写真实姓名
+    public function checkUserRealname() {
+        $uid = $this->myinfo['uid'];
+        try {
+            $realname = Db::table('mp_user')->where('id',$uid)->value('realname');
+            if($realname) {
+                return ajax(true);
+            }else {
+                return ajax(false);
+            }
+        }catch (\Exception $e) {
+            return ajax($e->getMessage(),-1);
+        }
     }
 
 
