@@ -14,28 +14,24 @@ class Email extends Controller {
 
     public function sendSmtp() {
         $id = input('param.id');
-        try {
-            $exist = Db::table('mp_appoint')->where('id','=',$id)->find();
-            if(!$exist) {
-                die();
-            }
-            $resource = Db::table('mp_resource')->where('id','=',$exist['res_id'])->find();
-            $user = Db::table('mp_user')->where('id','=',$exist['uid'])->find();
-        } catch (\Exception $e) {
-            die($e->getMessage());
-        }
-        $res_name = $resource['name'];
-
-        $data['tel'] = $user['tel'];
-        $data['name'] = $user['realname'];
-        $data['to_tel'] = $exist['tel'];
-        $data['to_name'] = $exist['name'];
-        $data['title'] = $res_name.'案场报备';
-        $data['email'] = $resource['email'];
-        $data['meeting_date'] = $exist['meeting_date'];
-
         if($_SERVER['REMOTE_ADDR'] == '47.105.162.170') {
             try {
+                $exist = Db::table('mp_appoint')->where('id','=',$id)->find();
+                if(!$exist) {
+                    die();
+                }
+                $resource = Db::table('mp_resource')->where('id','=',$exist['res_id'])->find();
+                $user = Db::table('mp_user')->where('id','=',$exist['uid'])->find();
+                $res_name = $resource['name'];
+
+                $data['tel'] = $user['tel'];
+                $data['name'] = $user['realname'];
+                $data['to_tel'] = $exist['tel'];
+                $data['to_name'] = $exist['name'];
+                $data['title'] = $res_name.'案场报备';
+                $data['email'] = $resource['email'];
+                $data['meeting_date'] = $exist['meeting_date'];
+
                 //使用163邮箱服务器
                 $smtpserver = "smtp.163.com";
 //163邮箱服务器端口
@@ -73,9 +69,10 @@ class Email extends Controller {
             $smtp->debug = false;
 //发送邮件
             $smtp->sendmail($smtpemailto, $smtpusermail, $mailsubject, $mailbody, $mailtype);
+        }else {
+            die('IP不在访问白名单内');
         }
 
-//        halt($user);
     }
 
 

@@ -301,6 +301,17 @@ class Api extends Common {
         }
     }
 
+    public function realname() {
+        $val['realname'] = input('post.realname');
+        checkPost($val);
+        try {
+            Db::table('mp_user')->where('id','=',$this->myinfo['uid'])->update($val);
+        } catch (\Exception $e) {
+            return ajax($e->getMessage(), -1);
+        }
+        return ajax();
+    }
+
 
     public function getCommission() {
         $uid = $this->myinfo['uid'];
