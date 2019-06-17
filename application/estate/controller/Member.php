@@ -90,7 +90,6 @@ class Member extends Base {
         return $this->fetch();
     }
 
-
     public function contact() {
         $id = input('post.id');
         try {
@@ -98,6 +97,37 @@ class Member extends Base {
                 ['id','=',$id]
             ];
             Db::table('mp_appoint')->where($where)->update(['status'=>1]);
+        } catch (\Exception $e) {
+            return ajax($e->getMessage(), -1);
+        }
+        return ajax();
+    }
+
+    public function deal() {
+        $id = input('post.id');
+        try {
+            $where = [
+                ['id','=',$id]
+            ];
+            $exist = Db::table('mp_appoint')->where($where)->find();
+            if(!$exist) {
+                return ajax('非法参数',-4);
+            }
+            Db::table('mp_appoint')->where($where)->update(['status'=>2]);
+            Db::table('mp_user')->where('id','=',$exist['uid'])->setInc('deal_num',1);
+        } catch (\Exception $e) {
+            return ajax($e->getMessage(), -1);
+        }
+        return ajax();
+    }
+
+    public function settle() {
+        $id = input('post.id');
+        try {
+            $where = [
+                ['id','=',$id]
+            ];
+            Db::table('mp_appoint')->where($where)->update(['status'=>3]);
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
         }

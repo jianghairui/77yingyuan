@@ -184,10 +184,11 @@ class Api extends Common {
 //                return ajax('此手机号已预约',47);
 //            }
             $val['commission'] = $res_exist['commission'];
-            Db::table('mp_appoint')->insert($val);
+            $id = Db::table('mp_appoint')->insertGetId($val);
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
         }
+        $this->asyn_smtp(['id'=>$id]);
         return ajax();
     }
 
@@ -297,6 +298,64 @@ class Api extends Common {
             }
         }catch (\Exception $e) {
             return ajax($e->getMessage(),-1);
+        }
+    }
+
+
+    public function getCommission() {
+        $uid = $this->myinfo['uid'];
+        try {
+            $where = [
+                ['uid','=',$uid],
+                ['status','=',3]
+            ];
+            $data['commission_settled'] = Db::table('mp_appoint')->where($where)->sum('commission');
+            $where = [
+                ['uid','=',$uid],
+                ['status','=',2]
+            ];
+            $data['commission_unsettled'] = Db::table('mp_appoint')->where($where)->sum('commission');
+        } catch (\Exception $e) {
+            return ajax($e->getMessage(), -1);
+        }
+        return ajax($data);
+    }
+
+
+    public function getCommissionList() {
+        $uid = $this->myinfo['uid'];
+        try {
+            $where = [
+                ['a.uid','=',$uid],
+                ['a.status','in',[2,3]]
+            ];
+            $list = Db::table('mp_appoint')->alias('a')
+                ->join('mp_resource r','a.res_id=r.id','left')
+                ->where($where)->field('a.id,a.name,a.tel,a.create_time,a.status,a.commission,r.name AS res_name')->select();
+        } catch (\Exception $e) {
+            return ajax($e->getMessage(), -1);
+        }
+        return ajax($list);
+    }
+
+//    public function test() {
+//        $this->asyn_smtp(['id'=>29]);
+//        return ajax(987);
+//    }
+
+    protected function asyn_smtp($data) {
+        $param = http_build_query($data);
+        $fp = fsockopen('ssl://' . $this->domain, 443, $errno, $errstr, 20);
+        if (!$fp){
+            echo 'error fsockopen';
+        }else{
+            stream_set_blocking($fp,0);
+            $http = "GET /estate/api.email/sendSmtp?".$param." HTTP/1.1\r\n";
+            $http .= "Host: ".$this->domain."\r\n";
+            $http .= "Connection: Close\r\n\r\n";
+            fwrite($fp,$http);
+            usleep(1000);
+            fclose($fp);
         }
     }
 
