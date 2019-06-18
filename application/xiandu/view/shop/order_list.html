@@ -79,7 +79,7 @@
                     <span id="refund-status">
                         {switch $li['refund_apply']}
                         {case 1}
-                            <span class="label label-danger radius">申请退款</span>
+                            <span class="label label-danger radius" title="{$li.reason}">申请退款</span>
                         {/case}
                         {case 2}
                             <span class="label label-danger radius">已退款</span>

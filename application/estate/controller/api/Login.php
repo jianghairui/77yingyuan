@@ -89,7 +89,7 @@ class Login extends Common {
                 $data['sex'] = $decryptedData['gender'];
 //                $data['unionid'] = $decryptedData['unionId'];
                 $data['user_auth'] = 1;
-                if($inviter_id) {
+                if($inviter_id && !$user['inviter_id']) {
                     $inviter_exist = Db::table('mp_user')->where('id','=',$inviter_id)->find();
                     if($inviter_exist) {
                         $update_data = [

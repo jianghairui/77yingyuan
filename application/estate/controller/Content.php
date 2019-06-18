@@ -84,6 +84,7 @@ class Content extends Base {
         $val['tel'] = input('post.tel','');
         $val['status'] = input('post.status',1);
         checkInput($val);
+        $val['term'] = input('post.term');
         $val['selling_point'] = input('post.selling_point','');
         $val['licence'] = input('post.licence');
         if(!is_tel($val['tel'])) {
@@ -199,6 +200,7 @@ class Content extends Base {
         $val['status'] = input('post.status',1);
         $val['id'] = input('post.id','');
         checkInput($val);
+        $val['term'] = input('post.term');
         $val['selling_point'] = input('post.selling_point','');
         $val['licence'] = input('post.licence');
         if(!is_tel($val['tel'])) {
