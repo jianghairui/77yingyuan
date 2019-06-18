@@ -22,7 +22,9 @@ class Api extends Common {
     public function userInfo()
     {
         $info = $this->getMyInfo();
+        $data['id'] = $info['id'];
         $data['nickname'] = $info['nickname'];
+        $data['realname'] = $info['realname'];
         $data['avatar'] = $info['avatar'];
         $data['sex'] = $info['sex'];
         $data['tel'] = $info['tel'];
@@ -156,10 +158,11 @@ class Api extends Common {
         $val['res_id'] = input('post.res_id');
         $val['name'] = input('post.name');
         $val['tel'] = input('post.tel');
-        $val['desc'] = input('post.desc');
         $val['meeting_date'] = input('post.meeting_date');
         $val['uid'] = $this->myinfo['uid'];
+        $val['type'] = input('post.type',1);
         checkPost($val);
+        $val['desc'] = input('post.desc');
         $val['create_time'] = time();
         if(!is_tel($val['tel'])) {
             return ajax('无效的手机号',6);
@@ -206,7 +209,8 @@ class Api extends Common {
         $perpage = input('post.perpage',10);
         try {
             $where = [
-                ['uid','=',$this->myinfo['uid']]
+                ['uid','=',$this->myinfo['uid']],
+                ['type','=',1]
             ];
             $list = Db::table('mp_appoint')
                 ->where($where)
@@ -264,7 +268,7 @@ class Api extends Common {
         $order = ['id'=>'DESC'];
         try {
             $data['count'] = Db::table('mp_user')->where($where)->count();
-            $data['list'] = Db::table('mp_user')->where($where)->field('id,realname,tel,avatar,deal_num')->order($order)->select();
+            $data['list'] = Db::table('mp_user')->where($where)->field('id,nickname,tel,avatar,deal_num')->order($order)->select();
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
         }
@@ -335,6 +339,8 @@ class Api extends Common {
 
     public function getCommissionList() {
         $uid = $this->myinfo['uid'];
+        $curr_page = input('post.page',1);
+        $perpage = input('post.perpage',10);
         try {
             $where = [
                 ['a.uid','=',$uid],
@@ -342,7 +348,7 @@ class Api extends Common {
             ];
             $list = Db::table('mp_appoint')->alias('a')
                 ->join('mp_resource r','a.res_id=r.id','left')
-                ->where($where)->field('a.id,a.name,a.tel,a.create_time,a.status,a.commission,r.name AS res_name')->select();
+                ->where($where)->field('a.id,a.name,a.tel,a.create_time,a.deal_time,a.status,a.commission,r.name AS res_name')->limit(($curr_page-1)*$perpage,$perpage)->select();
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
         }
