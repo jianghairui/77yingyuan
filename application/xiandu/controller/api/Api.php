@@ -35,9 +35,11 @@ class Api extends Common
             $where = [
                 ['del','=',0]
             ];
+            $order = ['id'=>'DESC'];
             $list = Db::table('mp_coupon')
                 ->where($where)
                 ->field('id,coupon_name,condition,cut_price,create_time')
+                ->order($order)
                 ->select();
             $whereUserCoupon = [
                 ['uid','=',$this->myinfo['uid']]
