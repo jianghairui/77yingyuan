@@ -67,6 +67,7 @@ class Login extends Common {
     public function userAuth() {
         $iv = input('post.iv');
         $encryptData = input('post.encryptedData');
+        $inviter_id = input('post.inviter_id','');
         checkPost([
             'iv' => $iv,
             'encryptedData' => $encryptData
@@ -88,6 +89,17 @@ class Login extends Common {
                 $data['sex'] = $decryptedData['gender'];
 //                $data['unionid'] = $decryptedData['unionId'];
                 $data['user_auth'] = 1;
+                $data['inviter_id'] = -1;
+                if($inviter_id && !$user['inviter_id']) {
+                    $inviter_exist = Db::table('mp_user')->where('id','=',$inviter_id)->find();
+                    if($inviter_exist) {
+                        $update_data = [
+                            'invite_num' => ($inviter_exist['invite_num'] + 1)
+                        ];
+                        Db::table('mp_user')->where('id','=',$inviter_id)->update($update_data);
+                        $data['inviter_id'] = $inviter_id;
+                    }
+                }
                 Db::table('mp_user')->where('id','=',$this->myinfo['uid'])->update($data);
             }else {
                 return ajax();

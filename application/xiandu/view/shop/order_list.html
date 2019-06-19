@@ -79,7 +79,7 @@
                     <span id="refund-status">
                         {switch $li['refund_apply']}
                         {case 1}
-                            <span class="label label-danger radius">申请退款</span>
+                            <span class="label label-danger radius" title="{$li.reason}">申请退款</span>
                         {/case}
                         {case 2}
                             <span class="label label-danger radius">已退款</span>
@@ -90,11 +90,11 @@
 
                 </td>
                 <td class="td-manage" rowspan="3">
-                    <span>
-                        <a title="查看详情" href="javascript:;" onclick="detail('订单详情','{:url("Shop/orderDetail",array("id"=>$li["id"]))}')">
-                        <i class="Hui-iconfont">&#xe6df;</i>
-                        </a>
-                    </span>
+                    <!--<span>-->
+                        <!--<a title="查看详情" href="javascript:;" onclick="detail('订单详情','{:url("Shop/orderDetail",array("id"=>$li["id"]))}')">-->
+                        <!--<i class="Hui-iconfont">&#xe6df;</i>-->
+                        <!--</a>-->
+                    <!--</span>-->
                     <span id="send-btn">
                         {if $li['status'] == 1 && $li['refund_apply'] == 0}
                         <a title="发货" href="javascript:;" onclick="order_send('订单发货','{:url("Shop/orderSend",array("id"=>$li["id"]))}','600','400')"">

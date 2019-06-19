@@ -526,7 +526,7 @@ class Shop extends Common {
         try {
             $count = Db::query("SELECT count(id) AS total_count FROM mp_order o WHERE " . $where);
             $sql = "SELECT 
-`o`.`id`,`o`.`pay_order_sn`,`o`.`trans_id`,`o`.`receiver`,`o`.`tel`,`o`.`address`,`o`.`pay_price`,`o`.`total_price`,`o`.`carriage`,`o`.`create_time`,`o`.`refund_apply`,`o`.`status`,`o`.`refund_apply`,`d`.`order_id`,`d`.`goods_id`,`d`.`num`,`d`.`unit_price`,`d`.`goods_name`,`d`.`attr`,`g`.`pics` 
+`o`.`id`,`o`.`pay_order_sn`,`o`.`trans_id`,`o`.`receiver`,`o`.`tel`,`o`.`address`,`o`.`pay_price`,`o`.`total_price`,`o`.`carriage`,`o`.`create_time`,`o`.`refund_apply`,`o`.`reason`,`o`.`status`,`o`.`refund_apply`,`d`.`order_id`,`d`.`goods_id`,`d`.`num`,`d`.`unit_price`,`d`.`goods_name`,`d`.`attr`,`g`.`pics` 
 FROM (SELECT * FROM mp_order WHERE " . $where . $order . " LIMIT ".($curr_page-1)*$perpage.",".$perpage.") `o` 
 LEFT JOIN `mp_order_detail` `d` ON `o`.`id`=`d`.`order_id`
 LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
@@ -557,6 +557,7 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
                     $data['carriage'] = $li['carriage'];
                     $data['status'] = $li['status'];
                     $data['refund_apply'] = $li['refund_apply'];
+                    $data['reason'] = $li['reason'];
                     $data['create_time'] = date('Y-m-d H:i',$li['create_time']);
                     $data_child['goods_id'] = $li['goods_id'];
                     $data_child['cover'] = unserialize($li['pics'])[0];
@@ -643,7 +644,8 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
                 return ajax('订单不存在或状态已改变',-1);
             }
             $pay_order_sn = $exist['pay_order_sn'];
-//            $exist['pay_price'] = 0.01;
+
+            $exist['pay_price'] = 0.01;
             $arr = [
                 'appid' => config('app_id'),
                 'mch_id'=> config('mch_id'),
@@ -686,7 +688,7 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
     public function orderDel() {
 
     }
-
+//修改收货地址
     public function modAdress() {
         $val['address'] = input('post.address');
         $val['id'] = input('post.id');
@@ -708,7 +710,7 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
         }
         return ajax();
     }
-
+//修改订单价格
     public function modPrice() {
         $val['pay_price'] = input('post.pay_price');
         $val['id'] = input('post.id');
@@ -730,7 +732,7 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
         }
         return ajax();
     }
-
+//优惠券列表
     public function couponList() {
         $where = [
             ['del','=',0]
@@ -743,11 +745,11 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
         $this->assign('list',$list);
         return $this->fetch();
     }
-
+//添加优惠券
     public function couponAdd() {
         return $this->fetch();
     }
-
+//添加优惠券POST
     public function couponAddPost() {
         $val['coupon_name'] = input('post.coupon_name');
         $val['condition'] = input('post.condition',200);
@@ -764,7 +766,7 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
         }
         return ajax([]);
     }
-
+//优惠券详情
     public function couponDetail() {
         try {
             $val['id'] = input('param.id');
@@ -778,7 +780,7 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
         $this->assign('info',$info);
         return $this->fetch();
     }
-
+//优惠券修改
     public function couponMod() {
         $val['coupon_name'] = input('post.coupon_name');
         $val['condition'] = input('post.condition',200);
@@ -802,7 +804,7 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
         }
         return ajax([]);
     }
-
+//优惠券删除
     public function couponDel() {
         $val['id'] = input('post.id');
         checkInput($val);
@@ -824,5 +826,7 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
         }
         return ajax([]);
     }
+
+
 
 }

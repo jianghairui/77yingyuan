@@ -29,7 +29,7 @@
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">
-                <span id="btn-star1" class="btn btn-primary btn-uploadstar radius ml-10"  onclick="document.getElementById('pic_up').click()">上传图片</span>
+                <span id="btn-star1" class="btn btn-primary btn-uploadstar radius ml-10"  onclick="document.getElementById('pic_up').click()">上传图片(建议尺寸:430*430)</span>
             </label>
             <div class="formControls col-xs-8 col-sm-9">
                 <div class="uploader-thum-container">
@@ -63,7 +63,7 @@
             <div class="row cl">
                 <label class="form-label col-sm-2">规格组：</label>
                 <div class="formControls col-sm-4">
-                    <input type="text" class="input-text" value="" placeholder=“(如颜色、尺寸)" id="attr" name="attr">
+                    <input type="text" class="input-text" value="" placeholder=“(如颜色、尺寸)" id="attr" name="attr" maxlength="20">
                 </div>
                 <label class="col-sm-6" id="attr_add"><span class="btn btn-primary">添加+</span></label>
             </div>
@@ -90,7 +90,7 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">商家服务：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="7天无理由退换" id="service" name="service" maxlength="8">
+                <input type="text" class="input-text" value="" placeholder="7天无理由退换" id="service" name="service" maxlength="255">
             </div>
         </div>
         <div class="row cl">
@@ -102,19 +102,19 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">库存：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="number" class="input-text" value="0" placeholder="输入数字" id="stock" name="stock" maxlength="8">
+                <input type="number" class="input-text" value="0" placeholder="输入数字" id="stock" name="stock" maxlength="10">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">排序：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="number" class="input-text" value="0" placeholder="输入数字" id="sort" name="sort" maxlength="8">
+                <input type="number" class="input-text" value="0" placeholder="输入数字" id="sort" name="sort" maxlength="10">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">销量：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="number" class="input-text" value="0" placeholder="输入数字" id="sales" name="sales" maxlength="8">
+                <input type="number" class="input-text" value="0" placeholder="输入数字" id="sales" name="sales" maxlength="10">
             </div>
         </div>
         <div class="row cl">
@@ -152,7 +152,7 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">描述：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <textarea name="desc" id="desc" cols="" rows="" maxlength="50" class="textarea"  placeholder="说点什么...最少输入10个字符" dragonfly="true" nullmsg="备注不能为空！" ></textarea>
+                <textarea name="desc" id="desc" cols="" rows="" maxlength="50" class="textarea"  placeholder="说点什么...最多输入50个字符" dragonfly="true" nullmsg="备注不能为空！" ></textarea>
             </div>
         </div>
         <div class="row cl">
@@ -376,7 +376,7 @@
                 return false;
             }
             $("#attr_detail").append(
-                '<div class="row cl"><label class="form-label col-sm-2"><a style="text-decoration:none" class="ml-5" title="删除" onclick="javascript:$(this).parent().parent().remove();"><i class="Hui-iconfont">&#xe6e2;</i></a></label><div class="formControls col-sm-2"><input type="text" class="input-text" value="" name="attr1[]" maxlength="30"></div><div class="formControls col-sm-2"><input type="text" class="input-text" value="" name="attr2[]"  oninput="this.value=/^\\d{1,8}(\\.\\d{0,2})?$/.test(this.value) ? this.value : this.value.substring(0,this.value.length-1)"></div><div class="formControls col-sm-2"><input type="number" class="input-text" value="" name="attr3[]"></div></div>'
+                '<div class="row cl"><label class="form-label col-sm-2"><a style="text-decoration:none" class="ml-5" title="删除" onclick="javascript:$(this).parent().parent().remove();"><i class="Hui-iconfont">&#xe6e2;</i></a></label><div class="formControls col-sm-2"><input type="text" class="input-text" value="" name="attr1[]" maxlength="30"></div><div class="formControls col-sm-2"><input type="text" class="input-text" value="" name="attr2[]"  oninput="this.value=/^\\d{1,8}(\\.\\d{0,2})?$/.test(this.value) ? this.value : this.value.substring(0,this.value.length-1)"></div><div class="formControls col-sm-2"><input type="number" class="input-text" value="" name="attr3[]" maxlength="10"></div></div>'
             );
         })
 

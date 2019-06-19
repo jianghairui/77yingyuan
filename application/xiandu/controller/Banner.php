@@ -14,7 +14,11 @@ use my\Bigfile;
 class Banner extends Common {
     //轮播图列表
     public function slideshow() {
-        $list = Db::table('mp_slideshow')->order(['sort'=>'ASC'])->select();
+        try {
+            $list = Db::table('mp_slideshow')->order(['sort'=>'ASC'])->select();
+        } catch (\Exception $e) {
+            die($e->getMessage());
+        }
         $this->assign('list',$list);
         return $this->fetch();
     }
@@ -56,9 +60,13 @@ class Banner extends Common {
     //修改轮播图
     public function slidemod() {
         $val['id'] = input('param.id');
-        $exist = Db::table('mp_slideshow')->where('id','=',$val['id'])->find();
-        if(!$exist) {
-            $this->error('非法操作',url('Banner/slideshow'));
+        try {
+            $exist = Db::table('mp_slideshow')->where('id','=',$val['id'])->find();
+            if(!$exist) {
+                $this->error('非法操作',url('Banner/slideshow'));
+            }
+        } catch (\Exception $e) {
+            die($e->getMessage());
         }
         $this->assign('info',$exist);
         return $this->fetch();
@@ -70,21 +78,20 @@ class Banner extends Common {
             $val['id'] = input('post.slideid');
             checkInput($val);
             $val['url'] = input('post.url');
-
-            $exist = Db::table('mp_slideshow')->where('id',$val['id'])->find();
-            if(!$exist) {
-                return ajax('非法操作',-1);
-            }
-
-            if(isset($_FILES['file'])) {
-                $info = upload('file',$this->upload_base_path);
-                if($info['error'] === 0) {
-                    $val['pic'] = $info['data'];
-                }else {
-                    return ajax($info['msg'],-1);
-                }
-            }
             try {
+                $exist = Db::table('mp_slideshow')->where('id',$val['id'])->find();
+                if(!$exist) {
+                    return ajax('非法操作',-1);
+                }
+
+                if(isset($_FILES['file'])) {
+                    $info = upload('file',$this->upload_base_path);
+                    if($info['error'] === 0) {
+                        $val['pic'] = $info['data'];
+                    }else {
+                        return ajax($info['msg'],-1);
+                    }
+                }
                 Db::table('mp_slideshow')->update($val);
             }catch (\Exception $e) {
                 if(isset($_FILES['file'])) {
@@ -102,12 +109,12 @@ class Banner extends Common {
     public function slide_del() {
         $val['id'] = input('post.slideid');
         checkInput($val);
-        $exist = Db::table('mp_slideshow')->where('id',$val['id'])->find();
-        if(!$exist) {
-            return ajax('非法操作',-1);
-        }
-        $model = model('Slideshow');
         try {
+            $exist = Db::table('mp_slideshow')->where('id',$val['id'])->find();
+            if(!$exist) {
+                return ajax('非法操作',-1);
+            }
+            $model = model('Slideshow');
             $model::destroy($val['id']);
         }catch (\Exception $e) {
             return ajax($e->getMessage(),-1);
@@ -131,12 +138,11 @@ class Banner extends Common {
     public function slide_stop() {
         $val['id'] = input('post.slideid');
         checkInput($val);
-        $exist = Db::table('mp_slideshow')->where('id',$val['id'])->find();
-        if(!$exist) {
-            return ajax('非法操作',-1);
-        }
-
         try {
+            $exist = Db::table('mp_slideshow')->where('id',$val['id'])->find();
+            if(!$exist) {
+                return ajax('非法操作',-1);
+            }
             Db::table('mp_slideshow')->where('id',$val['id'])->update(['status'=>0]);
         }catch (\Exception $e) {
             return ajax($e->getMessage(),-1);
@@ -147,12 +153,11 @@ class Banner extends Common {
     public function slide_start() {
         $val['id'] = input('post.slideid');
         checkInput($val);
-        $exist = Db::table('mp_slideshow')->where('id',$val['id'])->find();
-        if(!$exist) {
-            return ajax('非法操作',-1);
-        }
-
         try {
+            $exist = Db::table('mp_slideshow')->where('id',$val['id'])->find();
+            if(!$exist) {
+                return ajax('非法操作',-1);
+            }
             Db::table('mp_slideshow')->where('id',$val['id'])->update(['status'=>1]);
         }catch (\Exception $e) {
             return ajax($e->getMessage(),-1);
@@ -220,6 +225,54 @@ class Banner extends Common {
             @unlink($exist['poster']);
         }
         return ajax(['path'=>$val['poster']]);
+    }
+
+    public function company() {
+        if(request()->isPost()) {
+            $val['name'] = input('post.name');
+            $val['linkman'] = input('post.linkman');
+            $val['tel'] = input('post.tel');
+            $val['address'] = input('post.address');
+            $val['intro'] = input('post.intro');
+            checkInput($val);
+            $val['lon'] = input('post.lon',0);
+            $val['lat'] = input('post.lat',0);
+            if(isset($_FILES['file'])) {
+                $info = upload('file','res/xiandu/upload/');
+                if($info['error'] === 0) {
+                    $val['logo'] = $info['data'];
+                }else {
+                    return ajax($info['msg'],-1);
+                }
+            }
+            try {
+                $exist = Db::table('mp_company')->where('id',1)->find();
+                if(!$exist) {
+                    Db::table('mp_company')->insert($val);
+                }else {
+                    Db::table('mp_company')->where('id',1)->update($val);
+                }
+            }catch (\Exception $e) {
+                if(isset($val['logo'])) {
+                    @unlink($val['logo']);
+                }
+                return ajax($e->getMessage(),-1);
+            }
+            if($exist) {
+                if(isset($val['logo'])) {
+                    @unlink($exist['logo']);
+                }
+
+            }
+            return ajax();
+        }
+        try {
+            $exist = Db::table('mp_company')->where('id','=',1)->find();
+        } catch (\Exception $e) {
+            die($e->getMessage());
+        }
+        $this->assign('info',$exist);
+        return $this->fetch();
     }
 
     //上传图片限制512KB

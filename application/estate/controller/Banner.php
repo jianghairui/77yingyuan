@@ -168,6 +168,9 @@ class Banner extends Base {
             $val['tel'] = input('post.tel');
             $val['address'] = input('post.address');
             $val['intro'] = input('post.intro');
+            $val['treaty1'] = input('post.treaty1','');
+            $val['treaty2'] = input('post.treaty2','');
+            $val['treaty3'] = input('post.treaty3','');
             checkInput($val);
             $val['lon'] = input('post.lon',0);
             $val['lat'] = input('post.lat',0);

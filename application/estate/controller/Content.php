@@ -6,7 +6,7 @@
  * Time: 16:14
  */
 namespace app\estate\controller;
-
+use think\exception\HttpResponseException;
 use think\Db;
 class Content extends Base {
 
@@ -54,48 +54,42 @@ class Content extends Base {
 
     public function resourceAddPost() {
         $val['name'] = input('post.name');
-        $val['avr_price'] = input('post.avr_price',0);
-        $val['min_area'] = input('post.min_area');
-        $val['max_area'] = input('post.max_area');
-        $val['min_bro'] = input('post.min_bro');
-        $val['max_bro'] = input('post.max_bro');
-        $val['type'] = input('post.type');
-        $val['structure'] = input('post.structure');
-        $val['apartment'] = input('post.apartment');
-        $val['deliver'] = input('post.deliver',date('Y-m-d'));
-        $val['open_date'] = input('post.open_date',date('Y-m-d'));
-        $val['name'] = input('post.name');
         $val['region'] = input('post.region');
+        $val['open_date'] = input('post.open_date',date('Y-m-d'));
+        $val['deliver'] = input('post.deliver',date('Y-m-d'));
         $val['address'] = input('post.address');
-        $val['saler_address'] = input('post.saler_address');
-        $val['developer'] = input('post.developer');
-        $val['building_type'] = input('post.building_type');
         $val['property'] = input('post.property');
-        $val['trim_std'] = input('post.trim_std');
-        $val['trim_price'] = input('post.trim_price',0);
-        $val['trim_desc'] = input('post.trim_desc');
-        $val['area_covered'] = input('post.area_covered');
-        $val['floorage'] = input('post.floorage');
-        $val['area_rate'] = input('post.area_rate');
-        $val['green_rate'] = input('post.green_rate');
-        $val['house_num'] = input('post.house_num');
-        $val['building_num'] = input('post.building_num');
-        $val['parking_num'] = input('post.parking_num');
+        $val['developer'] = input('post.developer');
+        $val['saler_address'] = input('post.saler_address');
         $val['realty_type'] = input('post.realty_type');
         $val['realty_comp'] = input('post.realty_comp');
         $val['realty_price'] = input('post.realty_price',0);
-        $val['heating_type'] = input('post.heating_type');
-        $val['water_type'] = input('post.water_type');
-        $val['power_type'] = input('post.power_type');
+        $val['trim_type'] = input('post.trim_type');
+        $val['building_type'] = input('post.building_type');
+        $val['area_rate'] = input('post.area_rate');
+        $val['area_covered'] = input('post.area_covered');
+        $val['floorage'] = input('post.floorage');
+        $val['house_num'] = input('post.house_num');
+        $val['parking_num'] = input('post.parking_num');
+        $val['green_rate'] = input('post.green_rate');
+
+        $val['avr_price'] = input('post.avr_price',0);
+        $val['min_area'] = input('post.min_area');
+        $val['max_area'] = input('post.max_area');
+        $val['commission'] = input('post.commission');
+        $val['avr_total_price'] = $val['avr_price']*($val['min_area']+$val['max_area'])/2;
+        $val['tags'] = input('post.tags',[]);
+        $val['linkman'] = input('post.linkman','');
+        $val['email'] = input('post.email','');
+        $val['tel'] = input('post.tel','');
         $val['status'] = input('post.status',1);
-        $val['tel'] = input('post.tel',1);
         checkInput($val);
-        $val['desc'] = input('post.desc');
+        $val['term'] = input('post.term');
+        $val['selling_point'] = input('post.selling_point','');
+        $val['licence'] = input('post.licence');
         if(!is_tel($val['tel'])) {
             return ajax('无效的手机号',-1);
         }
-        $val['avr_total_price'] = $val['avr_price']*($val['min_area']+$val['max_area'])/2;
-        $val['tags'] = input('post.tags',[]);
         $val['create_time'] = time();
         if(!empty($val['tags']) && is_array($val['tags'])) {
             $val['tags'] = implode(',',$val['tags']);
@@ -112,17 +106,39 @@ class Content extends Base {
         }else {
             return ajax('请上传图片',-1);
         }
-
+        $image0 = input('post.pic_url0',[]);
+        $image1 = input('post.pic_url1',[]);
+        $image2 = input('post.pic_url2',[]);
+        $image3 = input('post.pic_url3',[]);
+        $image_array0 = $this->check_upload_pics($image0);
+        $image_array1 = $this->check_upload_pics($image1);
+        $image_array2 = $this->check_upload_pics($image2);
+        $image_array3 = $this->check_upload_pics($image3);
+        $val['pics0'] = serialize($image_array0);
+        $val['pics1'] = serialize($image_array1);
+        $val['pics2'] = serialize($image_array2);
+        $val['pics3'] = serialize($image_array3);
         try {
             Db::table('mp_resource')->insert($val);
         }catch (\Exception $e) {
             if(isset($val['pic'])) {
                 @unlink($val['pic']);
             }
+            foreach ($image_array0 as $v) {
+                @unlink($v);
+            }
+            foreach ($image_array1 as $v) {
+                @unlink($v);
+            }
+            foreach ($image_array2 as $v) {
+                @unlink($v);
+            }
+            foreach ($image_array3 as $v) {
+                @unlink($v);
+            }
             return ajax($e->getMessage(),-1);
         }
-        return ajax([],1);
-
+        return ajax();
     }
 
     public function resourceDetail() {
@@ -153,50 +169,44 @@ class Content extends Base {
 
     public function resourceMod() {
         $val['name'] = input('post.name');
-        $val['avr_price'] = input('post.avr_price',0);
-        $val['min_area'] = input('post.min_area');
-        $val['max_area'] = input('post.max_area');
-        $val['min_bro'] = input('post.min_bro');
-        $val['max_bro'] = input('post.max_bro');
-        $val['type'] = input('post.type');
-        $val['structure'] = input('post.structure');
-        $val['apartment'] = input('post.apartment');
-        $val['deliver'] = input('post.deliver',date('Y-m-d'));
-        $val['open_date'] = input('post.open_date',date('Y-m-d'));
-        $val['name'] = input('post.name');
         $val['region'] = input('post.region');
+        $val['open_date'] = input('post.open_date',date('Y-m-d'));
+        $val['deliver'] = input('post.deliver',date('Y-m-d'));
         $val['address'] = input('post.address');
-        $val['saler_address'] = input('post.saler_address');
-        $val['developer'] = input('post.developer');
-        $val['building_type'] = input('post.building_type');
         $val['property'] = input('post.property');
-        $val['trim_std'] = input('post.trim_std');
-        $val['trim_price'] = input('post.trim_price',0);
-        $val['trim_desc'] = input('post.trim_desc');
-        $val['area_covered'] = input('post.area_covered');
-        $val['floorage'] = input('post.floorage');
-        $val['area_rate'] = input('post.area_rate');
-        $val['green_rate'] = input('post.green_rate');
-        $val['house_num'] = input('post.house_num');
-        $val['building_num'] = input('post.building_num');
-        $val['parking_num'] = input('post.parking_num');
+        $val['developer'] = input('post.developer');
+        $val['saler_address'] = input('post.saler_address');
         $val['realty_type'] = input('post.realty_type');
         $val['realty_comp'] = input('post.realty_comp');
         $val['realty_price'] = input('post.realty_price',0);
-        $val['heating_type'] = input('post.heating_type');
-        $val['water_type'] = input('post.water_type');
-        $val['power_type'] = input('post.power_type');
-        $val['status'] = input('post.status',1);
-        $val['tel'] = input('post.tel');
-        $val['id'] = input('post.id');
-        checkInput($val);
-        $val['desc'] = input('post.desc');
-        $val['tags'] = input('post.tags',[]);
+        $val['trim_type'] = input('post.trim_type');
+        $val['building_type'] = input('post.building_type');
+        $val['area_rate'] = input('post.area_rate');
+        $val['area_covered'] = input('post.area_covered');
+        $val['floorage'] = input('post.floorage');
+        $val['house_num'] = input('post.house_num');
+        $val['parking_num'] = input('post.parking_num');
+        $val['green_rate'] = input('post.green_rate');
+
+        $val['avr_price'] = input('post.avr_price',0);
+        $val['min_area'] = input('post.min_area');
+        $val['max_area'] = input('post.max_area');
+        $val['commission'] = input('post.commission');
         $val['avr_total_price'] = $val['avr_price']*($val['min_area']+$val['max_area'])/2;
-        $val['create_time'] = time();
+        $val['tags'] = input('post.tags',[]);
+        $val['linkman'] = input('post.linkman','');
+        $val['email'] = input('post.email','');
+        $val['tel'] = input('post.tel','');
+        $val['status'] = input('post.status',1);
+        $val['id'] = input('post.id','');
+        checkInput($val);
+        $val['term'] = input('post.term');
+        $val['selling_point'] = input('post.selling_point','');
+        $val['licence'] = input('post.licence');
         if(!is_tel($val['tel'])) {
             return ajax('无效的手机号',-1);
         }
+        $val['create_time'] = time();
         if(!empty($val['tags']) && is_array($val['tags'])) {
             $val['tags'] = implode(',',$val['tags']);
         }else {
@@ -210,7 +220,18 @@ class Content extends Base {
                 return ajax($info['msg'],-1);
             }
         }
-
+        $image0 = input('post.pic_url0',[]);
+        $image1 = input('post.pic_url1',[]);
+        $image2 = input('post.pic_url2',[]);
+        $image3 = input('post.pic_url3',[]);
+        $image_array0 = $this->check_upload_pics($image0);
+        $image_array1 = $this->check_upload_pics($image1);
+        $image_array2 = $this->check_upload_pics($image2);
+        $image_array3 = $this->check_upload_pics($image3);
+        $val['pics0'] = serialize($image_array0);
+        $val['pics1'] = serialize($image_array1);
+        $val['pics2'] = serialize($image_array2);
+        $val['pics3'] = serialize($image_array3);
         try {
             $where = [
                 ['id','=',$val['id']]
@@ -219,17 +240,58 @@ class Content extends Base {
             if(!$exist) {
                 return ajax('非法参数',-1);
             }
+            $old_pics0 = unserialize($exist['pics0']);
+            $old_pics1 = unserialize($exist['pics1']);
+            $old_pics2 = unserialize($exist['pics2']);
+            $old_pics3 = unserialize($exist['pics3']);
             Db::table('mp_resource')->where($where)->update($val);
         }catch (\Exception $e) {
             if(isset($val['pic'])) {
                 @unlink($val['pic']);
             }
+            foreach ($image_array0 as $v) {
+                if(!in_array($v,$old_pics0)) {
+                    @unlink($v);
+                }
+            }
+            foreach ($image_array1 as $v) {
+                if(!in_array($v,$old_pics1)) {
+                    @unlink($v);
+                }
+            }
+            foreach ($image_array2 as $v) {
+                if(!in_array($v,$old_pics2)) {
+                    @unlink($v);
+                }
+            }
+            foreach ($image_array3 as $v) {
+                if(!in_array($v,$old_pics3)) {
+                    @unlink($v);
+                }
+            }
             return ajax($e->getMessage(),-1);
         }
-        if(isset($val['pic'])) {
-            @unlink($exist['pic']);
+        foreach ($old_pics0 as $v) {
+            if(!in_array($v,$image_array0)) {
+                @unlink($v);
+            }
         }
-        return ajax([],1);
+        foreach ($old_pics1 as $v) {
+            if(!in_array($v,$image_array1)) {
+                @unlink($v);
+            }
+        }
+        foreach ($old_pics2 as $v) {
+            if(!in_array($v,$image_array2)) {
+                @unlink($v);
+            }
+        }
+        foreach ($old_pics3 as $v) {
+            if(!in_array($v,$image_array3)) {
+                @unlink($v);
+            }
+        }
+        return ajax();
     }
 
     public function resourceDel() {
@@ -446,6 +508,25 @@ class Content extends Base {
             }
         }
         return $arr;
+    }
+
+
+    private function check_upload_pics($image = [],$limit = 6) {
+        $image_array = [];
+        if(is_array($image) && !empty($image)) {
+            if(count($image) > $limit) {
+                throw new HttpResponseException(ajax('最多上传'.$limit.'张图片',-1));
+            }
+            foreach ($image as $v) {
+                if(!file_exists($v)) {
+                    throw new HttpResponseException(ajax('无效的图片路径,请重新上传图片',-1));
+                }
+            }
+            foreach ($image as $v) {
+                $image_array[] = rename_file($v,'res/estate/upload/');
+            }
+        }
+        return $image_array;
     }
 
 
