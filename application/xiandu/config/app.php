@@ -23,7 +23,10 @@ return array(
         'auth_on' => true,
         'auth_type'         => 1, // 认证方式，1为实时认证；2为登录认证。
         'auth_out'          => [
-            'Index/index'
+            'Index/index',
+            'Index/uploadimage',
+            'Login/personal',
+            'Login/modifyInfo'
         ]
     ],
     'app_id' => 'wxcf0a69a03e0d6c0a',

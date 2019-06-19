@@ -306,6 +306,10 @@ class Shop extends Common {
                 return ajax($val['cart_id'],-4);
             }
             Db::table('mp_cart')->where($where)->delete();
+            if($exist['attr_id']) {
+                Db::table('mp_goods_attr')->where('id','=',$exist['attr_id'])->setInc('stock',$exist['num']);
+            }
+            Db::table('mp_goods')->where('id','=',$exist['goods_id'])->setInc('stock',$exist['num']);
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
         }

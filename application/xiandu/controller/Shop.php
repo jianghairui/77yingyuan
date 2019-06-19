@@ -688,7 +688,7 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
     public function orderDel() {
 
     }
-
+//修改收货地址
     public function modAdress() {
         $val['address'] = input('post.address');
         $val['id'] = input('post.id');
@@ -710,7 +710,7 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
         }
         return ajax();
     }
-
+//修改订单价格
     public function modPrice() {
         $val['pay_price'] = input('post.pay_price');
         $val['id'] = input('post.id');
@@ -732,7 +732,7 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
         }
         return ajax();
     }
-
+//优惠券列表
     public function couponList() {
         $where = [
             ['del','=',0]
@@ -745,11 +745,11 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
         $this->assign('list',$list);
         return $this->fetch();
     }
-
+//添加优惠券
     public function couponAdd() {
         return $this->fetch();
     }
-
+//添加优惠券POST
     public function couponAddPost() {
         $val['coupon_name'] = input('post.coupon_name');
         $val['condition'] = input('post.condition',200);
@@ -766,7 +766,7 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
         }
         return ajax([]);
     }
-
+//优惠券详情
     public function couponDetail() {
         try {
             $val['id'] = input('param.id');
@@ -780,7 +780,7 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
         $this->assign('info',$info);
         return $this->fetch();
     }
-
+//优惠券修改
     public function couponMod() {
         $val['coupon_name'] = input('post.coupon_name');
         $val['condition'] = input('post.condition',200);
@@ -804,7 +804,7 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
         }
         return ajax([]);
     }
-
+//优惠券删除
     public function couponDel() {
         $val['id'] = input('post.id');
         checkInput($val);
@@ -826,5 +826,7 @@ LEFT JOIN `mp_goods` `g` ON `d`.`goods_id`=`g`.`id`
         }
         return ajax([]);
     }
+
+
 
 }
