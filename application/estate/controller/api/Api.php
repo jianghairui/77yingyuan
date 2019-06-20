@@ -207,6 +207,7 @@ class Api extends Common {
     public function appointList() {
         $curr_page = input('post.page',1);
         $perpage = input('post.perpage',10);
+        $order = ['id'=>'DESC'];
         try {
             $where = [
                 ['uid','=',$this->myinfo['uid']],
@@ -214,7 +215,7 @@ class Api extends Common {
             ];
             $list = Db::table('mp_appoint')
                 ->where($where)
-                ->limit(($curr_page-1)*$perpage,$perpage)->select();
+                ->limit(($curr_page-1)*$perpage,$perpage)->order($order)->select();
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
         }

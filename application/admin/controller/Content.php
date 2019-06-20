@@ -428,6 +428,18 @@ class Content extends Base {
         return ajax([],1);
     }
 
+    public function sortActivity() {
+        $val['id'] = input('post.id');
+        $val['sort'] = input('post.sort');
+        checkInput($val);
+        try {
+            Db::table('mp_activity')->update($val);
+        }catch (\Exception $e) {
+            return ajax($e->getMessage(),-1);
+        }
+        return ajax($val);
+    }
+
     public function orderList() {
         $param['search'] = input('param.search');
         $page['query'] = http_build_query(input('param.'));

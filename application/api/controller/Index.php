@@ -17,7 +17,7 @@ class Index extends Common {
             $where = [
                 ['status','=',1]
             ];
-            $list = Db::table('mp_slideshow')->where($where)->select();
+            $list = Db::table('mp_slideshow')->where($where)->order(['sort'=>'ASC'])->select();
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
         }
@@ -91,6 +91,7 @@ class Index extends Common {
         $where = [
             ['start_time','<',time()]
         ];
+        $order = ['sort'=>'ASC'];
         try {
             $count = Db::table('mp_activity')->where($where)->count();
             $page['count'] = $count;
@@ -98,7 +99,7 @@ class Index extends Common {
             $page['totalPage'] = ceil($count/$perpage);
             $list = Db::table('mp_activity')
                 ->field("id,title,origin_price,price,pic,start_time,end_time")
-                ->where($where)->limit(($curr_page - 1)*$perpage,$perpage)->select();
+                ->where($where)->limit(($curr_page - 1)*$perpage,$perpage)->order($order)->select();
         }catch (\Exception $e) {
             die('SQL错误: ' . $e->getMessage());
         }
@@ -134,6 +135,7 @@ class Index extends Common {
         $val['tel'] = input('post.tel');
         $val['a_id'] = input('post.a_id');
         $val['num'] = input('post.num');
+        $val['meeting_time'] = input('post.meeting_time');
         checkPost($val);
         $val['uid'] = $this->myinfo['uid'];
         $val['create_time'] = time();
