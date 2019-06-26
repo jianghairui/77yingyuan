@@ -23,7 +23,6 @@ return array(
             'Index/index'
         ]
     ],
-
     'mch_key' => 'TIANJINTAOCIYUAN20190111SHWHCOPY',
     'app_id' => 'wx0c41f710915cf5b8',
     'secret' => '0aa0bd60351b1c928cb311fa99299d88',
@@ -31,7 +30,6 @@ return array(
     // 如需使用敏感接口（如退款、发送红包等）需要配置 API 证书路径(登录商户平台下载 API 证书)
     'cert_path'          =>  '/var/www/cave.jianghairui.com/public/cert/apiclient_cert.pem',
     'key_path'           =>  '/var/www/cave.jianghairui.com/public/cert/apiclient_key.pem',
-
 
 
 );
