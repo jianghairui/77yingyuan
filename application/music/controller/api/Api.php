@@ -171,13 +171,13 @@ class Api extends Common {
     public function orderList() {
         $curr_page = input('post.page',1);
         $perpage = input('post.perpage',10);
-        $status = input('post.status','1');
+//        $status = input('post.status','1');
         $where = [
             ['o.uid','=',$this->myinfo['uid']]
         ];
-        if($status !== '') {
-            $where[] = ['o.status','=',$status];
-        }
+//        if($status !== '') {
+//            $where[] = ['o.status','=',$status];
+//        }
         try {
             $list = Db::table('mp_order')->alias('o')
                 ->join('mp_course c','o.course_id=c.id','left')
