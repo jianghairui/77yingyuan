@@ -24,14 +24,14 @@ class Common extends Controller {
         $this->domain = 'cave.jianghairui.com';
         $this->weburl = 'https://cave.jianghairui.com/';
         $this->mp_config = [
-            'app_id' => 'wx215316a9caf08d21',
-            'secret' => 'f3ac4b7dc9780de7bbfe576a826cb97b',
+            'app_id' => config('app_id'),
+            'secret' => config('secret'),
 
-            'mch_id'             => '1490402642',
-            'key'                => 'TIANJINTAOCIYUAN20190111SHWHCOPY',   // API 密钥
+            'mch_id'             => config('mch_id'),
+            'key'                => config('mch_key'),   // API 密钥
             // 如需使用敏感接口（如退款、发送红包等）需要配置 API 证书路径(登录商户平台下载 API 证书)
-            'cert_path'          =>  '/var/www/cave.jianghairui.com/public/cert/apiclient_cert.pem',
-            'key_path'           =>  '/var/www/cave.jianghairui.com/public/cert/apiclient_key.pem',
+            'cert_path'          =>  config('cert_path'),
+            'key_path'           =>  config('key_path'),
             // 下面为可选项,指定 API 调用返回结果的类型：array(default)/collection/object/raw/自定义类名
             'response_type' => 'array',
             'log' => [

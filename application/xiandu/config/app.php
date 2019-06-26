@@ -26,7 +26,8 @@ return array(
             'Index/index',
             'Index/uploadimage',
             'Login/personal',
-            'Login/modifyInfo'
+            'Login/modifyinfo',
+            'Login/logout',
         ]
     ],
     'app_id' => 'wxcf0a69a03e0d6c0a',
