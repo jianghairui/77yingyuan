@@ -34,7 +34,7 @@ return array(
     'app_secret' => 'a3a1402a7063c946ccf8ae7634bd010e',
     'mch_id'  => '1437814202',
     'mch_key' => 'xanaducn1234567890xanaducn123456',
-    'cert_path' =>  '/var/www/cave.jianghairui.com/public/res/xiandu/cert/apiclient_cert.pem',
-    'key_path' =>  '/var/www/cave.jianghairui.com/public/res/xiandu/cert/apiclient_key.pem'
+    'cert_path' =>  '/var/www/mp.wcip.net/public/res/xiandu/cert/apiclient_cert.pem',
+    'key_path' =>  '/var/www/mp.wcip.net/public/res/xiandu/cert/apiclient_key.pem'
 
 );

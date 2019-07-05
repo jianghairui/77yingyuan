@@ -14,7 +14,7 @@ class Email extends Controller {
 
     public function sendSmtp() {
         $id = input('param.id');
-        if($_SERVER['REMOTE_ADDR'] == '47.105.169.186') {
+        if($_SERVER['REMOTE_ADDR'] == '120.27.60.129') {
             try {
                 $exist = Db::table('mp_appoint')->where('id','=',$id)->find();
                 if(!$exist) {
