@@ -195,6 +195,41 @@ class Api extends Common {
         return ajax();
     }
 
+    public function order() {
+        $val['res_id'] = input('post.res_id');
+        $val['meeting_date'] = input('post.meeting_date');
+        checkPost($val);
+        $val['type'] = 3;
+        $val['uid'] = $this->myinfo['uid'];
+        $val['desc'] = input('post.desc');
+        $val['create_time'] = time();
+
+        try {
+            $user = Db::table('mp_user')->where('id','=',$val['uid'])->find();
+            if(!$user['tel'] || !$user['realname']) {
+                return ajax('请认证后操作',50);
+            }
+            if(!is_date($val['meeting_date'])) {
+                return ajax('无效的日期',48);
+            }
+            $val['name'] = $user['realname'];
+            $val['tel'] = $user['tel'];
+            $whereRes = [
+                ['id','=',$val['res_id']]
+            ];
+            $res_exist = Db::table('mp_resource')->where($whereRes)->find();
+            if(!$res_exist) {
+                return ajax('非法参数',-4);
+            }
+            $val['commission'] = 0;
+            $id = Db::table('mp_appoint')->insertGetId($val);
+        } catch (\Exception $e) {
+            return ajax($e->getMessage(), -1);
+        }
+        $this->asyn_smtp_order(['id'=>$id]);
+        return ajax();
+    }
+
     public function aboutUs() {
         try {
             $info = Db::table('mp_company')->field('id,name,intro,tel,address,linkman,logo,lon,lat,desc')->find();
@@ -215,6 +250,26 @@ class Api extends Common {
             ];
             $list = Db::table('mp_appoint')
                 ->where($where)
+                ->limit(($curr_page-1)*$perpage,$perpage)->order($order)->select();
+        } catch (\Exception $e) {
+            return ajax($e->getMessage(), -1);
+        }
+        return ajax($list);
+    }
+
+    public function orderList() {
+        $curr_page = input('post.page',1);
+        $perpage = input('post.perpage',10);
+        $order = ['a.id'=>'DESC'];
+        try {
+            $where = [
+                ['a.uid','=',$this->myinfo['uid']],
+                ['a.type','=',3]
+            ];
+            $list = Db::table('mp_appoint')->alias('a')
+                ->join('mp_resource r','a.res_id=r.id','left')
+                ->where($where)
+                ->field('a.id,a.name,a.tel,a.meeting_date,r.name AS res_name,r.pic')
                 ->limit(($curr_page-1)*$perpage,$perpage)->order($order)->select();
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
@@ -290,7 +345,6 @@ class Api extends Common {
             return ajax($e->getMessage(),-1);
         }
     }
-
     //检测用户是否填写真实姓名
     public function checkUserRealname() {
         $uid = $this->myinfo['uid'];
@@ -337,7 +391,6 @@ class Api extends Common {
         return ajax($data);
     }
 
-
     public function getCommissionList() {
         $uid = $this->myinfo['uid'];
         $curr_page = input('post.page',1);
@@ -345,7 +398,8 @@ class Api extends Common {
         try {
             $where = [
                 ['a.uid','=',$uid],
-                ['a.status','in',[2,3]]
+                ['a.status','in',[2,3]],
+                ['a.type','<>',3]
             ];
             $list = Db::table('mp_appoint')->alias('a')
                 ->join('mp_resource r','a.res_id=r.id','left')
@@ -356,11 +410,6 @@ class Api extends Common {
         return ajax($list);
     }
 
-//    public function test() {
-//        $this->asyn_smtp(['id'=>29]);
-//        return ajax(987);
-//    }
-
     protected function asyn_smtp($data) {
         $param = http_build_query($data);
         $fp = fsockopen('ssl://' . $this->domain, 443, $errno, $errstr, 20);
@@ -369,6 +418,22 @@ class Api extends Common {
         }else{
             stream_set_blocking($fp,0);
             $http = "GET /estate/api.email/sendSmtp?".$param." HTTP/1.1\r\n";
+            $http .= "Host: ".$this->domain."\r\n";
+            $http .= "Connection: Close\r\n\r\n";
+            fwrite($fp,$http);
+            usleep(1000);
+            fclose($fp);
+        }
+    }
+
+    protected function asyn_smtp_order($data) {
+        $param = http_build_query($data);
+        $fp = fsockopen('ssl://' . $this->domain, 443, $errno, $errstr, 20);
+        if (!$fp){
+            echo 'error fsockopen';
+        }else{
+            stream_set_blocking($fp,0);
+            $http = "GET /estate/api.email/sendSmtpOrder?".$param." HTTP/1.1\r\n";
             $http .= "Host: ".$this->domain."\r\n";
             $http .= "Connection: Close\r\n\r\n";
             fwrite($fp,$http);

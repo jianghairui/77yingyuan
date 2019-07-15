@@ -38,8 +38,12 @@
             <tr class="text-c userinfo">
                 <td>{$li.id}</td>
                 <td>{$li.res_name}</td>
-                <td>{$li.rec_name}</td>
-                <td>{$li.rec_tel}</td>
+                <td>
+                    {if $li['type'] != 3}{$li.rec_name}{/if}
+                </td>
+                <td>
+                    {if $li['type'] != 3}{$li.rec_tel}{/if}
+                </td>
                 <td>{$li.name}</td>
                 <td>{$li.tel}</td>
                 <td>{$li.meeting_date}</td>
