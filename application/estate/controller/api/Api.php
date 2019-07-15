@@ -269,7 +269,7 @@ class Api extends Common {
             $list = Db::table('mp_appoint')->alias('a')
                 ->join('mp_resource r','a.res_id=r.id','left')
                 ->where($where)
-                ->field('a.id,a.name,a.tel,a.meeting_date,r.name AS res_name,r.pic')
+                ->field('a.id,a.name,a.tel,a.meeting_date,r.name AS res_name,r.pic,a.desc')
                 ->limit(($curr_page-1)*$perpage,$perpage)->order($order)->select();
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
