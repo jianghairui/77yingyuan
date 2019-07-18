@@ -20,6 +20,7 @@ class Shop extends Common {
         $where = [
             ['del','=',0]
         ];
+        $order = ['id'=>'DESC'];
         if($param['search']) {
             $where[] = ['name','like',"%{$param['search']}%"];
         }
@@ -31,6 +32,7 @@ class Shop extends Common {
         try {
             $list = Db::table('mp_goods')
                 ->where($where)
+                ->order($order)
                 ->limit(($curr_page - 1)*$perpage,$perpage)->select();
         }catch (\Exception $e) {
             die('SQL错误: ' . $e->getMessage());
@@ -117,12 +119,15 @@ class Shop extends Common {
             $val['status'] = input('post.status');
             $val['unit'] = input('post.unit');
             $val['carriage'] = input('post.carriage');
-            $val['reduction'] = input('post.reduction');
             $val['service'] = input('post.service');
             $val['desc'] = input('post.desc');
             $val['status'] = input('post.status');
             $val['create_time'] = time();
             checkInput($val);
+            $val['reduction'] = input('post.reduction',0);
+            if(!is_currency($val['origin_price']) || !is_currency($val['price'])) {
+                return ajax('无效的金额',-1);
+            }
             $val['detail'] = input('post.detail');
             $val['use_attr'] = input('post.use_attr','');
             if($val['use_attr']) {
@@ -146,7 +151,7 @@ class Shop extends Common {
                 }
                 foreach ($image as $v) {
                     if(!file_exists($v)) {
-                        return ajax('无效的图片路径',-1);
+                        return ajax('请重新上传图片',-1);
                     }
                 }
                 foreach ($image as $v) {
@@ -184,7 +189,7 @@ class Shop extends Common {
                 }
                 return ajax($e->getMessage(),-1);
             }
-            return ajax([],1);
+            return ajax();
         }
     }
 //修改商品POST
@@ -202,13 +207,16 @@ class Shop extends Common {
             $val['status'] = input('post.status');
             $val['unit'] = input('post.unit');
             $val['carriage'] = input('post.carriage');
-            $val['reduction'] = input('post.reduction');
             $val['service'] = input('post.service');
             $val['desc'] = input('post.desc');
             $val['status'] = input('post.status');
             $val['id'] = input('post.id');
             $val['create_time'] = time();
             checkInput($val);
+            $val['reduction'] = input('post.reduction',0);
+            if(!is_currency($val['origin_price']) || !is_currency($val['price'])) {
+                return ajax('无效的金额',-1);
+            }
             $val['detail'] = input('post.detail');
             $val['use_attr'] = input('post.use_attr',0);
             if($val['use_attr']) {
@@ -243,7 +251,7 @@ class Shop extends Common {
                     }
                     foreach ($image as $v) {
                         if(!file_exists($v)) {
-                            return ajax('无效的图片路径',-1);
+                            return ajax('请重新上传图片',-1);
                         }
                     }
                     foreach ($image as $v) {

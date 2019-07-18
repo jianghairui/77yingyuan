@@ -15,7 +15,7 @@ return array(
     'layout_on'     =>  true,
     'layout_name'   =>  'layout',
     'login_key' => 'jiang',
-    'superman'  => 'estate',
+    'superman'  => 'root',
     'auth'  => [
         'auth_on' => true,
         'auth_type'         => 1, // 认证方式，1为实时认证；2为登录认证。

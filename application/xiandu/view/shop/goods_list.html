@@ -45,7 +45,13 @@
                 <td>{$li.price}</td>
                 <td>{$li.stock}</td>
                 <td>{$li.sort}</td>
-                <td>{$li.hot}</td>
+                <td>
+                    {if $li['hot'] == '1'}
+                    是
+                    {else /}
+                    否
+                    {/if}
+                </td>
                 <td class="td-status">
                     {if $li['status'] == '1'}
                     <span class="label label-success radius">已上架</span>
@@ -120,9 +126,9 @@
         var index = layer.open({
             type: 2,
             title: title,
-            content: url
+            content: url,
+            area:['100%','100%']
         });
-        layer.full(index);
     }
 
     /*下架*/
@@ -134,7 +140,7 @@
                 dataType:'json',
                 data:{id:id},
                 success:function(data) {
-                    console.log(data)
+                    console.log(data);
                     if(data.code == 1) {
                         $(obj).parents("tr").find(".td-status").html('<span class="label label-defaunt radius">已下架</span>');
                         $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="goods_show(this,'+id+')" href="javascript:;" title="上架"><i class="Hui-iconfont">&#xe603;</i></a>');
