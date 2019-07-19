@@ -34,6 +34,7 @@ class Shop extends Common {
             ['status','=',1],
             ['del','=',0]
         ];
+        $order = ['id'=>'DESC'];
         if($pcate_id) {
             $where[] = ['pcate_id','=',$pcate_id];
         }
@@ -44,7 +45,10 @@ class Shop extends Common {
             $where[] = ['name','like',"%{$search}%"];
         }
         try {
-            $list = Db::table('mp_goods')->where($where)->field("id,name,origin_price,price,desc,pics,width,height")->limit(($curr_page-1)*$perpage,$perpage)->select();
+            $list = Db::table('mp_goods')
+                ->where($where)
+                ->order($order)
+                ->field("id,name,origin_price,price,desc,pics,width,height")->limit(($curr_page-1)*$perpage,$perpage)->select();
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
         }
