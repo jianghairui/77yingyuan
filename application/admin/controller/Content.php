@@ -16,6 +16,11 @@ class Content extends Base {
         $curr_page = input('param.page',1);
         $perpage = input('param.perpage',10);
         $where = [];
+        $order= [
+            'f.sort'=>'ASC',
+            'f.create_time'=>'DESC'
+        ];
+
         if($param['search']) {
             $where[] = ['f.title','like',"%{$param['search']}%"];
         }
@@ -28,7 +33,7 @@ class Content extends Base {
             $list = Db::table('mp_film')->alias('f')
                 ->join("mp_admin a","f.admin_id=a.id","left")
                 ->field("f.*,a.realname")
-                ->order(['f.create_time'=>'DESC'])
+                ->order($order)
                 ->where($where)->limit(($curr_page - 1)*$perpage,$perpage)->select();
         }catch (\Exception $e) {
             die('SQL错误: ' . $e->getMessage());
@@ -227,6 +232,19 @@ class Content extends Base {
             return ajax($e->getMessage(), -1);
         }
         return ajax([],1);
+    }
+
+    //轮播图排序
+    public function sortFilm() {
+        $val['id'] = input('post.id');
+        $val['sort'] = input('post.sort');
+        checkInput($val);
+        try {
+            Db::table('mp_film')->update($val);
+        }catch (\Exception $e) {
+            return ajax($e->getMessage(),-1);
+        }
+        return ajax($val);
     }
 
     public function activityList() {

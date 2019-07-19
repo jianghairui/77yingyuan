@@ -17,6 +17,7 @@
         <thead>
         <tr class="text-c">
             <th width="25">#</th>
+            <th width="80">排序</th>
             <th width="80">影片图片</th>
             <th>影片标题</th>
             <th width="80">状态</th>
@@ -30,6 +31,7 @@
             {foreach $list as $li}
             <tr class="text-c userinfo">
                 <td>{$li.id}</td>
+                <td><input type="text" class="input-text text-c sort" value="{$li.sort}"></td>
                 <td>
                     <div style="width: 80px;height: 120px;background-image: url('{if $li['pic']}/{$li.pic}{else /}/static/src/image/default.jpg{/if}');background-position: center;background-repeat: no-repeat;background-size: cover"></div>
                 </td>
@@ -235,5 +237,27 @@
             });
         }
     }
+
+    $(".sort").bind('input propertychange', function() {
+        var id = $(this).parent().prev().text();
+        var sort = $(this).val();
+        var rule = /^[0-9]{0,10}$/;
+        if(!rule.test(sort)) {
+            // $(this).val('')
+            alert('排序必须为数字,且不超过10位');
+            return;
+        }
+        $.ajax({
+            url:"{:url('Content/sortFilm')}",
+            type:"post",
+            data:{id:id,sort:sort},
+            success:function(data) {
+                console.log(data)
+            },
+            error: function(data) {
+                console.log('system error')
+            }
+        })
+    });
 
 </script>
