@@ -84,11 +84,14 @@ class Email extends Controller {
                     die();
                 }
                 $resource = Db::table('mp_resource')->where('id','=',$exist['res_id'])->find();
+                $user = Db::table('mp_user')->where('id','=',$exist['uid'])->find();
                 $res_name = $resource['name'];
 
+                $data['tel'] = $user['tel'];
+                $data['name'] = $user['realname'];
                 $data['to_tel'] = $exist['tel'];
                 $data['to_name'] = $exist['name'];
-                $data['title'] = $res_name.'个人预约';
+                $data['title'] = $res_name.'案场报备';
                 $data['email'] = $resource['email'];
                 $data['meeting_date'] = $exist['meeting_date'];
 
@@ -109,11 +112,14 @@ class Email extends Controller {
 //邮件主题
                 $mailsubject = $data['title'];
 //邮件内容
-                $mailbody = '报备案场: ' . $data['title'] . '<br>';
-                $mailbody .= '客户手机号: ' . $data['to_tel'] . '<br>';
-                $mailbody .= '客户姓名: ' . $data['to_name'] . '<br>';
+                $mailbody = '预约案场: ' . $data['title'] . '<br>';
+                $mailbody .= '预约ID: ' . $exist['id'] . '<br>';
+                $mailbody .= '推荐人手机号: ' . $data['tel'] . '<br>';
+                $mailbody .= '推荐人姓名: ' . $data['name'] . '<br>';
+                $mailbody .= '预约人手机号: ' . $data['to_tel'] . '<br>';
+                $mailbody .= '预约人姓名: ' . $data['to_name'] . '<br>';
                 $mailbody .= '预约时间: ' . $data['meeting_date'] . '<br>';
-                $mailbody .= '客户备注: ' . $exist['desc'] . '<br>';
+                $mailbody .= '备注: ' . $exist['desc'] . '<br>';
             } catch(\Exception $e) {
                 die($e->getMessage());
             }

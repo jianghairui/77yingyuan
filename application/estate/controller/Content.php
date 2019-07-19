@@ -16,7 +16,9 @@ class Content extends Base {
 
         $curr_page = input('param.page',1);
         $perpage = input('param.perpage',10);
-        $where = [];
+        $where = [
+            ['del','=',0]
+        ];
         if($param['search']) {
             $where[] = ['name','like',"%{$param['search']}%"];
         }
@@ -301,7 +303,7 @@ class Content extends Base {
             if(!$exist) {
                 return ajax('非法参数',-1);
             }
-            Db::table('mp_resource')->where('id',$val['id'])->delete();
+            Db::table('mp_resource')->where('id',$val['id'])->update(['del'=>1]);
         }catch (\Exception $e) {
             return ajax($e->getMessage(),-1);
         }
@@ -484,12 +486,11 @@ class Content extends Base {
     public function apartmentDel() {
         $val['id'] = input('post.id',0);
         try {
-            $model = model('apartment');
-            $exist = Db::table('mp_apartment')->where('id',$val['id'])->find();
+            $exist = Db::table('mp_apartment')->where('id','=',$val['id'])->find();
             if(!$exist) {
                 return ajax('非法参数',-1);
             }
-            $model::destroy($val['id']);
+            Db::table('mp_apartment')->where('id','=',$val['id'])->delete();
         }catch (\Exception $e) {
             return ajax($e->getMessage(),-1);
         }

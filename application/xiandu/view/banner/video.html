@@ -89,7 +89,7 @@
         this.addFileAndSend = function(that){
             var file = that.files[0];
             console.log(file,'filesize');
-            if(file.size > 128*1024*1024) {
+            if(file.size > 256*1024*1024) {
                 alert('视频文件不超过128M');
                 return false;
             }

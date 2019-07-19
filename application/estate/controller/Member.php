@@ -57,7 +57,9 @@ class Member extends Base {
         $curr_page = input('param.page',1);
         $perpage = input('param.perpage',10);
 
-        $where = [];
+        $where = [
+            ['r.del','=',0]
+        ];
         if($param['logmin']) {
             $where[] = ['a.meeting_date','>=',date('Y-m-d 00:00:00',strtotime($param['logmin']))];
         }
@@ -71,6 +73,7 @@ class Member extends Base {
         }
         try {
             $count = Db::table('mp_appoint')->alias('a')
+                ->join("mp_resource r","a.res_id=r.id","left")
                 ->where($where)->count();
             $page['count'] = $count;
             $page['curr'] = $curr_page;

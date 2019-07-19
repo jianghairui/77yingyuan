@@ -153,15 +153,16 @@ class Api extends Common {
         $exist['pic'] = unserialize($exist['pic']);
         return ajax($exist);
     }
-
+    //报备客户
     public function appointment() {
         $val['res_id'] = input('post.res_id');
         $val['name'] = input('post.name');
         $val['tel'] = input('post.tel');
         $val['meeting_date'] = input('post.meeting_date');
-        $val['uid'] = $this->myinfo['uid'];
         $val['type'] = input('post.type',1);
         checkPost($val);
+        $val['uid'] = $this->myinfo['uid'];
+        $val['inviter_id'] = $this->myinfo['uid'];
         $val['desc'] = input('post.desc');
         $val['create_time'] = time();
         if(!is_tel($val['tel'])) {
@@ -178,14 +179,6 @@ class Api extends Common {
             if(!$res_exist) {
                 return ajax('非法参数',-4);
             }
-//            $whereAppoint = [
-//                ['res_id','=',$val['res_id']],
-//                ['tel','=',$val['tel']]
-//            ];
-//            $appoint_exist = Db::table('mp_appoint')->where($whereAppoint)->find();
-//            if($appoint_exist) {
-//                return ajax('此手机号已预约',47);
-//            }
             $val['commission'] = $res_exist['commission'];
             $id = Db::table('mp_appoint')->insertGetId($val);
         } catch (\Exception $e) {
@@ -194,26 +187,29 @@ class Api extends Common {
         $this->asyn_smtp(['id'=>$id]);
         return ajax();
     }
-
+    //客户预约
     public function order() {
         $val['res_id'] = input('post.res_id');
+        $val['inviter_id'] = input('post.inviter_id');
+        $val['name'] = input('post.name');
+        $val['tel'] = input('post.tel');
         $val['meeting_date'] = input('post.meeting_date');
         checkPost($val);
         $val['type'] = 3;
-        $val['uid'] = $this->myinfo['uid'];
         $val['desc'] = input('post.desc');
         $val['create_time'] = time();
-
+        $val['uid'] = $this->myinfo['uid'];
         try {
-            $user = Db::table('mp_user')->where('id','=',$val['uid'])->find();
-            if(!$user['tel'] || !$user['realname']) {
-                return ajax('请认证后操作',50);
+            $user = Db::table('mp_user')->where('id','=',$val['inviter_id'])->find();
+            if(!$user) {
+                return ajax('非法参数',-4);
+            }
+            if(!is_tel($val['tel'])) {
+                return ajax('无效的手机号',6);
             }
             if(!is_date($val['meeting_date'])) {
                 return ajax('无效的日期',48);
             }
-            $val['name'] = $user['realname'];
-            $val['tel'] = $user['tel'];
             $whereRes = [
                 ['id','=',$val['res_id']]
             ];
@@ -221,7 +217,7 @@ class Api extends Common {
             if(!$res_exist) {
                 return ajax('非法参数',-4);
             }
-            $val['commission'] = 0;
+            $val['commission'] = $res_exist['commission'];
             $id = Db::table('mp_appoint')->insertGetId($val);
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
