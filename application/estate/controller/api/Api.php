@@ -241,7 +241,7 @@ class Api extends Common {
         $order = ['id'=>'DESC'];
         try {
             $where = [
-                ['uid','=',$this->myinfo['uid']],
+                ['inviter_id','=',$this->myinfo['uid']],
                 ['type','=',1]
             ];
             $list = Db::table('mp_appoint')
@@ -259,7 +259,7 @@ class Api extends Common {
         $order = ['a.id'=>'DESC'];
         try {
             $where = [
-                ['a.uid','=',$this->myinfo['uid']],
+                ['a.inviter_id','=',$this->myinfo['uid']],
                 ['a.type','=',3]
             ];
             $list = Db::table('mp_appoint')->alias('a')

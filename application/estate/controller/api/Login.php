@@ -93,10 +93,7 @@ class Login extends Common {
                 if($inviter_id && !$user['inviter_id']) {
                     $inviter_exist = Db::table('mp_user')->where('id','=',$inviter_id)->find();
                     if($inviter_exist) {
-                        $update_data = [
-                            'invite_num' => ($inviter_exist['invite_num'] + 1)
-                        ];
-                        Db::table('mp_user')->where('id','=',$inviter_id)->update($update_data);
+                        Db::table('mp_user')->where('id','=',$inviter_id)->setInc('invite_num');
                         $data['inviter_id'] = $inviter_id;
                     }
                 }

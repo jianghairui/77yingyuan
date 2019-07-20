@@ -46,7 +46,7 @@ class Member extends Base {
         $this->assign('page',$page);
         return $this->fetch();
     }
-    //会员列表
+    //会员推荐
     public function appointList() {
         $param['logmin'] = input('param.logmin');
         $param['logmax'] = input('param.logmax');
@@ -80,7 +80,7 @@ class Member extends Base {
             $page['totalPage'] = ceil($count/$perpage);
             $list = Db::table('mp_appoint')->alias('a')
                 ->join("mp_resource r","a.res_id=r.id","left")
-                ->join("mp_user u","a.uid=u.id","left")
+                ->join("mp_user u","a.inviter_id=u.id","left")
                 ->where($where)
                 ->field("a.*,r.name AS res_name,u.nickname AS rec_name,u.tel AS rec_tel")
                 ->order(['a.id'=>'DESC'])->limit(($curr_page - 1)*$perpage,$perpage)->select();
@@ -117,7 +117,7 @@ class Member extends Base {
                 return ajax('非法参数',-4);
             }
             Db::table('mp_appoint')->where($where)->update(['status'=>2]);
-            Db::table('mp_user')->where('id','=',$exist['uid'])->setInc('deal_num',1);
+            Db::table('mp_user')->where('id','=',$exist['inviter_id'])->setInc('deal_num',1);
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
         }
