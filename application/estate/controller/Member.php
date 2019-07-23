@@ -116,7 +116,11 @@ class Member extends Base {
             if(!$exist) {
                 return ajax('非法参数',-4);
             }
-            Db::table('mp_appoint')->where($where)->update(['status'=>2]);
+            $update_data = [
+                'deal_time' => time(),
+                'status' => 2
+            ];
+            Db::table('mp_appoint')->where($where)->update($update_data);
             Db::table('mp_user')->where('id','=',$exist['inviter_id'])->setInc('deal_num',1);
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
