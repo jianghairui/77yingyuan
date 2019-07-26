@@ -28,6 +28,7 @@
             <th width="120">手机号</th>
             <th width="220">OPENID</th>
             <th width="120">注册时间</th>
+            <th width="100" class="td-manage">操作</th>
         </tr>
         </thead>
         <tbody>
@@ -52,12 +53,19 @@
                 <td>{$li.tel}</td>
                 <td>{$li.openid}</td>
                 <td>{$li.create_time|date="Y-m-d h:i:s"}</td>
+                <td>
+                    <span id="send-btn">
+                        <a title="邀请人ID" href="javascript:;" onclick="inviter_mod('邀请人ID','{:url("Member/inviterMod",array("id"=>$li["id"]))}','600','400')"">
+                        <i class="Hui-iconfont">&#xe6df;</i>
+                        </a>
+                    </span>
+                </td>
             </tr>
             {/foreach}
         </form>
 
         <tr>
-            <td colspan="11" id="page" class="text-r"></td>
+            <td colspan="12" id="page" class="text-r"></td>
         </tr>
         </tbody>
     </table>
@@ -102,6 +110,11 @@
         }
         window.location.href = '{:url("Member/memberlist")}' + '?' + str;
     });
+
+    /*发货*/
+    function inviter_mod(title,url,w,h){
+        layer_show(title,url,w,h);
+    }
 
 
 

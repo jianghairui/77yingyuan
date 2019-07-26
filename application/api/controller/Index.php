@@ -68,7 +68,7 @@ class Index extends Common {
             $list = Db::table('mp_film')->alias('f')
                 ->join("mp_admin a","f.admin_id=a.id","left")
                 ->field("f.id,f.pic,f.title,f.up_time,f.desc,f.content")
-                ->order(['f.up_time'=>'DESC'])
+                ->order(['f.sort'=>'ASC','f.up_time'=>'DESC'])
                 ->where($where)->limit(($curr_page - 1)*$perpage,$perpage)->select();
         }catch (\Exception $e) {
             die('SQL错误: ' . $e->getMessage());

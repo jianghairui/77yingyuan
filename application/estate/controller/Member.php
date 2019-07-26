@@ -141,4 +141,33 @@ class Member extends Base {
         return ajax();
     }
 
+    public function inviterMod() {
+        if(request()->isPost()) {
+            $id = input('post.id','');
+            $inviter_id = input('post.inviter_id','');
+            try {
+                $where = [
+                    ['id','in',[$id,$inviter_id]]
+                ];
+                $exist = Db::table('mp_user')->where($where)->select();
+                if(count($exist) != 2) {
+                    return ajax('非法操作',-1);
+                }
+                Db::table('mp_user')->where('id','=',$id)->update(['inviter_id'=>$inviter_id]);
+            } catch (\Exception $e) {
+                return ajax($e->getMessage(), -1);
+            }
+            return ajax();
+        }
+        $id = input('param.id','');
+        try {
+            $info = Db::table('mp_user')->where('id','=',$id)->find();
+        } catch (\Exception $e) {
+            die($e->getMessage());
+        }
+        $this->assign('info',$info);
+        return $this->fetch();
+    }
+
+
 }
