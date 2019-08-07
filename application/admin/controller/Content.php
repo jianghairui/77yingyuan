@@ -253,7 +253,9 @@ class Content extends Base {
 
         $curr_page = input('param.page',1);
         $perpage = input('param.perpage',10);
-        $where = [];
+        $where = [
+            ['f.del','=',0]
+        ];
         if($param['search']) {
             $where[] = ['f.title','like',"%{$param['search']}%"];
         }
@@ -430,16 +432,11 @@ class Content extends Base {
         $val['id'] = input('post.id');
         checkInput($val);
         try {
-            $exist = Db::table('mp_activity')->where('id',$val['id'])->find();
+            $exist = Db::table('mp_activity')->where('id','=',$val['id'])->find();
             if(!$exist) {
                 return ajax('非法操作',-1);
             }
-            $model = model('Activity');
-            try {
-                $model::destroy($val['id']);
-            }catch (\Exception $e) {
-                return ajax($e->getMessage(),-1);
-            }
+            Db::table('mp_activity')->where('id','=',$val['id'])->update(['del'=>1]);
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
         }

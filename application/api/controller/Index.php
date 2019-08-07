@@ -89,7 +89,8 @@ class Index extends Common {
         $curr_page = input('param.page',1);
         $perpage = input('param.perpage',10);
         $where = [
-            ['start_time','<',time()]
+            ['start_time','<',time()],
+            ['del','=',0]
         ];
         $order = ['sort'=>'ASC'];
         try {
@@ -222,6 +223,9 @@ class Index extends Common {
                 ->select();
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
+        }
+        foreach ($list as &$v) {
+            $v['meeting_time'] = date('Y-m-d H:i',strtotime($v['meeting_time']));
         }
         return ajax($list);
     }
