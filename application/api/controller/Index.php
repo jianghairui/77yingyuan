@@ -88,7 +88,7 @@ class Index extends Common {
     public function activeList() {
         $curr_page = input('param.page',1);
         $perpage = input('param.perpage',10);
-        $where = [//
+        $where = [
             ['start_time','<',time()],
             ['status','=',1],
             ['del','=',0]
