@@ -26,13 +26,13 @@ class Common extends Controller {
         $this->weburl = 'https://mp.wcip.net/';
         $this->rename_base_path = 'res/xiandu/api/';
         $this->mp_config = [
-            'app_id' => 'wxcf0a69a03e0d6c0a',
-            'secret' => 'a3a1402a7063c946ccf8ae7634bd010e',
-            'mch_id'             => '1437814202',
-            'key'                => 'xanaducn1234567890xanaducn123456',   // API 密钥
+            'app_id' => config('appid'),
+            'secret' => config('app_secret'),
+            'mch_id'             => config('mch_id'),
+            'key'                => config('mch_key'),   // API 密钥
             // 如需使用敏感接口（如退款、发送红包等）需要配置 API 证书路径(登录商户平台下载 API 证书)
-            'cert_path'          =>  '/mnt/mp.wcip.net/public/cert/apiclient_cert.pem',
-            'key_path'           =>  '/mnt/mp.wcip.net/cert/apiclient_key.pem',
+            'cert_path'          =>  config('cert_path'),
+            'key_path'           =>  config('key_path'),
             // 下面为可选项,指定 API 调用返回结果的类型：array(default)/collection/object/raw/自定义类名
             'response_type' => 'array',
             'log' => [
