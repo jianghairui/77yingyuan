@@ -8,7 +8,7 @@
 namespace app\dati\controller;
 use think\Db;
 use think\Loader;
-class Login extends Common {
+class Login extends Base {
 
     public function index() {
         if(session('username') && session('mploginstatus') && session('mploginstatus') == md5(session('username') . config('login_key'))) {

@@ -7,7 +7,7 @@
  */
 namespace app\dati\controller;
 use think\Db;
-class Admin extends Common {
+class Admin extends Base {
 
     public function adminlist() {
         $param['logmin'] = input('param.logmin');
