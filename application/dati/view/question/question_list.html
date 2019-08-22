@@ -1,0 +1,117 @@
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页
+    <span class="c-gray en">&gt;</span>
+    内容管理
+    <span class="c-gray en">&gt;</span>
+    题目列表
+    <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a>
+</nav>
+<div class="page-container">
+    <form id="formAjax">
+        <div class="text-c">
+            <button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button>
+            <span class="select-box inline">
+				<select class="select" name="c_id" id="c_id" style="width: 150px;">
+                    <option value="">全部</option>
+                    {foreach $chapterlist as $li}
+					<option value="{$li.id}" {if $param['c_id']==$li['id']}selected{/if}>{$li.title}</option>
+                    {/foreach}
+				</select>
+            </span>
+            <input type="text" name="search" id="search" value="{$Think.get.search}" placeholder="题目" style="width:250px" class="input-text">
+            <button id="search-btn" class="btn btn-success" type="button"><i class="Hui-iconfont">&#xe665;</i> 搜索</button>
+        </div>
+    </form>
+    <div class="cl pd-5 bg-1 bk-gray mt-20">
+        <span class="l">
+            <a class="btn btn-primary radius" data-title="添加题目" data-href="" onclick="pagefull('添加题目','{:url("Question/questionAdd",array("c_id"=>$param["c_id"]))}')" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加题目
+            </a>
+        </span>
+        <span class="r">共有数据：<strong>{$page.count}</strong> 条</span>
+    </div>
+    <table class="table table-border table-bordered table-bg table-hover table-sort">
+        <thead>
+        <tr class="text-c">
+            <th width="25">#</th>
+            <th>题目</th>
+            <th width="80">正确答案</th>
+            <th width="100">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $list as $li}
+        <tr class="text-c">
+            <td>{$li.id}</td>
+            <td>{$li.title}</td>
+            <td>{$li.key}</td>
+            <td class="td-manage">
+                <a style="text-decoration:none" onclick="pagefull('编辑','{:url("Question/questionDetail",array("id"=>$li["id"]))}')" class="ml-5" href="javascript:;" title="编辑">
+                <i class="Hui-iconfont">&#xe6df;</i>
+                </a>
+            </td>
+        </tr>
+        {/foreach}
+
+        <tr class="text-r">
+            <td colspan="9" id="page">
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div id="pageNav" class="pageNav"></div>
+</div>
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="/lib/laypage/1.2/laypage.js"></script>
+<script>
+    var url = '{:url("Question/questionList")}' + '?<?php echo $page["query"];?>';
+    var curr = '{$page.curr}',totalPage = '{$page.totalPage}';
+    if(totalPage > 1) {
+        laypage({
+            cont: 'page', //容器。值支持id名、原生dom对象，jquery对象。
+            pages: totalPage, //通过后台拿到的总页数
+            skip: false, //是否开启跳页
+            skin: '#5a98de',
+            curr: curr || 1, //当前页
+            jump: function(obj, first){ //触发分页后的回调
+                // console.log(obj)
+                if(!first) {
+                    window.location.href = url+'&page=' + obj.curr;
+                }
+            }
+        });
+    }
+
+
+    $("#search-btn").click(function () {
+        var search = $("#formAjax").find("#search").val();
+        var c_id = $("#formAjax").find("#c_id").val();
+        var str = '';
+        if(c_id.length != '') {
+            str += 'c_id=' + c_id
+        }
+        if(search.length != '') {
+            str += '&search=' + search
+        }
+        window.location.href = '{:url("Question/questionList")}' + '?' + str;
+    });
+
+    /*打开新窗口*/
+    function layeropen(title,url,w,h){
+        layer_show(title,url,w,h);
+    }
+
+    /*打开新窗口铺满*/
+    function pagefull(title,url){
+        var index = layer.open({
+            type: 2,
+            title: title,
+            content: url,
+            area: ['100%','100%']
+        });
+        // layer.full(index);
+    }
+
+</script>

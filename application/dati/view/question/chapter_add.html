@@ -3,17 +3,16 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">章节名：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <textarea name="title" cols="" rows="" class="textarea" maxlength="100" placeholder="输入章节名称" oninput="this.value.length<=100?$('#textlen1').text(this.value.length):$('#textlen1').text(100)" >{$info.title}</textarea>
+                <textarea name="title" cols="" rows="" class="textarea" maxlength="100" placeholder="输入章节名称" oninput="this.value.length<=100?$('#textlen1').text(this.value.length):$('#textlen1').text(100)" ></textarea>
                 <p class="textarea-numberbar"><em class="textarea-length" id="textlen1">0</em>/100</p>
             </div>
         </div>
         <div class="row cl">
             <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
-                <button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
+                <button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 添加</button>
                 <button onClick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
             </div>
         </div>
-        <input type="hidden" name="id" value="{$info.id}">
     </form>
 </article>
 
@@ -30,7 +29,7 @@
             rules:{
                 title:{
                     required:true,
-                    maxlength:255
+                    maxlength:100
                 }
 
             },
@@ -41,11 +40,11 @@
                     isclick = false;
                     $(form).ajaxSubmit({
                         type: 'post',
-                        url: "{:url('Question/chapterMod')}" ,
+                        url: "{:url('Question/chapterAdd')}" ,
                         success: function(data){
                             console.log(data.data);
                             if(data.code == 1) {
-                                layer.msg('保存成功!',{icon:1,time:1000},function () {
+                                layer.msg('添加成功!',{icon:1,time:1000},function () {
                                     window.parent.location.reload();
                                 });
                             }else {
@@ -64,8 +63,7 @@
             }
         });
 
-        var textlen1 = $("textarea[name='title']").val().length;
-        $("#textlen1").text(textlen1);
+
 
     });
 

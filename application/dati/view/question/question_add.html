@@ -1,0 +1,178 @@
+<article class="page-container">
+    <form class="form form-horizontal" id="form-article-add">
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">所属章节：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <span class="select-box">
+                <select name="c_id" class="select" id="c_id">
+                    {foreach $list as $v}
+                        <option value="{$v.id}" {if $param['c_id'] == $v['id']}selected{/if}>{$v.title}</option>
+                    {/foreach}
+                </select>
+                </span>
+            </div>
+            <div class="col-3">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">选项数量：</label>
+            <div class="formControls col-xs-2 col-sm-2">
+                <span class="select-box">
+                <select name="num" class="select" id="num">
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                </select>
+                </span>
+            </div>
+            <div class="col-3">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">题目：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <textarea name="title" cols="" rows="" class="textarea" maxlength="255" placeholder="输入题目名称" oninput="this.value.length<=255?$('#textlen1').text(this.value.length):$('#textlen1').text(255)" ></textarea>
+                <p class="textarea-numberbar"><em class="textarea-length" id="textlen1">0</em>/255</p>
+            </div>
+        </div>
+
+        <div class="row cl" id="row-a">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>选项A：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="option_a" name="option_a" maxlength="100">
+            </div>
+        </div>
+        <div class="row cl" id="row-b">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>选项B：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="option_b" name="option_b" maxlength="100">
+            </div>
+        </div>
+        <div class="row cl" id="row-c" style="display: none">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>选项C：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="option_c" name="option_c" maxlength="100">
+            </div>
+        </div>
+        <div class="row cl" id="row-d" style="display: none">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>选项D：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="option_d" name="option_d" maxlength="100">
+            </div>
+        </div>
+        <div class="row cl" id="row-e" style="display: none">
+            <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>选项E：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <input type="text" class="input-text" value="" placeholder="" id="option_e" name="option_e" maxlength="100">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">摘录：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <textarea name="excerpt" cols="" rows="" class="textarea" maxlength="255" placeholder="输入题目来源" oninput="this.value.length<=255?$('#textlen1').text(this.value.length):$('#textlen1').text(255)" ></textarea>
+                <p class="textarea-numberbar"><em class="textarea-length" id="textlen2">0</em>/255</p>
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">答案：</label>
+            <div class="formControls col-xs-2 col-sm-2">
+                <span class="select-box">
+                <select name="key" class="select" id="key">
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                </select>
+                </span>
+            </div>
+            <div class="col-3">
+            </div>
+        </div>
+        <div class="row cl">
+            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+                <button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 添加</button>
+                <button onClick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+            </div>
+        </div>
+    </form>
+</article>
+
+<script type="text/javascript" src="/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+
+<script type="text/javascript">
+    $(function(){
+
+        var isclick = true;
+        //表单验证
+        $("#form-article-add").validate({
+            rules:{
+                title:{
+                    required:true,
+                    maxlength:255
+                },
+                excerpt:{
+                    maxlength:255
+                }
+            },
+            focusCleanup:true,
+            success:"valid",
+            submitHandler:function(form){
+                if(isclick === true) {
+                    isclick = false;
+                    $(form).ajaxSubmit({
+                        type: 'post',
+                        url: "{:url('Question/questionAdd')}" ,
+                        success: function(data){
+                            console.log(data.data);
+                            if(data.code == 1) {
+                                layer.msg('添加成功!',{icon:1,time:1000},function () {
+                                    window.parent.location.reload();
+                                });
+                            }else {
+                                layer.msg(data.data,{icon:2,time:1000});
+                                isclick = true
+                            }
+
+                        },
+                        error: function(XmlHttpRequest, textStatus, errorThrown){
+                            layer.msg('error!',{icon:5,time:1000});
+                            isclick = true
+                        }
+                    });
+                }
+
+            }
+        });
+
+
+        $("#num").on("change",function () {
+            var num = $(this).val();
+            if(num == 2) {
+                $("#row-c,#row-d,#row,#row-e").hide();
+                $("#key").html('<option value="A">A</option><option value="B">B</option>');
+            }
+            if(num == 3) {
+                $("#row-c").show();
+                $("#row-d,#row-e").hide();
+                $("#key").html('<option value="A">A</option><option value="B">B</option><option value="C">C</option>');
+            }
+            if(num == 4) {
+                $("#row-c,#row-d").show();
+                $("#row-e").hide();
+                $("#key").html('<option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>');
+            }
+            if(num == 5) {
+                $("#row-c,#row-d,#row,#row-e").show();
+                $("#key").html('<option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option><option value="E">E</option>');
+            }
+        })
+
+
+
+    });
+
+
+
+</script>
