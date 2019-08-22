@@ -23,7 +23,7 @@
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>区域：</label>
-            <div class="formControls col-xs-8 col-sm-9">
+            <div class="formControls col-xs-4 col-sm-4">
                 <span class="select-box">
                     <select name="region" class="select">
                         {foreach $citylist as $li}
@@ -36,25 +36,25 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>开盘时间：</label>
             <div class="formControls col-xs-4 col-sm-4">
-                <input type="text" name="open_date" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="open_date" value="" class="input-text Wdate" readonly>
+                <input type="text" name="open_date" value="" class="input-text" maxlength="30">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>交房日期：</label>
             <div class="formControls col-xs-4 col-sm-4">
-                <input type="text" name="deliver" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" id="deliver" value="" class="input-text Wdate" readonly>
+                <input type="text" name="deliver" value="" class="input-text" maxlength="30">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>楼盘地址：</label>
             <div class="formControls col-xs-8 col-sm-9">
-                <input type="text" class="input-text" value="" placeholder="" id="address" name="address" maxlength="20">
+                <input type="text" class="input-text" value="" placeholder="" id="address" name="address" maxlength="100">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>产权年限：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="number" class="input-text" value="70" placeholder="" id="property" name="property" maxlength="3"><span> 年</span>
+            <div class="formControls col-xs-4 col-sm-4">
+                <input type="number" class="input-text" value="70" placeholder="" id="property" name="property" maxlength="10"><span></span>
             </div>
         </div>
         <div class="row cl">
@@ -77,7 +77,7 @@
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>物业类型：</label>
-            <div class="formControls col-xs-8 col-sm-9">
+            <div class="formControls col-xs-4 col-sm-4">
                 <span class="select-box">
                     <select name="realty_type" class="select">
                         <option value="居住">居住</option>
@@ -101,13 +101,13 @@
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>装修类型：</label>
-            <div class="formControls col-xs-8 col-sm-9">
+            <div class="formControls col-xs-4 col-sm-4">
                 <input type="text" class="input-text" value="" placeholder="普通装修" id="trim_type" name="trim_type" maxlength="20">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>建筑类型：</label>
-            <div class="formControls col-xs-8 col-sm-9"> <span class="select-box">
+            <div class="formControls col-xs-4 col-sm-4"> <span class="select-box">
 				<select name="building_type" class="select">
 					<option value="板楼">板楼</option>
 					<option value="塔楼">塔楼</option>
@@ -124,32 +124,32 @@
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>占地面积(m²)：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="number" class="input-text" value="" placeholder="" id="area_covered" name="area_covered" maxlength="20">
+            <div class="formControls col-xs-4 col-sm-4">
+                <input type="text" class="input-text" value="" placeholder="" id="area_covered" name="area_covered" maxlength="20">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>建筑面积(m²)：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="number" class="input-text" value="" placeholder="" id="floorage" name="floorage" maxlength="20">
+            <div class="formControls col-xs-4 col-sm-4">
+                <input type="text" class="input-text" value="" placeholder="" id="floorage" name="floorage" maxlength="20">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>规划户数：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="number" class="input-text" value="" placeholder="" id="house_num" name="house_num" maxlength="20">
+            <div class="formControls col-xs-4 col-sm-4">
+                <input type="text" class="input-text" value="" placeholder="" id="house_num" name="house_num" maxlength="20">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>规划车位：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="number" class="input-text" value="" placeholder="" id="parking_num" name="parking_num" maxlength="20">
+            <div class="formControls col-xs-4 col-sm-4">
+                <input type="text" class="input-text" value="" placeholder="" id="parking_num" name="parking_num" maxlength="20">
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>绿化率(%)：</label>
-            <div class="formControls col-xs-8 col-sm-9">
-                <input type="number" class="input-text" value="" placeholder="" id="green_rate" name="green_rate" maxlength="20">
+            <div class="formControls col-xs-4 col-sm-4">
+                <input type="text" class="input-text" value="" placeholder="" id="green_rate" name="green_rate" maxlength="20">
             </div>
         </div>
         <div class="row cl">
@@ -174,7 +174,7 @@
         </div>
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">佣金(元)：</label>
-            <div class="formControls col-xs-8 col-sm-9">
+            <div class="formControls col-xs-4 col-sm-4">
                 <input type="number" id="min_bro" name="commission" placeholder="" value="6000" class="input-text">
             </div>
         </div>
