@@ -64,7 +64,9 @@ class Api extends Common {
         if($val['search']) {
             $where[] = ['name','like',"%{$val['search']}%"];
         }
-        $order = [];
+        $order = [
+            'id' => 'DESC'
+        ];
         if($val['sort']) {
             switch ($val['sort']) {
                 case '1':
@@ -295,18 +297,25 @@ class Api extends Common {
         return ajax();
     }
 
-    public function getTreaty() {
-        $type = input('post.type',1);
-        switch ($type) {
-            case 1:
-                $field='treaty1';break;
-            case 2:
-                $field='treaty2';break;
-            case 3:
-                $field='treaty3';break;
-        }
+    public function treatyList() {
+        $where = [
+            ['status','=',1]
+        ];
         try {
-            $info = Db::table('mp_company')->where('id','=',1)->value($field);
+            $list = Db::table('mp_treaty')->where($where)->field('id,title')->select();
+        } catch (\Exception $e) {
+            return ajax($e->getMessage(), -1);
+        }
+        return ajax($list);
+    }
+
+    public function getTreaty() {
+        $type = input('post.id',1);
+        $where = [
+            ['id','=',$type]
+        ];
+        try {
+            $info = Db::table('mp_treaty')->where($where)->value('content');
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
         }

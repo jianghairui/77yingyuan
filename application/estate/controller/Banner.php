@@ -168,9 +168,6 @@ class Banner extends Base {
             $val['tel'] = input('post.tel');
             $val['address'] = input('post.address');
             $val['intro'] = input('post.intro');
-            $val['treaty1'] = input('post.treaty1','');
-            $val['treaty2'] = input('post.treaty2','');
-            $val['treaty3'] = input('post.treaty3','');
             checkInput($val);
             $val['lon'] = input('post.lon',0);
             $val['lat'] = input('post.lat',0);
@@ -203,72 +200,95 @@ class Banner extends Base {
             }
             return ajax();
         }
-        $exist = Db::table('mp_company')->where('id','=',1)->find();
+        try {
+            $exist = Db::table('mp_company')->where('id','=',1)->find();
+        } catch (\Exception $e) {
+            return ajax($e->getMessage(), -1);
+        }
         $this->assign('info',$exist);
         return $this->fetch();
     }
 
-    public function video() {
+    public function treatyList() {
         try {
-            $info = Db::table('mp_video')->find();
+            $list = Db::table('mp_treaty')->select();
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
+        }
+        $this->assign('list',$list);
+        return $this->fetch();
+
+    }
+
+    public function treatyDetail() {
+        $val['id'] = input('param.id');
+        $where = [
+            ['id','=',$val['id']]
+        ];
+        try {
+            $info = Db::table('mp_treaty')->where($where)->find();
+            if(!$info) {
+                die('非法参数');
+            }
+        } catch (\Exception $e) {
+            die($e->getMessage());
         }
         $this->assign('info',$info);
         return $this->fetch();
     }
 
-    public function bifileUpload() {
-        //实例化并获取系统变量传参
-        $upload = new Bigfile($_FILES['file']['tmp_name'],$_POST['blob_num'],$_POST['total_blob_num'],$_POST['file_name']);
-//调用方法，返回结果
-        $upload->apiReturn();
-    }
-
-    public function videoUpdate() {
-        $val['url'] = input('post.video_url');
+    public function treatyMod() {
+        $val['id'] = input('post.id');
+        $val['title'] = input('post.title');
+        $val['content'] = input('post.content');
+        checkInput($val);
+        $where = [
+            ['id','=',$val['id']]
+        ];
         try {
-            $exist = Db::table('mp_video')->where('id','=',1)->find();
-            $update_data = [
-                'id' => 1,
-                'url' => $val['url']
-            ];
-            if($exist) {
-                Db::table('mp_video')->where('id','=',1)->update($update_data);
-            }else {
-                Db::table('mp_video')->where('id','=',1)->insert($update_data);
+            $info = Db::table('mp_treaty')->where($where)->find();
+            if(!$info) {
+                return ajax('非法参数',-1);
             }
+            Db::table('mp_treaty')->update($val);
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
-        }
-        if($exist) {
-            @unlink($exist['url']);
         }
         return ajax();
     }
 
-    public function posterUpdate() {
-        $val['poster'] = input('post.poster');
+    //停用协议
+    public function treatyHide()
+    {
+        $val['id'] = input('post.id');
+        checkInput($val);
         try {
-            $val['poster'] = rename_file($val['poster'],'res/estate/upload/');
-            $exist = Db::table('mp_video')->where('id','=',1)->find();
-            $update_data = [
-                'id' => 1,
-                'poster' => $val['poster']
-            ];
-            if($exist) {
-                Db::table('mp_video')->where('id','=',1)->update($update_data);
-            }else {
-                Db::table('mp_video')->where('id','=',1)->insert($update_data);
+            $exist = Db::table('mp_treaty')->where('id','=',$val['id'])->find();
+            if (!$exist) {
+                return ajax('非法操作', -1);
             }
+            Db::table('mp_treaty')->where('id','=',$val['id'])->update(['status' => 0]);
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
         }
-        if($exist) {
-            @unlink($exist['poster']);
-        }
-        return ajax(['path'=>$val['poster']]);
+        return ajax();
     }
+    //启用协议
+    public function treatyShow() {
+        $val['id'] = input('post.id');
+        checkInput($val);
+        try {
+            $exist = Db::table('mp_treaty')->where('id','=',$val['id'])->find();
+            if(!$exist) {
+                return ajax('非法操作',-1);
+            }
+            Db::table('mp_treaty')->where('id','=',$val['id'])->update(['status'=>1]);
+        } catch (\Exception $e) {
+            return ajax($e->getMessage(), -1);
+        }
+        return ajax();
+    }
+
 
     //上传图片限制512KB
     public function uploadImage()
@@ -283,6 +303,7 @@ class Banner extends Base {
             return ajax('请上传图片', 3);
         }
     }
+
 
 
 

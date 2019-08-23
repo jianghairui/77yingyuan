@@ -26,7 +26,8 @@
             <th>昵称</th>
             <th width="90">性别</th>
             <th width="120">手机号</th>
-            <th width="220">OPENID</th>
+            <th width="60">邀请人头像</th>
+            <th width="100">邀请人昵称</th>
             <th width="120">注册时间</th>
             <th width="100" class="td-manage">操作</th>
         </tr>
@@ -51,7 +52,12 @@
                     {/switch}
                 </td>
                 <td>{$li.tel}</td>
-                <td>{$li.openid}</td>
+                <td>
+                    {if $li['avatar2']}
+                    <img src="{$li['avatar2']}" alt="">
+                    {/if}
+                </td>
+                <td>{$li.nickname2}</td>
                 <td>{$li.create_time|date="Y-m-d h:i:s"}</td>
                 <td>
                     <span id="send-btn">

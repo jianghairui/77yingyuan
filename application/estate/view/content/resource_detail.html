@@ -55,7 +55,7 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>产权年限：</label>
             <div class="formControls col-xs-4 col-sm-4">
-                <input type="text" class="input-text" value="{$info.property}" placeholder="" id="property" name="property" maxlength="10"><span></span>
+                <input type="text" class="input-text" value="{$info.property}" placeholder="" id="property" name="property" maxlength="20"><span></span>
             </div>
         </div>
         <div class="row cl">
@@ -97,7 +97,7 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>物业费(元/m²/月)：</label>
             <div class="formControls col-xs-4 col-sm-4">
-                <input type="text" class="input-text" value="{$info.realty_price}" placeholder="" id="realty_price" name="realty_price" maxlength="20" oninput="this.value=/^\d{1,8}(\.\d{0,2})?$/.test(this.value) ? this.value : this.value.substring(0,this.value.length-1)">
+                <input type="text" class="input-text" value="{$info.realty_price}" placeholder="" id="realty_price" name="realty_price" maxlength="30">
             </div>
         </div>
         <div class="row cl">
@@ -156,7 +156,7 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2"><span class="c-red">*</span>参考均价(元/m²)：</label>
             <div class="formControls col-xs-4 col-sm-4">
-                <input type="text" class="input-text" value="{$info.avr_price}" placeholder="" id="avr_price" name="avr_price" maxlength="20" oninput="this.value=/^\d{1,8}(\.\d{0,2})?$/.test(this.value) ? this.value : this.value.substring(0,this.value.length-1)">
+                <input type="text" class="input-text" value="{$info.avr_price}" placeholder="" id="avr_price" name="avr_price" maxlength="11" oninput="this.value=/^\d{1,8}(\.\d{0,2})?$/.test(this.value) ? this.value : this.value.substring(0,this.value.length-1)">
             </div>
         </div>
         <div class="row cl">
@@ -176,7 +176,7 @@
         <div class="row cl">
             <label class="form-label col-xs-4 col-sm-2">佣金(元)：</label>
             <div class="formControls col-xs-4 col-sm-4">
-                <input type="number" id="min_bro" name="commission" placeholder="" value="{$info.commission}" class="input-text">
+                <input type="number" id="min_bro" name="commission" placeholder="" value="{$info.commission}" class="input-text" maxlength="8">
             </div>
         </div>
 
@@ -422,7 +422,7 @@
                 if(checkfile('file') !== true) {
                     $("#file").val('');
                     $("#fileList").html('');
-                    return false
+                    return false;
                 }
                 var img = e.target.files[0];
                 var src = window.URL.createObjectURL(img);

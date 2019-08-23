@@ -22,22 +22,28 @@ class Member extends Base {
 
         $where = [];
         if($param['logmin']) {
-            $where[] = ['create_time','>=',strtotime(date('Y-m-d 00:00:00',strtotime($param['logmin'])))];
+            $where[] = ['u.create_time','>=',strtotime(date('Y-m-d 00:00:00',strtotime($param['logmin'])))];
         }
 
         if($param['logmax']) {
-            $where[] = ['create_time','<=',strtotime(date('Y-m-d 23:59:59',strtotime($param['logmax'])))];
+            $where[] = ['u.create_time','<=',strtotime(date('Y-m-d 23:59:59',strtotime($param['logmax'])))];
         }
 
         if($param['search']) {
-            $where[] = ['nickname|tel','like',"%{$param['search']}%"];
+            $where[] = ['u.nickname|u.tel','like',"%{$param['search']}%"];
         }
+        $order = ['u.id'=>'DESC'];
         try {
-            $count = Db::table('mp_user')->where($where)->count();
+            $count = Db::table('mp_user')->alias('u')->where($where)->count();
             $page['count'] = $count;
             $page['curr'] = $curr_page;
             $page['totalPage'] = ceil($count/$perpage);
-            $list = Db::table('mp_user')->where($where)->order(['id'=>'DESC'])->limit(($curr_page - 1)*$perpage,$perpage)->select();
+            $list = Db::table('mp_user')->alias('u')
+                ->join('mp_user u2','u.inviter_id=u2.id','left')
+                ->where($where)
+                ->order($order)
+                ->field('u.*,u2.nickname AS nickname2,u2.avatar AS avatar2')
+                ->limit(($curr_page - 1)*$perpage,$perpage)->select();
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
         }
