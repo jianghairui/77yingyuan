@@ -20,7 +20,7 @@ class Api extends Controller
         try {
             $chapter = Db::table('mp_chapter')->field('id,title,q_num')->select();
             $questionlist = Db::table('mp_question')
-                ->field('id,c_id,num,title,option_a AS a,option_b AS b,option_c AS c,option_d AS d,key,excerpt')->select();
+                ->field('id,c_id,num,title,option_a AS A,option_b AS B,option_c AS C,option_d AS D,key,excerpt')->select();
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
         }
@@ -34,21 +34,21 @@ class Api extends Controller
                     switch ($vv['num']) {
                         case 2:
                             $data['options'] = [
-                                'a' => $vv['a'],
-                                'b' => $vv['b']
+                                'A' => $vv['A'],
+                                'B' => $vv['B']
                             ];break;
                         case 3:
                             $data['options'] = [
-                            'a' => $vv['a'],
-                            'b' => $vv['b'],
-                            'c' => $vv['c']
+                            'A' => $vv['A'],
+                            'B' => $vv['B'],
+                            'C' => $vv['C']
                             ];break;
                         case 4:
                             $data['options'] = [
-                                'a' => $vv['a'],
-                                'b' => $vv['b'],
-                                'c' => $vv['c'],
-                                'd' => $vv['d']
+                                'A' => $vv['A'],
+                                'B' => $vv['B'],
+                                'C' => $vv['C'],
+                                'D' => $vv['D']
                             ];break;
                         default:;
                     }
