@@ -22,11 +22,15 @@ class Question extends Base {
         $page['curr'] = $curr_page;
         $page['totalPage'] = ceil($count/$perpage);
         try {
-            $list = Db::table('mp_chapter')->alias('c')
-                ->join('mp_admin ad','c.admin_id=ad.id','left')
-                ->field('c.*,ad.realname')
-                ->where($where)
-                ->select();
+            $list = Db::query("SELECT c.*,c2.`count` FROM mp_chapter c 
+LEFT JOIN (SELECT c_id,COUNT(c_id) AS `count` FROM mp_question GROUP BY c_id) c2 
+ON c.id=c2.c_id");
+
+//            $list = Db::table('mp_chapter')->alias('c')
+//                ->join('mp_admin ad','c.admin_id=ad.id','left')
+//                ->field('c.*,ad.realname')
+//                ->where($where)
+//                ->select();
         }catch (\Exception $e) {
             die('SQL错误: ' . $e->getMessage());
         }
@@ -169,6 +173,7 @@ class Question extends Base {
             $val['admin_id'] = session('admin_id');
             try {
                 Db::table('mp_question')->insert($val);
+                Db::table('mp_chapter')->where('id','=',$val['c_id'])->setInc('q_num',1);
             }catch (\Exception $e) {
                 return ajax($e->getMessage(),-1);
             }
@@ -253,6 +258,7 @@ class Question extends Base {
                 return ajax('非法操作',-1);
             }
             Db::table('mp_question')->where('id',$val['id'])->delete();
+            Db::table('mp_chapter')->where('id','=',$exist['c_id'])->setDec('q_num',1);
         }catch (\Exception $e) {
             return ajax($e->getMessage(),-1);
         }
