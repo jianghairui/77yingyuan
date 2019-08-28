@@ -99,6 +99,11 @@ class Login extends Common {
                 }
                 Db::table('mp_user')->where('id','=',$this->myinfo['uid'])->update($data);
             }else {
+                $data['nickname'] = $decryptedData['nickName'];
+                $data['avatar'] = $decryptedData['avatarUrl'];
+                $data['sex'] = $decryptedData['gender'];
+                $data['user_auth'] = 1;
+                Db::table('mp_user')->where('id','=',$this->myinfo['uid'])->update($data);
                 return ajax();
             }
         }catch (\Exception $e) {
