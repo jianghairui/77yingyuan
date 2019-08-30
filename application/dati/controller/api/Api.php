@@ -62,5 +62,14 @@ class Api extends Controller
 
     }
 
+    public function remark() {
+        try {
+            $list = Db::table('mp_remark')->field('min_score as min,max_score as max,remark')->select();
+        } catch (\Exception $e) {
+            return ajax($e->getMessage(), -1);
+        }
+        return ajax($list);
+    }
+
 
 }
