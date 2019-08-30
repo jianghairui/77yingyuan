@@ -1,0 +1,43 @@
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 首页 <span class="c-gray en">&gt;</span> 内容管理 <span class="c-gray en">&gt;</span> 评语设置 <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="page-container">
+    <table class="table table-border table-bordered table-bg">
+        <thead>
+        <tr class="text-c">
+            <th width="25">#</th>
+            <th width="120">分数区间</th>
+            <th>评语</th>
+            <th width="100">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        <form id="multi-check">
+            {foreach $list as $li}
+            <tr class="text-c userinfo">
+                <td>{$li.id}</td>
+                <td>{$li.min_score}~{$li.max_score}</td>
+                <td>{$li.remark}</td>
+                <td class="td-manage">
+                    <a style="text-decoration:none" onclick="layeropen('编辑','{:url("Question/remarkDetail",array("id"=>$li["id"]))}')" class="ml-5" href="javascript:;" title="编辑">
+                    <i class="Hui-iconfont">&#xe6df;</i>
+                    </a>
+                </td>
+            </tr>
+            {/foreach}
+        </form>
+        <tr>
+            <td colspan="8" id="page" class="text-r"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript">
+    /*打开新窗口*/
+    function layeropen(title,url,w,h){
+        layer_show(title,url,w,h);
+    }
+
+</script>

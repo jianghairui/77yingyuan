@@ -1,0 +1,74 @@
+<article class="page-container">
+    <form class="form form-horizontal" id="form-article-add">
+        <div class="row cl">
+            <label class="form-label col-xs-4 col-sm-2">({$info.min_score}~{$info.max_score})评语：</label>
+            <div class="formControls col-xs-8 col-sm-9">
+                <textarea name="remark" cols="" rows="" class="textarea" maxlength="500" placeholder="输入评语" oninput="this.value.length<=500?$('#textlen1').text(this.value.length):$('#textlen1').text(500)" >{$info.remark}</textarea>
+                <p class="textarea-numberbar"><em class="textarea-length" id="textlen1">0</em>/500</p>
+            </div>
+        </div>
+        <div class="row cl">
+            <div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+                <button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 保存</button>
+                <button onClick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+            </div>
+        </div>
+        <input type="hidden" name="id" value="{$info.id}">
+    </form>
+</article>
+
+<script type="text/javascript" src="/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+
+<script type="text/javascript">
+    $(function(){
+
+        var isclick = true;
+        //表单验证
+        $("#form-article-add").validate({
+            rules:{
+                remark:{
+                    required:true,
+                    maxlength:500
+                }
+
+            },
+            focusCleanup:true,
+            success:"valid",
+            submitHandler:function(form){
+                if(isclick === true) {
+                    isclick = false;
+                    $(form).ajaxSubmit({
+                        type: 'post',
+                        url: "{:url('Question/remarkMod')}" ,
+                        success: function(data){
+                            console.log(data.data);
+                            if(data.code == 1) {
+                                layer.msg('保存成功!',{icon:1,time:1000},function () {
+                                    window.parent.location.reload();
+                                });
+                            }else {
+                                layer.msg(data.data,{icon:2,time:1000});
+                                isclick = true
+                            }
+
+                        },
+                        error: function(XmlHttpRequest, textStatus, errorThrown){
+                            layer.msg('error!',{icon:5,time:1000});
+                            isclick = true
+                        }
+                    });
+                }
+
+            }
+        });
+
+        var textlen1 = $("textarea[name='title']").val().length;
+        $("#textlen1").text(textlen1);
+
+    });
+
+
+
+</script>

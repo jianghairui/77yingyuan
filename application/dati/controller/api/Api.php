@@ -16,17 +16,20 @@ class Api extends Controller
 {
 
     public function questionList() {
-
+        $where = [
+            ['status','=',1]
+        ];
         try {
             $chapter = Db::table('mp_chapter')->field('id,title,q_num')->select();
             $questionlist = Db::table('mp_question')
+                ->where($where)
                 ->field('id,c_id,num,title,option_a AS A,option_b AS B,option_c AS C,option_d AS D,key,excerpt')->select();
         } catch (\Exception $e) {
             return ajax($e->getMessage(), -1);
         }
-        foreach ($chapter as &$v) {
-            $v['list'] = [];
-            $data = [];
+        $chapterlist = [];
+        foreach ($chapter as $v) {
+            $qlist = [];
             foreach ($questionlist as $vv) {
                 if($vv['c_id'] == $v['id']) {
                     $data['id'] = $vv['id'];
@@ -54,11 +57,15 @@ class Api extends Controller
                     }
                     $data['key'] = $vv['key'];
                     $data['excerpt'] = $vv['excerpt'];
-                    $v['list'][] = $data;
+                    $qlist[] = $data;
                 }
             }
+            if(!empty($qlist)) {
+                $v['list'] = $qlist;
+                $chapterlist[] = $v;
+            }
         }
-        return ajax($chapter);
+        return ajax($chapterlist);
 
     }
 

@@ -89,11 +89,17 @@ ON c.id=c2.c_id");
         $val['id'] = input('post.id');
         checkInput($val);
         try {
-            $exist = Db::table('mp_question')->where('id',$val['id'])->find();
+            $whereChapter = [
+                ['id','=',$val['id']]
+            ];
+            $exist = Db::table('mp_chapter')->where($whereChapter)->find();
             if(!$exist) {
                 return ajax('非法操作',-1);
             }
-            Db::table('mp_question')->where('id',$val['id'])->delete();
+            $whereQuestion = [
+                ['c_id','=',$val['id']]
+            ];
+            Db::table('mp_question')->where($whereQuestion)->delete();
         }catch (\Exception $e) {
             return ajax($e->getMessage(),-1);
         }
@@ -262,8 +268,43 @@ ON c.id=c2.c_id");
         }catch (\Exception $e) {
             return ajax($e->getMessage(),-1);
         }
-        @unlink($exist['pic']);
         return ajax([],1);
+    }
+
+    public function remarkList() {
+        try {
+            $list = Db::table('mp_remark')->select();
+        }catch (\Exception $e) {
+            die('SQL错误: ' . $e->getMessage());
+        }
+        $this->assign('list',$list);
+        return $this->fetch();
+    }
+
+    public function remarkDetail() {
+        $question_id = input('param.id');
+        try {
+            $exist = Db::table('mp_remark')->where('id',$question_id)->find();
+            if(!$exist) {
+                $this->error('非法操作');
+            }
+        } catch (\Exception $e) {
+            die($e->getMessage());
+        }
+        $this->assign('info',$exist);
+        return $this->fetch();
+    }
+
+    public function remarkMod() {
+        $val['remark'] = input('post.remark');
+        $val['id'] = input('post.id');
+        checkInput($val);
+        try {
+            Db::table('mp_remark')->update($val);
+        }catch (\Exception $e) {
+            return ajax($e->getMessage(),-1);
+        }
+        return ajax();
     }
 
 
