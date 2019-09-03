@@ -41,6 +41,8 @@ ON c.id=c2.c_id");
     }
 
     public function chapterAdd() {
+        die('access denied!');
+
         if(request()->isPost()) {
             $val['title'] = input('post.title');
             checkInput($val);
@@ -86,6 +88,8 @@ ON c.id=c2.c_id");
     }
 
     public function chapterDel() {
+        die('access denied!');
+
         $val['id'] = input('post.id');
         checkInput($val);
         try {
@@ -100,6 +104,7 @@ ON c.id=c2.c_id");
                 ['c_id','=',$val['id']]
             ];
             Db::table('mp_question')->where($whereQuestion)->delete();
+            Db::table('mp_chapter')->where($whereChapter)->delete();
         }catch (\Exception $e) {
             return ajax($e->getMessage(),-1);
         }
@@ -185,6 +190,7 @@ ON c.id=c2.c_id");
             }
             return ajax([]);
         }
+        die('access denied!');
         try {
             $list = Db::table('mp_chapter')->select();
         } catch (\Exception $e) {
@@ -256,6 +262,7 @@ ON c.id=c2.c_id");
     }
     //删除题目
     public function questionDel() {
+        die('access denied!');
         $val['id'] = input('post.id');
         checkInput($val);
         try {
