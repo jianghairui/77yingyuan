@@ -9,6 +9,7 @@ namespace app\api\controller;
 use think\Controller;
 use think\Db;
 use think\exception\HttpResponseException;
+use EasyWeChat\Factory;
 class Common extends Controller {
 
     protected $cmd = '';
@@ -157,6 +158,33 @@ class Common extends Controller {
         }else{
             echo '创建失败';
         }
+    }
+
+    //小程序验证文本内容是否违规
+    protected function msgSecCheck($msg) {
+        $content = $msg;
+        $app = Factory::payment($this->mp_config);
+        $access_token = $app->access_token;
+        $token = $access_token->getToken();
+        $url = 'https://api.weixin.qq.com/wxa/msg_sec_check?access_token=' . $token['access_token'];
+        $res = curl_post_data($url, '{ "content":"'.$content.'" }');
+
+        $result = json_decode($res,true);
+        try {
+            $audit = true;
+            if($result['errcode'] !== 0) {
+                $this->excep($this->cmd,$this->myinfo['uid'] .' : '. $content .' : '. var_export($result,true));
+                switch ($result['errcode']) {
+                    case 87014: $audit = false;break;
+                    case 40001:
+                        $audit = false;break;
+                    default:$audit = false;;
+                }
+            }
+        } catch (\Exception $e) {
+            throw new HttpResponseException(ajax($e->getMessage(),-1));
+        }
+        return $audit;
     }
 
 

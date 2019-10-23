@@ -29,6 +29,9 @@ class Index extends Common {
         checkPost($val);
         $val['uid'] = $this->myinfo['uid'];
         $val['create_time'] = time();
+        if(!$this->msgSecCheck($val['content'])) {
+            return ajax('内容包含敏感词',47);
+        }
         try {
             Db::table('mp_message')->insert($val);
         } catch (\Exception $e) {
@@ -54,16 +57,14 @@ class Index extends Common {
         $curr_page = input('param.page',1);
         $perpage = input('param.perpage',10);
         $recommend = input('post.recommend','');
-        $where = [];
-        $count = Db::table('mp_film')->alias('f')->where($where)->count();
-        $page['count'] = $count;
-        $page['curr'] = $curr_page;
-        $page['totalPage'] = ceil($count/$perpage);
+        $search = input('post.search','');
+        $where = [['f.status','=',1]];
         try {
             if($recommend) {
-                $where = [
-                    ['f.recommend','=',1]
-                ];
+                $where[] = ['f.recommend','=',1];
+            }
+            if($search) {
+                $where[] = ['f.title','LIKE',"%{$search}%"];
             }
             $list = Db::table('mp_film')->alias('f')
                 ->join("mp_admin a","f.admin_id=a.id","left")
@@ -74,6 +75,18 @@ class Index extends Common {
             die('SQL错误: ' . $e->getMessage());
         }
         return ajax($list);
+    }
+
+    public function filmCount() {
+        $where = [
+            ['status','=',1]
+        ];
+        try {
+            $count = Db::table('mp_film')->where($where)->count();
+        } catch (\Exception $e) {
+            return ajax($e->getMessage(), -1);
+        }
+        return ajax($count);
     }
 //公司简介
     public function company() {
