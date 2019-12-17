@@ -44,7 +44,8 @@ class Common extends Controller {
 
     private function checkSession() {
         $noneed = [
-            'Login/login'
+            'Login/login',
+            'Index/checkboard'
         ];
         if (in_array(request()->controller() . '/' . request()->action(), $noneed)) {
             return true;
