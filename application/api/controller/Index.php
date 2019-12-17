@@ -254,6 +254,9 @@ class Index extends Common {
         return ajax($url);
     }
 
+    public function checkBoard() {
+        return ajax(false);
+    }
 
 
 }
