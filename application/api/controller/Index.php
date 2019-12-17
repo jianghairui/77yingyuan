@@ -274,7 +274,7 @@ class Index extends Common {
     }
 
     public function checkBoard() {
-        return ajax(false);
+        return ajax(true);
     }
 
 
