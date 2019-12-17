@@ -11,7 +11,7 @@ use think\Db;
 
 class Index extends Common {
 
-//轮播图列表
+    //轮播图列表
     public function slideList() {
         try {
             $where = [
@@ -22,6 +22,25 @@ class Index extends Common {
             return ajax($e->getMessage(), -1);
         }
         return ajax($list);
+    }
+
+    //轮播图详情
+    public function slideDetail() {
+        $val['id'] = input('post.id');
+        $this->checkPost($val);
+        try {
+            $where = [
+                ['id','=',$val['id']]
+            ];
+            $info = Db::table('mp_slideshow')
+                ->where($where)->find();
+            if(!$info) {
+                return ajax('异常参数',-4);
+            }
+        } catch (\Exception $e) {
+            return ajax($e->getMessage(), -1);
+        }
+        return ajax($info);
     }
 //需求留言
     public function messageAdd() {
@@ -255,7 +274,7 @@ class Index extends Common {
     }
 
     public function checkBoard() {
-        return ajax(false);
+        return ajax(true);
     }
 
 
